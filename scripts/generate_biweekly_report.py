@@ -495,7 +495,7 @@ def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: fl
         "thresh_manual_red": f"≥ {MANUAL_RED:.0f}%",
         "thresh_manual_yellow": f"≥ {MANUAL_YELLOW:.0f}%",
         "thresh_low20_red": f"≥ {LOW20_RED:.0f}%",
-        "thresh_low20_yellow": f"≥ {LOW20_YELLOW:.0f}%",
+        "thresh_low20_yellow": f"≥ {LOW20_YELLOW:g}%",
         "thresh_low30_red": f"≥ {LOW30_RED:.0f}%",
         "thresh_low30_yellow": f"≥ {LOW30_YELLOW:.0f}%",
     }
