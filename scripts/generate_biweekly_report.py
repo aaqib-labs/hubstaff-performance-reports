@@ -31,7 +31,7 @@ Metric multipliers (reflecting violation priority hierarchy):
     B  (Break %)          → 1×
 
 Score = sum of (base_pts × multiplier) for all flags on an employee.
-Break time (B) contributes to score but is excluded from displayed flag count.
+All flags including Break (B) are counted in both score and displayed flag count.
 
 Hours Proration
 ---------------
@@ -329,8 +329,6 @@ def count_flags(flags: dict) -> tuple[int, int]:
         if status == "red" or status == "orange":
             red += 1
         elif status == "yellow":
-            if metric == "B":
-                continue  # Excluded from display count
             yellow += 1
     return red, yellow
 

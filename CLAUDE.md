@@ -91,7 +91,7 @@ See `data/reference/sla_violation_legend.md` — this is the ONLY source of trut
 - NEVER guess or infer thresholds
 - NEVER prorate thresholds that are explicitly provided — only auto-prorate when computing from a date range
 - Red flag overrides yellow for the same metric — never show both
-- Break yellow (B ⚠️) excluded from displayed flag count but included in severity score
+- Break yellow (B ⚠️) is included in both the displayed flag count and severity score
 - Hours SLA: strict red/orange only, no yellow band
 
 **Auto-prorate hours thresholds from date range:**
@@ -126,7 +126,7 @@ If a name in the CSV does not match anyone in the index, flag it to Aaqib before
 | All other numeric values | 1 decimal place |
 | All percentage fields | Always include `%` symbol |
 | Break / Manual / Low Activity cells | `Xh (X.X%)` format |
-| Flags badge | `🔴 2 ⚠️ 1` (B ⚠️ excluded from count) |
+| Flags badge | `🔴 2 ⚠️ 1` (all flags including B ⚠️ are counted) |
 | Member name cells | No status emoji prefix |
 | Empty / compliant cells | Leave blank — no "CLEAR" text |
 | Violation indicators | Embedded in metric cells: `🔴 34%`, `⚠️ 8.3h (11.4%)` |
