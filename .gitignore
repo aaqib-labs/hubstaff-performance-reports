@@ -1,0 +1,8 @@
+# Raw data inputs — never commit employee data CSVs to public repo
+data/input/*.csv
+data/input/*.xlsx
+
+# Python
+__pycache__/
+*.pyc
+.DS_Store
