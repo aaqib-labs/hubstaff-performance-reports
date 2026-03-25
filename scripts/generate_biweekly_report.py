@@ -166,7 +166,7 @@ def load_master_table(csv_path: Path) -> pd.DataFrame:
     """Load and clean the master table CSV."""
     df = pd.read_csv(csv_path, dtype=str)
     df.columns = [c.strip() for c in df.columns]
-    df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
+    df = df.map(lambda x: x.strip() if isinstance(x, str) else x)
 
     # Drop completely empty rows
     df = df.dropna(how="all").reset_index(drop=True)

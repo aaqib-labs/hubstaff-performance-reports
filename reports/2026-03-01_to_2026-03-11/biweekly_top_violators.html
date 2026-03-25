@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bi-Weekly Performance Report — March 01, 2026 — March 11, 2026</title>
+  <style>
+    /* ------------------------------------------------------------------ */
+    /* Reset & Base                                                         */
+    /* ------------------------------------------------------------------ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+                   'Helvetica Neue', Arial, sans-serif;
+      background: #f4f5f7;
+      color: #1a1a2e;
+      font-size: 14px;
+      line-height: 1.5;
+      padding: 32px 20px 60px;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    /* ------------------------------------------------------------------ */
+    /* Report Header                                                        */
+    /* ------------------------------------------------------------------ */
+    .report-header {
+      background: #fff;
+      border-radius: 10px;
+      padding: 28px 32px;
+      margin-bottom: 20px;
+      border-left: 5px solid #2d5be3;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+
+    .report-header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 4px;
+    }
+
+    .report-header .subtitle {
+      color: #555;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+    }
+
+    .meta-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .meta-item .label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #888;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .meta-item .value {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #1a1a2e;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Benchmark Strip                                                      */
+    /* ------------------------------------------------------------------ */
+    .benchmark-strip {
+      background: #1a1a2e;
+      color: #e8eaf6;
+      border-radius: 8px;
+      padding: 14px 20px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+    }
+
+    .benchmark-strip .strip-title {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #8892b0;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .benchmarks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .benchmark-item {
+      white-space: nowrap;
+    }
+
+    .benchmark-item .b-label {
+      font-size: 0.72rem;
+      color: #8892b0;
+      font-weight: 600;
+      margin-right: 6px;
+    }
+
+    .b-red {
+      background: rgba(220, 38, 38, 0.25);
+      color: #fca5a5;
+      padding: 1px 7px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-right: 4px;
+    }
+
+    .b-yellow {
+      background: rgba(234, 179, 8, 0.2);
+      color: #fde68a;
+      padding: 1px 7px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-right: 4px;
+    }
+
+    .b-orange {
+      background: rgba(234, 88, 12, 0.25);
+      color: #fed7aa;
+      padding: 1px 7px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Section Headers                                                      */
+    /* ------------------------------------------------------------------ */
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .section-header h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #1a1a2e;
+    }
+
+    .section-header .count-badge {
+      background: #eef2ff;
+      color: #2d5be3;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 2px 10px;
+      border-radius: 12px;
+    }
+
+    .section-note {
+      font-size: 0.8rem;
+      color: #777;
+      margin-bottom: 14px;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Tables                                                               */
+    /* ------------------------------------------------------------------ */
+    .table-wrapper {
+      overflow-x: auto;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      margin-bottom: 36px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      font-size: 0.85rem;
+    }
+
+    thead { background: #2d5be3; }
+
+    thead th {
+      color: #fff;
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    thead th.center { text-align: center; }
+
+    tbody tr {
+      border-bottom: 1px solid #f0f2f5;
+      transition: background 0.1s;
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #f7f9ff !important; }
+
+    tbody td {
+      padding: 10px 14px;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    tbody td.center { text-align: center; }
+
+    /* Rank column */
+    td.rank {
+      font-weight: 700;
+      color: #888;
+      text-align: center;
+      font-size: 0.82rem;
+      width: 40px;
+    }
+
+    /* Member name */
+    td.member-name {
+      font-weight: 600;
+      color: #1a1a2e;
+      min-width: 160px;
+    }
+
+    td.team-name {
+      color: #555;
+      font-size: 0.82rem;
+      max-width: 140px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    td.score-cell {
+      font-weight: 700;
+      text-align: center;
+      color: #2d5be3;
+    }
+
+    td.flags-cell {
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    td.metric-cell {
+      white-space: nowrap;
+    }
+
+    /* Shortfall cell */
+    td.shortfall { color: #dc2626; font-weight: 600; }
+
+    /* Row severity shading */
+    tr.severity-critical { background: #fff1f2; }
+    tr.severity-high     { background: #fffbeb; }
+    tr.severity-medium   { background: #f0fdf4; }
+    tr.severity-low      { background: #fafafa; }
+
+    /* ------------------------------------------------------------------ */
+    /* Hours Violators Section                                              */
+    /* ------------------------------------------------------------------ */
+    .hours-threshold-note {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 6px;
+      padding: 10px 16px;
+      margin-bottom: 14px;
+      font-size: 0.84rem;
+      color: #9a3412;
+    }
+
+    .hours-threshold-note strong { font-weight: 700; }
+
+    /* ------------------------------------------------------------------ */
+    /* Empty States                                                         */
+    /* ------------------------------------------------------------------ */
+    .empty-state {
+      background: #fff;
+      border: 2px dashed #d0d5dd;
+      border-radius: 8px;
+      padding: 32px;
+      text-align: center;
+      color: #888;
+      font-size: 0.9rem;
+      margin-bottom: 36px;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Footer                                                               */
+    /* ------------------------------------------------------------------ */
+    .report-footer {
+      text-align: center;
+      color: #aaa;
+      font-size: 0.78rem;
+      margin-top: 12px;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Mobile                                                               */
+    /* ------------------------------------------------------------------ */
+    @media (max-width: 640px) {
+      body { padding: 16px 12px 48px; }
+      .report-header { padding: 20px 16px; }
+      .report-header h1 { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- ================================================================ -->
+    <!-- Report Header                                                      -->
+    <!-- ================================================================ -->
+    <div class="report-header">
+      <h1>Bi-Weekly Performance Report</h1>
+      <div class="subtitle">WebLife Ventures · Internal Use Only</div>
+      <div class="meta-grid">
+        <div class="meta-item">
+          <span class="label">Period</span>
+          <span class="value">March 01, 2026 — March 11, 2026</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Working Days</span>
+          <span class="value">8 days</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Hours Threshold (Red)</span>
+          <span class="value">58.2h</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Hours Threshold (Overwork)</span>
+          <span class="value">72.7h</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Employees Covered</span>
+          <span class="value">85</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Employees Flagged</span>
+          <span class="value">64</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Generated</span>
+          <span class="value">2026-03-25 22:12</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- Benchmark Strip                                                    -->
+    <!-- ================================================================ -->
+    <div class="benchmark-strip">
+      <div class="strip-title">SLA Thresholds — This Period</div>
+      <div class="benchmarks">
+        <div class="benchmark-item">
+          <span class="b-label">Activity (A)</span>
+          <span class="b-red">🔴 &lt; 35%</span>
+          <span class="b-yellow">⚠️ &lt; 45%</span>
+        </div>
+        <div class="benchmark-item">
+          <span class="b-label">Hours (H)</span>
+          <span class="b-red">🔴 &lt; 58.2h</span>
+          <span class="b-orange">🟠 ≥ 72.7h</span>
+        </div>
+        <div class="benchmark-item">
+          <span class="b-label">Break (B)</span>
+          <span class="b-red">🔴 ≥ 12%</span>
+          <span class="b-yellow">⚠️ &gt; 10%</span>
+        </div>
+        <div class="benchmark-item">
+          <span class="b-label">Manual (M)</span>
+          <span class="b-red">🔴 ≥ 10%</span>
+          <span class="b-yellow">⚠️ ≥ 5%</span>
+        </div>
+        <div class="benchmark-item">
+          <span class="b-label">Low Act ≤20%</span>
+          <span class="b-red">🔴 ≥ 15%</span>
+          <span class="b-yellow">⚠️ ≥ 8%</span>
+        </div>
+        <div class="benchmark-item">
+          <span class="b-label">Low Act ≤30%</span>
+          <span class="b-red">🔴 ≥ 20%</span>
+          <span class="b-yellow">⚠️ ≥ 10%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- Section 1: Top 15 Violators                                       -->
+    <!-- ================================================================ -->
+    <div class="section-header">
+      <h2>Section 1 — Top Violators</h2>
+      <span class="count-badge">Top 15</span>
+    </div>
+    <p class="section-note">
+      Ranked by weighted severity score. Red rows = critical multi-metric violations.
+      Scores reflect metric priority: Activity &gt; Manual &gt; Hours &gt; Low Activity &gt; Break.
+      Break ⚠️ contributes to score but is excluded from displayed flag count.
+    </p>
+
+    
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th class="center">#</th>
+            <th>Member</th>
+            <th>Team</th>
+            <th class="center">Activity %</th>
+            <th class="center">Hours</th>
+            <th class="center">Break</th>
+            <th class="center">Manual</th>
+            <th class="center">Low Act ≤20%</th>
+            <th class="center">Low Act ≤30%</th>
+            <th class="center">Flags</th>
+            <th class="center">Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr class="severity-critical">
+            <td class="rank">1</td>
+            <td class="member-name">Shaarukshan Seralathan</td>
+            <td class="team-name">Labs - all</td>
+            <td class="metric-cell center">🔴 20%</td>
+            <td class="metric-cell center">🔴 49.1h</td>
+            <td class="metric-cell center">2.5h (5.1%)</td>
+            <td class="metric-cell center">0.0h (0.0%)</td>
+            <td class="metric-cell center">🔴 33.3h (67.8%)</td>
+            <td class="metric-cell center">🔴 37.5h (76.4%)</td>
+            <td class="flags-cell">🔴 4</td>
+            <td class="score-cell">115.0</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="rank">2</td>
+            <td class="member-name">Shen Perera</td>
+            <td class="team-name">Labs - all, Task Agency</td>
+            <td class="metric-cell center">🔴 30%</td>
+            <td class="metric-cell center">🔴 19.7h</td>
+            <td class="metric-cell center">1.3h (6.7%)</td>
+            <td class="metric-cell center">0.8h (4.1%)</td>
+            <td class="metric-cell center">🔴 3.0h (15.4%)</td>
+            <td class="metric-cell center">🔴 14.3h (72.4%)</td>
+            <td class="flags-cell">🔴 4</td>
+            <td class="score-cell">115.0</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="rank">3</td>
+            <td class="member-name">jorn wossner</td>
+            <td class="team-name">Leadership</td>
+            <td class="metric-cell center">🔴 29%</td>
+            <td class="metric-cell center">🔴 39.1h</td>
+            <td class="metric-cell center">1.7h (4.3%)</td>
+            <td class="metric-cell center">0.0h (0.0%)</td>
+            <td class="metric-cell center">⚠️ 3.3h (8.4%)</td>
+            <td class="metric-cell center">🔴 21.3h (54.4%)</td>
+            <td class="flags-cell">🔴 3 ⚠️ 1</td>
+            <td class="score-cell">101.0</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="rank">4</td>
+            <td class="member-name">Tejashwini T N</td>
+            <td class="team-name">Accounting, FP&amp;A</td>
+            <td class="metric-cell center">🔴 34%</td>
+            <td class="metric-cell center">🔴 6.1h</td>
+            <td class="metric-cell center">0.0h (0.0%)</td>
+            <td class="metric-cell center">0.0h (0.0%)</td>
+            <td class="metric-cell center">⚠️ 0.7h (11.7%)</td>
+            <td class="metric-cell center">🔴 2.7h (44.7%)</td>
+            <td class="flags-cell">🔴 3 ⚠️ 1</td>
+            <td class="score-cell">101.0</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="rank">5</td>
+            <td class="member-name">Ali Asghar</td>
+            <td class="team-name">allintalent, Sales - BDR, Sales - Management</td>
+            <td class="metric-cell center">🔴 28%</td>
+            <td class="metric-cell center">62.9h</td>
+            <td class="metric-cell center">⚠️ 6.5h (10.4%)</td>
+            <td class="metric-cell center">0.0h (0.0%)</td>
+            <td class="metric-cell center">🔴 12.3h (19.5%)</td>
+            <td class="metric-cell center">🔴 39.3h (62.4%)</td>
+            <td class="flags-cell">🔴 3</td>
+            <td class="score-cell">88.0</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="rank">6</td>
+            <td class="member-name">Dharshika Perera</td>
+            <td class="team-name">Accounting, Labs - all</td>
+            <td class="metric-cell center">🔴 25%</td>
+            <td class="metric-cell center">69.4h</td>
+            <td class="metric-cell center">6.6h (9.5%)</td>
+            <td class="metric-cell center">0.0h (0.0%)</td>
+            <td class="metric-cell center">🔴 14.9h (21.4%)</td>
+            <td class="metric-cell center">🔴 44.8h (64.6%)</td>
+            <td class="flags-cell">🔴 3</td>
+            <td class="score-cell">85.0</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="rank">7</td>
+            <td class="member-name">Nishantha Hettiarachchi</td>
+            <td class="team-name">Digital Product, Labs - all</td>
+            <td class="metric-cell center">🔴 33%</td>
+            <td class="metric-cell center">🟠 78.8h</td>
+            <td class="metric-cell center">5.0h (6.3%)</td>
+            <td class="metric-cell center">0.0h (0.0%)</td>
+            <td class="metric-cell center">0.0h (0.0%)</td>
+            <td class="metric-cell center">🔴 21.1h (26.7%)</td>
+            <td class="flags-cell">🔴 3</td>
+            <td class="score-cell">79.0</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="rank">8</td>
+            <td class="member-name">Kianna Xue</td>
+            <td class="team-name">Venia Products  - All, VP - Systems - CRM Automation Product Owner</td>
+            <td class="metric-cell center">⚠️ 43%</td>
+            <td class="metric-cell center">🔴 18.1h</td>
+            <td class="metric-cell center">🔴 2.7h (15.2%)</td>
+            <td class="metric-cell center">0.0h (0.0%)</td>
+            <td class="metric-cell center">⚠️ 1.5h (8.1%)</td>
+            <td class="metric-cell center">1.5h (8.1%)</td>
+            <td class="flags-cell">🔴 2 ⚠️ 2</td>
+            <td class="score-cell">61.0</td>
+          </tr>
+          
+          <tr class="severity-high">
+            <td class="rank">9</td>
+            <td class="member-name">leora megan</td>
+            <td class="team-name">Labs - all, VP - Customer Ops - Customer Relations</td>
+            <td class="metric-cell center">⚠️ 35%</td>
+            <td class="metric-cell center">63.1h</td>
+            <td class="metric-cell center">⚠️ 6.6h (10.5%)</td>
+            <td class="metric-cell center">0.0h (0.0%)</td>
+            <td class="metric-cell center">🔴 10.6h (16.8%)</td>
+            <td class="metric-cell center">🔴 16.3h (25.8%)</td>
+            <td class="flags-cell">🔴 2 ⚠️ 1</td>
+            <td class="score-cell">53.0</td>
+          </tr>
+          
+          <tr class="severity-high">
+            <td class="rank">10</td>
+            <td class="member-name">Denise Marsha Elisa Moscare</td>
+            <td class="team-name">VP - Customer Ops - Leads, VP - Customer Ops - SDR</td>
+            <td class="metric-cell center">⚠️ 42%</td>
+            <td class="metric-cell center">🔴 51.8h</td>
+            <td class="metric-cell center">⚠️ 6.2h (11.9%)</td>
+            <td class="metric-cell center">0.5h (0.9%)</td>
+            <td class="metric-cell center">3.4h (6.5%)</td>
+            <td class="metric-cell center">4.4h (8.5%)</td>
+            <td class="flags-cell">🔴 1 ⚠️ 1</td>
+            <td class="score-cell">48.0</td>
+          </tr>
+          
+          <tr class="severity-high">
+            <td class="rank">11</td>
+            <td class="member-name">Carmen Santos</td>
+            <td class="team-name">Venia Products  - All, VP - Customer Ops - CAM</td>
+            <td class="metric-cell center">50%</td>
+            <td class="metric-cell center">🔴 57.3h</td>
+            <td class="metric-cell center">0.1h (0.1%)</td>
+            <td class="metric-cell center">0.0h (0.0%)</td>
+            <td class="metric-cell center">2.7h (4.7%)</td>
+            <td class="metric-cell center">⚠️ 5.8h (10.1%)</td>
+            <td class="flags-cell">🔴 1 ⚠️ 1</td>
+            <td class="score-cell">34.5</td>
+          </tr>
+          
+          <tr class="severity-high">
+            <td class="rank">12</td>
+            <td class="member-name">Abdullah Shinwari</td>
+            <td class="team-name">Catalog Team</td>
+            <td class="metric-cell center">47%</td>
+            <td class="metric-cell center">🔴 39.2h</td>
+            <td class="metric-cell center">⚠️ 4.0h (10.2%)</td>
+            <td class="metric-cell center">0.0h (0.0%)</td>
+            <td class="metric-cell center">2.3h (5.9%)</td>
+            <td class="metric-cell center">2.7h (7.0%)</td>
+            <td class="flags-cell">🔴 1</td>
+            <td class="score-cell">33.0</td>
+          </tr>
+          
+          <tr class="severity-high">
+            <td class="rank">13</td>
+            <td class="member-name">Amjad Ali</td>
+            <td class="team-name">Catalog Team</td>
+            <td class="metric-cell center">55%</td>
+            <td class="metric-cell center">🔴 46.7h</td>
+            <td class="metric-cell center">⚠️ 5.1h (10.9%)</td>
+            <td class="metric-cell center">0.0h (0.0%)</td>
+            <td class="metric-cell center">0.0h (0.0%)</td>
+            <td class="metric-cell center">2.0h (4.3%)</td>
+            <td class="flags-cell">🔴 1</td>
+            <td class="score-cell">33.0</td>
+          </tr>
+          
+          <tr class="severity-high">
+            <td class="rank">14</td>
+            <td class="member-name">Hammad Rafique</td>
+            <td class="team-name">Catalog Team</td>
+            <td class="metric-cell center">51%</td>
+            <td class="metric-cell center">🔴 34.5h</td>
+            <td class="metric-cell center">⚠️ 3.5h (10.3%)</td>
+            <td class="metric-cell center">0.0h (0.0%)</td>
+            <td class="metric-cell center">0.2h (0.6%)</td>
+            <td class="metric-cell center">1.4h (4.1%)</td>
+            <td class="flags-cell">🔴 1</td>
+            <td class="score-cell">33.0</td>
+          </tr>
+          
+          <tr class="severity-high">
+            <td class="rank">15</td>
+            <td class="member-name">Melanie Joy Pecaña</td>
+            <td class="team-name">Accounting, WeAssist</td>
+            <td class="metric-cell center">49%</td>
+            <td class="metric-cell center">🔴 57.4h</td>
+            <td class="metric-cell center">⚠️ 6.6h (11.5%)</td>
+            <td class="metric-cell center">0.0h (0.0%)</td>
+            <td class="metric-cell center">0.0h (0.0%)</td>
+            <td class="metric-cell center">1.6h (2.9%)</td>
+            <td class="flags-cell">🔴 1</td>
+            <td class="score-cell">33.0</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+
+    <!-- ================================================================ -->
+    <!-- Section 2: Hours Violators                                        -->
+    <!-- ================================================================ -->
+    <div class="section-header">
+      <h2>Section 2 — Hours Violators</h2>
+      <span class="count-badge">23 employees</span>
+    </div>
+    <p class="section-note">
+      All employees below the prorated expected hours threshold for this period.
+      Sorted by hours worked ascending (lowest first).
+    </p>
+
+    <div class="hours-threshold-note">
+      <strong>Prorated threshold for this period:</strong>
+      58.2h expected &nbsp;·&nbsp;
+      8 working days &nbsp;·&nbsp;
+      Employees below this threshold are flagged 🔴
+    </div>
+
+    
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Member</th>
+            <th>Team</th>
+            <th class="center">Hours Worked</th>
+            <th class="center">Expected</th>
+            <th class="center">Shortfall</th>
+            <th class="center">Other Flags</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr class="severity-critical">
+            <td class="member-name">Tejashwini T N</td>
+            <td class="team-name">Accounting, FP&amp;A</td>
+            <td class="center">🔴 6.1h</td>
+            <td class="center">58.2h</td>
+            <td class="shortfall center">–52.1h</td>
+            <td class="flags-cell">🔴 3 ⚠️ 1</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="member-name">Kianna Xue</td>
+            <td class="team-name">Venia Products  - All, VP - Systems - CRM Automation Product Owner</td>
+            <td class="center">🔴 18.1h</td>
+            <td class="center">58.2h</td>
+            <td class="shortfall center">–40.1h</td>
+            <td class="flags-cell">🔴 2 ⚠️ 2</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="member-name">Unaiza Imran</td>
+            <td class="team-name">Design, Sales - RGC</td>
+            <td class="center">🔴 18.6h</td>
+            <td class="center">58.2h</td>
+            <td class="shortfall center">–39.6h</td>
+            <td class="flags-cell">🔴 1</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="member-name">Shen Perera</td>
+            <td class="team-name">Labs - all, Task Agency</td>
+            <td class="center">🔴 19.7h</td>
+            <td class="center">58.2h</td>
+            <td class="shortfall center">–38.5h</td>
+            <td class="flags-cell">🔴 4</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="member-name">Hammad Rafique</td>
+            <td class="team-name">Catalog Team</td>
+            <td class="center">🔴 34.5h</td>
+            <td class="center">58.2h</td>
+            <td class="shortfall center">–23.7h</td>
+            <td class="flags-cell">🔴 1</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="member-name">jorn wossner</td>
+            <td class="team-name">Leadership</td>
+            <td class="center">🔴 39.1h</td>
+            <td class="center">58.2h</td>
+            <td class="shortfall center">–19.1h</td>
+            <td class="flags-cell">🔴 3 ⚠️ 1</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="member-name">Abdullah Shinwari</td>
+            <td class="team-name">Catalog Team</td>
+            <td class="center">🔴 39.2h</td>
+            <td class="center">58.2h</td>
+            <td class="shortfall center">–19.0h</td>
+            <td class="flags-cell">🔴 1</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="member-name">Adam Burdeshaw</td>
+            <td class="team-name">CRM, Digital Product, Leadership, Platform and Engineering Team, VP - Systems - CRM Automation Product Owner</td>
+            <td class="center">🔴 43.3h</td>
+            <td class="center">58.2h</td>
+            <td class="shortfall center">–14.9h</td>
+            <td class="flags-cell">🔴 1</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="member-name">Amjad Ali</td>
+            <td class="team-name">Catalog Team</td>
+            <td class="center">🔴 46.7h</td>
+            <td class="center">58.2h</td>
+            <td class="shortfall center">–11.5h</td>
+            <td class="flags-cell">🔴 1</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="member-name">Jason Diaz</td>
+            <td class="team-name">Task Agency</td>
+            <td class="center">🔴 48.6h</td>
+            <td class="center">58.2h</td>
+            <td class="shortfall center">–9.6h</td>
+            <td class="flags-cell">🔴 1</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="member-name">Shaarukshan Seralathan</td>
+            <td class="team-name">Labs - all</td>
+            <td class="center">🔴 49.1h</td>
+            <td class="center">58.2h</td>
+            <td class="shortfall center">–9.1h</td>
+            <td class="flags-cell">🔴 4</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="member-name">Nouman Khan</td>
+            <td class="team-name">Catalog Team</td>
+            <td class="center">🔴 49.4h</td>
+            <td class="center">58.2h</td>
+            <td class="shortfall center">–8.8h</td>
+            <td class="flags-cell">🔴 1</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="member-name">Aaqib Hafeel</td>
+            <td class="team-name">Task Agency</td>
+            <td class="center">🔴 49.6h</td>
+            <td class="center">58.2h</td>
+            <td class="shortfall center">–8.6h</td>
+            <td class="flags-cell">🔴 1</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="member-name">Laleesha Wijeratne</td>
+            <td class="team-name">Catalog Team, Content_catalog_platform, Digital Product, Labs - all</td>
+            <td class="center">🔴 50.2h</td>
+            <td class="center">58.2h</td>
+            <td class="shortfall center">–8.0h</td>
+            <td class="flags-cell">🔴 1</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="member-name">Denise Marsha Elisa Moscare</td>
+            <td class="team-name">VP - Customer Ops - Leads, VP - Customer Ops - SDR</td>
+            <td class="center">🔴 51.8h</td>
+            <td class="center">58.2h</td>
+            <td class="shortfall center">–6.4h</td>
+            <td class="flags-cell">🔴 1 ⚠️ 1</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="member-name">Shannon Woods</td>
+            <td class="team-name">Venia Products  - All, VP - Customer Ops - CAM, VP - Customer Ops - Leads</td>
+            <td class="center">🔴 53.8h</td>
+            <td class="center">58.2h</td>
+            <td class="shortfall center">–4.4h</td>
+            <td class="flags-cell">🔴 1</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="member-name">Laci Burton</td>
+            <td class="team-name">Accounting, Leadership</td>
+            <td class="center">🔴 54.5h</td>
+            <td class="center">58.2h</td>
+            <td class="shortfall center">–3.7h</td>
+            <td class="flags-cell">🔴 1</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="member-name">Nawodya De Silva</td>
+            <td class="team-name">Task Agency</td>
+            <td class="center">🔴 55.8h</td>
+            <td class="center">58.2h</td>
+            <td class="shortfall center">–2.4h</td>
+            <td class="flags-cell">🔴 1</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="member-name">Sarah Madoro</td>
+            <td class="team-name">Venia Products  - All, VP - Customer Ops - SDR</td>
+            <td class="center">🔴 56.0h</td>
+            <td class="center">58.2h</td>
+            <td class="shortfall center">–2.2h</td>
+            <td class="flags-cell">🔴 1</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="member-name">Eden Schweyer</td>
+            <td class="team-name">Leadership, Venia Products  - All, VP - Customer Ops - Leads, VP - Customer Ops - SDR, VP - Systems - CRM Automation Product Owner, VP - VA/Contractor</td>
+            <td class="center">🔴 56.1h</td>
+            <td class="center">58.2h</td>
+            <td class="shortfall center">–2.1h</td>
+            <td class="flags-cell">🔴 1</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="member-name">Carmen Santos</td>
+            <td class="team-name">Venia Products  - All, VP - Customer Ops - CAM</td>
+            <td class="center">🔴 57.3h</td>
+            <td class="center">58.2h</td>
+            <td class="shortfall center">–0.9h</td>
+            <td class="flags-cell">🔴 1 ⚠️ 1</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="member-name">Ramez Sedra</td>
+            <td class="team-name">Content_catalog_platform, Digital Product, SEO Team, Site Content</td>
+            <td class="center">🔴 57.3h</td>
+            <td class="center">58.2h</td>
+            <td class="shortfall center">–0.9h</td>
+            <td class="flags-cell">🔴 1</td>
+          </tr>
+          
+          <tr class="severity-critical">
+            <td class="member-name">Melanie Joy Pecaña</td>
+            <td class="team-name">Accounting, WeAssist</td>
+            <td class="center">🔴 57.4h</td>
+            <td class="center">58.2h</td>
+            <td class="shortfall center">–0.8h</td>
+            <td class="flags-cell">🔴 1</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+
+    <!-- ================================================================ -->
+    <!-- Footer                                                             -->
+    <!-- ================================================================ -->
+    <div class="report-footer">
+      WebLife Ventures Performance Reporting System &nbsp;·&nbsp;
+      Generated 2026-03-25 22:12 &nbsp;·&nbsp;
+      Internal use only — do not distribute
+    </div>
+
+  </div>
+</body>
+</html>

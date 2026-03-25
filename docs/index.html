@@ -8,31 +8,26 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #f4f5f7;
+      background: #f5f6f8;
       color: #1a1a2e;
-      padding: 40px 24px 60px;
+      padding: 40px 24px;
     }
     .container { max-width: 900px; margin: 0 auto; }
-
     header {
-      background: #fff;
-      border-radius: 10px;
-      border-left: 5px solid #2d5be3;
-      padding: 24px 28px;
-      margin-bottom: 28px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      border-bottom: 3px solid #2d5be3;
+      padding-bottom: 20px;
+      margin-bottom: 32px;
     }
     header h1 {
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       font-weight: 700;
       color: #1a1a2e;
-      margin-bottom: 4px;
     }
     header p {
       color: #666;
-      font-size: 0.88rem;
+      margin-top: 6px;
+      font-size: 0.9rem;
     }
-
     .empty-state {
       background: #fff;
       border: 2px dashed #d0d5dd;
@@ -41,15 +36,6 @@
       text-align: center;
       color: #888;
     }
-    .empty-state p { margin-bottom: 8px; }
-    .empty-state code {
-      background: #f0f0f0;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 0.85rem;
-      color: #333;
-    }
-
     table {
       width: 100%;
       border-collapse: collapse;
@@ -60,18 +46,20 @@
     }
     thead { background: #2d5be3; color: #fff; }
     thead th {
-      padding: 11px 16px;
+      padding: 12px 16px;
       text-align: left;
-      font-size: 0.78rem;
+      font-size: 0.85rem;
       font-weight: 600;
-      letter-spacing: 0.04em;
-      white-space: nowrap;
+      letter-spacing: 0.03em;
     }
-    tbody tr { border-bottom: 1px solid #f0f2f5; }
+    tbody tr { border-bottom: 1px solid #f0f0f0; }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: #f7f9ff; }
-    tbody td { padding: 11px 16px; font-size: 0.88rem; vertical-align: middle; }
-
+    tbody td {
+      padding: 12px 16px;
+      font-size: 0.9rem;
+      vertical-align: middle;
+    }
     .period { font-weight: 600; color: #1a1a2e; }
     .report-type {
       display: inline-block;
@@ -79,8 +67,8 @@
       color: #2d5be3;
       padding: 2px 10px;
       border-radius: 12px;
-      font-size: 0.78rem;
-      font-weight: 600;
+      font-size: 0.8rem;
+      font-weight: 500;
     }
     .link-cell a {
       color: #2d5be3;
@@ -88,13 +76,12 @@
       font-weight: 500;
     }
     .link-cell a:hover { text-decoration: underline; }
-    .generated { color: #888; font-size: 0.8rem; }
-
+    .generated { color: #888; font-size: 0.82rem; }
     footer {
       margin-top: 32px;
       text-align: center;
-      color: #bbb;
-      font-size: 0.78rem;
+      color: #aaa;
+      font-size: 0.8rem;
     }
   </style>
 </head>
@@ -102,17 +89,25 @@
   <div class="container">
     <header>
       <h1>WebLife Ventures — Performance Reports</h1>
-      <p>Bi-weekly Hubstaff compliance reports &nbsp;·&nbsp; Auto-generated &nbsp;·&nbsp; Internal use only</p>
+      <p>Bi-weekly Hubstaff compliance reports · Auto-generated · Internal use only</p>
     </header>
 
-    <div class="empty-state">
-      <p><strong>No reports generated yet.</strong></p>
-      <p>Run the report generation script to create the first report:</p>
-      <p><code>python scripts/generate_biweekly_report.py --input data/input/FILE.csv --start YYYY-MM-DD --end YYYY-MM-DD</code></p>
-    </div>
+    <table>
+    <thead>
+      <tr>
+        <th>Cycle Period</th>
+        <th>Report Type</th>
+        <th>Generated</th>
+        <th>Link</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="period">Mar 01 – Mar 11, 2026</td><td><span class="report-type">Bi-Weekly Top Violators</span></td><td class="generated">2026-03-25 22:12</td><td class="link-cell"><a href="2026-03-01_to_2026-03-11_biweekly_top_violators.html">View Report &rarr;</a></td></tr>
+    </tbody>
+  </table>
 
     <footer>
-      Index last updated: — &nbsp;·&nbsp; WebLife Ventures
+      Index last updated: 2026-03-25 22:12 &nbsp;·&nbsp; WebLife Ventures
     </footer>
   </div>
 </body>
