@@ -442,6 +442,99 @@
     .footer-dot { color: #d1d5db; }
 
     /* ------------------------------------------------------------------ */
+    /* Data Quality Card                                                    */
+    /* ------------------------------------------------------------------ */
+    .dq-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 18px 24px;
+      margin-bottom: 28px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    .dq-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .dq-icon { font-size: 1rem; }
+
+    .dq-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #374151;
+    }
+
+    .dq-badge {
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    .dq-pass { background: #dcfce7; color: #15803d; }
+    .dq-warn { background: #fef9c3; color: #854d0e; }
+    .dq-fail { background: #fee2e2; color: #b91c1c; }
+
+    .dq-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px 32px;
+      margin-bottom: 14px;
+    }
+
+    .dq-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .dq-stat-val {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #111827;
+      line-height: 1;
+    }
+
+    .dq-stat-label {
+      font-size: 0.7rem;
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    .dq-stat.dq-warn .dq-stat-val { color: #d97706; }
+    .dq-stat.dq-fail .dq-stat-val { color: #dc2626; }
+
+    .dq-issue-block {
+      border-radius: 6px;
+      padding: 10px 14px;
+      margin-top: 12px;
+      font-size: 0.8rem;
+    }
+
+    .dq-issue-warn { background: #fef9c3; color: #854d0e; }
+    .dq-issue-fail { background: #fee2e2; color: #991b1b; }
+
+    .dq-issue-row {
+      margin-top: 4px;
+      padding-left: 12px;
+      font-size: 0.78rem;
+    }
+
+    .dq-pass-note {
+      font-size: 0.78rem;
+      color: #6b7280;
+      border-top: 1px solid #f1f5f9;
+      padding-top: 10px;
+      margin-top: 4px;
+    }
+
+    /* ------------------------------------------------------------------ */
     /* Responsive                                                           */
     /* ------------------------------------------------------------------ */
     @media (max-width: 768px) {
@@ -487,7 +580,7 @@
       </div>
       <div class="header-meta-item">
         <div class="h-label">Generated</div>
-        <div class="h-value">2026-03-25 23:03</div>
+        <div class="h-value">2026-03-25 23:18</div>
       </div>
     </div>
   </div>
@@ -1151,12 +1244,57 @@
   </div><!-- /content -->
 
   <!-- ================================================================== -->
+  <!-- Data Quality                                                         -->
+  <!-- ================================================================== -->
+  <div class="content" style="margin-top: 8px;">
+    <div class="dq-card">
+      <div class="dq-header">
+        <span class="dq-icon">✅</span>
+        <span class="dq-title">Data Quality Check</span>
+        <span class="dq-badge dq-pass">PASS</span>
+      </div>
+      <div class="dq-stats">
+        <div class="dq-stat">
+          <span class="dq-stat-val">85</span>
+          <span class="dq-stat-label">Rows Verified</span>
+        </div>
+        <div class="dq-stat">
+          <span class="dq-stat-val">100</span>
+          <span class="dq-stat-label">Flags Matched</span>
+        </div>
+        <div class="dq-stat">
+          <span class="dq-stat-val">17</span>
+          <span class="dq-stat-label">Expected Diffs <span style="font-weight:400;font-size:0.7rem;">(H hours-band)</span></span>
+        </div>
+        <div class="dq-stat ">
+          <span class="dq-stat-val">0</span>
+          <span class="dq-stat-label">Missing Values</span>
+        </div>
+        <div class="dq-stat ">
+          <span class="dq-stat-val">0</span>
+          <span class="dq-stat-label">Unexpected Issues</span>
+        </div>
+      </div>
+
+      
+
+      
+
+      
+      <div class="dq-pass-note">
+        All computed flags cross-checked against upstream CSV values. No unexpected discrepancies found.
+      </div>
+      
+    </div>
+  </div>
+
+  <!-- ================================================================== -->
   <!-- Footer                                                               -->
   <!-- ================================================================== -->
   <div class="page-footer">
     <span>WebLife Ventures Performance Reporting System</span>
     <span>
-      Generated 2026-03-25 23:03
+      Generated 2026-03-25 23:18
       <span class="footer-dot"> &nbsp;·&nbsp; </span>
       Internal use only — do not distribute
     </span>

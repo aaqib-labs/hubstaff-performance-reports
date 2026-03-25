@@ -336,6 +336,136 @@ def count_flags(flags: dict) -> tuple[int, int]:
 
 
 # ---------------------------------------------------------------------------
+# Data validation — cross-check computed flags vs CSV pre-populated flags
+# ---------------------------------------------------------------------------
+
+def parse_csv_flags(legend_str) -> dict:
+    """
+    Parse the pre-populated 'SLA Violation Legend' column into {metric: level}.
+    e.g. "A🔴, 20🔴, B⚠️" → {'A': 'red', '20': 'red', 'B': 'yellow'}
+    """
+    if not legend_str or pd.isna(legend_str):
+        return {}
+    flags = {}
+    for part in str(legend_str).split(","):
+        part = part.strip()
+        if "🔴" in part:
+            flags[part.replace("🔴", "").strip()] = "red"
+        elif "🟠" in part:
+            flags[part.replace("🟠", "").strip()] = "orange"
+        elif "⚠️" in part:
+            flags[part.replace("⚠️", "").strip()] = "yellow"
+    return flags
+
+
+def validate_data(df: pd.DataFrame, prorated_red: float, prorated_orange: float) -> dict:
+    """
+    Cross-check every employee's computed flags against the pre-populated
+    'SLA Violation Legend' column from the upstream CSV builder.
+
+    Discrepancy classes:
+      EXPECTED   — Hours (H) differences only. The upstream CSV uses a yellow
+                   hours band; our system uses red/orange only. Any H mismatch
+                   is therefore explainable and expected.
+      UNEXPECTED — Any non-H metric where our flags and the CSV flags disagree.
+                   These are genuine data quality issues requiring investigation.
+
+    Returns a dict with status, counts, and full discrepancy lists.
+    """
+    KEY_COLS = ["activity_pct", "total_hours", "break_pct", "manual_pct",
+                "low20_pct", "low30_pct"]
+    ALL_METRICS = {"A", "H", "B", "M", "20", "30"}
+
+    nan_issues = []
+    unexpected = []
+    expected = []
+    matched_flags = 0
+
+    for _, row in df.iterrows():
+        member = str(row.get("member", "Unknown"))
+
+        # 1 — NaN / missing value check
+        missing = [c for c in KEY_COLS if pd.isna(row.get(c, float("nan")))]
+        if missing:
+            nan_issues.append({"member": member, "missing_cols": missing})
+
+        # 2 — Parse upstream pre-populated flags
+        csv_flags = parse_csv_flags(row.get("SLA Violation Legend", ""))
+
+        # 3 — Compute our flags fresh from raw data
+        our_flags = evaluate_flags(row, prorated_red, prorated_orange)
+
+        # 4 — Compare metric by metric
+        for metric in ALL_METRICS:
+            csv_level = csv_flags.get(metric)
+            our_level = our_flags.get(metric)
+
+            if csv_level == our_level:
+                if csv_level is not None:
+                    matched_flags += 1
+                continue  # Both agree (including both None)
+
+            entry = {
+                "member": member,
+                "metric": metric,
+                "csv": csv_level or "none",
+                "ours": our_level or "none",
+            }
+
+            if metric == "H":
+                # H differences are always expected — upstream uses yellow band
+                entry["reason"] = "Hours band: upstream CSV uses H⚠️ yellow; our system uses red/orange only"
+                expected.append(entry)
+            else:
+                entry["reason"] = "Threshold mismatch — verify raw value against SLA legend"
+                unexpected.append(entry)
+
+    # Overall status
+    if unexpected:
+        status = "FAIL"
+    elif nan_issues:
+        status = "WARN"
+    else:
+        status = "PASS"
+
+    return {
+        "status": status,
+        "total_rows": len(df),
+        "matched_flags": matched_flags,
+        "nan_issues": nan_issues,
+        "nan_count": len(nan_issues),
+        "unexpected": unexpected,
+        "unexpected_count": len(unexpected),
+        "expected": expected,
+        "expected_count": len(expected),
+    }
+
+
+def print_validation_summary(v: dict):
+    """Print a concise validation summary to console."""
+    icon = {"PASS": "✅", "WARN": "⚠️ ", "FAIL": "❌"}.get(v["status"], "?")
+    print("-" * 60)
+    print(f"DATA VALIDATION: {icon} {v['status']}")
+    print(f"  Rows checked:          {v['total_rows']}")
+    print(f"  Flags matched:         {v['matched_flags']}")
+    print(f"  Expected discrepancies:{v['expected_count']}  (H hours-band differences — OK)")
+    print(f"  NaN / missing values:  {v['nan_count']}")
+    print(f"  UNEXPECTED issues:     {v['unexpected_count']}")
+
+    if v["nan_issues"]:
+        print("\n  ⚠️  Missing data:")
+        for n in v["nan_issues"]:
+            print(f"    {n['member']} — missing: {', '.join(n['missing_cols'])}")
+
+    if v["unexpected"]:
+        print("\n  ❌ UNEXPECTED flag discrepancies (investigate before publishing):")
+        for d in v["unexpected"]:
+            print(f"    {d['member']} | Metric {d['metric']} | CSV={d['csv']} | Ours={d['ours']}")
+        print("\n  ACTION REQUIRED: Do not publish this report until discrepancies are resolved.")
+    print("-" * 60)
+
+
+# ---------------------------------------------------------------------------
 # Cell formatting helpers
 # ---------------------------------------------------------------------------
 
@@ -584,20 +714,29 @@ def main():
         print(f"WARNING: Missing expected columns: {missing}", file=sys.stderr)
         print(f"Available columns: {list(df.columns)}", file=sys.stderr)
 
-    # --- Step 3: Build report data ---
+    # --- Step 3: Validate data against pre-populated CSV flags ---
+    validation = validate_data(df, prorated_red, prorated_orange)
+    print_validation_summary(validation)
+    if validation["status"] == "FAIL":
+        print("\nERROR: Unexpected flag discrepancies found. Report NOT generated.", file=sys.stderr)
+        print("Resolve the issues above and re-run.\n", file=sys.stderr)
+        sys.exit(1)
+
+    # --- Step 4: Build report data ---
     context = build_report_data(df, prorated_red, prorated_orange, start, end)
+    context["validation"] = validation
     print(f"Employees flagged: {context['total_flagged']} / {context['total_employees']}")
     print(f"Hours violators:   {context['hours_violator_count']}")
 
-    # --- Step 4: Render HTML ---
+    # --- Step 5: Render HTML ---
     html = render_report(context)
 
-    # --- Step 5: Write output files ---
+    # --- Step 6: Write output files ---
     report_path, docs_path = write_report(html, start, end)
     print(f"Report written:    {report_path}")
     print(f"Docs copy:         {docs_path}")
 
-    # --- Step 6: Update index ---
+    # --- Step 7: Update index ---
     update_index(start, end)
     print(f"Index updated:     {DOCS_DIR / 'index.html'}")
     print("Done.")
