@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebLife Ventures — Performance Reports</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f4f5f7;
+      color: #1a1a2e;
+      padding: 40px 24px 60px;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+
+    header {
+      background: #fff;
+      border-radius: 10px;
+      border-left: 5px solid #2d5be3;
+      padding: 24px 28px;
+      margin-bottom: 28px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 4px;
+    }
+    header p {
+      color: #666;
+      font-size: 0.88rem;
+    }
+
+    .empty-state {
+      background: #fff;
+      border: 2px dashed #d0d5dd;
+      border-radius: 8px;
+      padding: 48px;
+      text-align: center;
+      color: #888;
+    }
+    .empty-state p { margin-bottom: 8px; }
+    .empty-state code {
+      background: #f0f0f0;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      color: #333;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    thead { background: #2d5be3; color: #fff; }
+    thead th {
+      padding: 11px 16px;
+      text-align: left;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    tbody tr { border-bottom: 1px solid #f0f2f5; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #f7f9ff; }
+    tbody td { padding: 11px 16px; font-size: 0.88rem; vertical-align: middle; }
+
+    .period { font-weight: 600; color: #1a1a2e; }
+    .report-type {
+      display: inline-block;
+      background: #eef2ff;
+      color: #2d5be3;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .link-cell a {
+      color: #2d5be3;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .link-cell a:hover { text-decoration: underline; }
+    .generated { color: #888; font-size: 0.8rem; }
+
+    footer {
+      margin-top: 32px;
+      text-align: center;
+      color: #bbb;
+      font-size: 0.78rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>WebLife Ventures — Performance Reports</h1>
+      <p>Bi-weekly Hubstaff compliance reports &nbsp;·&nbsp; Auto-generated &nbsp;·&nbsp; Internal use only</p>
+    </header>
+
+    <div class="empty-state">
+      <p><strong>No reports generated yet.</strong></p>
+      <p>Run the report generation script to create the first report:</p>
+      <p><code>python scripts/generate_biweekly_report.py --input data/input/FILE.csv --start YYYY-MM-DD --end YYYY-MM-DD</code></p>
+    </div>
+
+    <footer>
+      Index last updated: — &nbsp;·&nbsp; WebLife Ventures
+    </footer>
+  </div>
+</body>
+</html>

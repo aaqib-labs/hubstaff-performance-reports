@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ report_title }} — {{ date_range }}</title>
+  <style>
+    /* ------------------------------------------------------------------ */
+    /* Reset & Base                                                         */
+    /* ------------------------------------------------------------------ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+                   'Helvetica Neue', Arial, sans-serif;
+      background: #f4f5f7;
+      color: #1a1a2e;
+      font-size: 14px;
+      line-height: 1.5;
+      padding: 32px 20px 60px;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    /* ------------------------------------------------------------------ */
+    /* Report Header                                                        */
+    /* ------------------------------------------------------------------ */
+    .report-header {
+      background: #fff;
+      border-radius: 10px;
+      padding: 28px 32px;
+      margin-bottom: 20px;
+      border-left: 5px solid #2d5be3;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+
+    .report-header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 4px;
+    }
+
+    .report-header .subtitle {
+      color: #555;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+    }
+
+    .meta-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .meta-item .label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #888;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .meta-item .value {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #1a1a2e;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Benchmark Strip                                                      */
+    /* ------------------------------------------------------------------ */
+    .benchmark-strip {
+      background: #1a1a2e;
+      color: #e8eaf6;
+      border-radius: 8px;
+      padding: 14px 20px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+    }
+
+    .benchmark-strip .strip-title {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #8892b0;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .benchmarks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .benchmark-item {
+      white-space: nowrap;
+    }
+
+    .benchmark-item .b-label {
+      font-size: 0.72rem;
+      color: #8892b0;
+      font-weight: 600;
+      margin-right: 6px;
+    }
+
+    .b-red {
+      background: rgba(220, 38, 38, 0.25);
+      color: #fca5a5;
+      padding: 1px 7px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-right: 4px;
+    }
+
+    .b-yellow {
+      background: rgba(234, 179, 8, 0.2);
+      color: #fde68a;
+      padding: 1px 7px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-right: 4px;
+    }
+
+    .b-orange {
+      background: rgba(234, 88, 12, 0.25);
+      color: #fed7aa;
+      padding: 1px 7px;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Section Headers                                                      */
+    /* ------------------------------------------------------------------ */
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .section-header h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #1a1a2e;
+    }
+
+    .section-header .count-badge {
+      background: #eef2ff;
+      color: #2d5be3;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 2px 10px;
+      border-radius: 12px;
+    }
+
+    .section-note {
+      font-size: 0.8rem;
+      color: #777;
+      margin-bottom: 14px;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Tables                                                               */
+    /* ------------------------------------------------------------------ */
+    .table-wrapper {
+      overflow-x: auto;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      margin-bottom: 36px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      font-size: 0.85rem;
+    }
+
+    thead { background: #2d5be3; }
+
+    thead th {
+      color: #fff;
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    thead th.center { text-align: center; }
+
+    tbody tr {
+      border-bottom: 1px solid #f0f2f5;
+      transition: background 0.1s;
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #f7f9ff !important; }
+
+    tbody td {
+      padding: 10px 14px;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    tbody td.center { text-align: center; }
+
+    /* Rank column */
+    td.rank {
+      font-weight: 700;
+      color: #888;
+      text-align: center;
+      font-size: 0.82rem;
+      width: 40px;
+    }
+
+    /* Member name */
+    td.member-name {
+      font-weight: 600;
+      color: #1a1a2e;
+      min-width: 160px;
+    }
+
+    td.team-name {
+      color: #555;
+      font-size: 0.82rem;
+      max-width: 140px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    td.score-cell {
+      font-weight: 700;
+      text-align: center;
+      color: #2d5be3;
+    }
+
+    td.flags-cell {
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    td.metric-cell {
+      white-space: nowrap;
+    }
+
+    /* Shortfall cell */
+    td.shortfall { color: #dc2626; font-weight: 600; }
+
+    /* Row severity shading */
+    tr.severity-critical { background: #fff1f2; }
+    tr.severity-high     { background: #fffbeb; }
+    tr.severity-medium   { background: #f0fdf4; }
+    tr.severity-low      { background: #fafafa; }
+
+    /* ------------------------------------------------------------------ */
+    /* Hours Violators Section                                              */
+    /* ------------------------------------------------------------------ */
+    .hours-threshold-note {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 6px;
+      padding: 10px 16px;
+      margin-bottom: 14px;
+      font-size: 0.84rem;
+      color: #9a3412;
+    }
+
+    .hours-threshold-note strong { font-weight: 700; }
+
+    /* ------------------------------------------------------------------ */
+    /* Empty States                                                         */
+    /* ------------------------------------------------------------------ */
+    .empty-state {
+      background: #fff;
+      border: 2px dashed #d0d5dd;
+      border-radius: 8px;
+      padding: 32px;
+      text-align: center;
+      color: #888;
+      font-size: 0.9rem;
+      margin-bottom: 36px;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Footer                                                               */
+    /* ------------------------------------------------------------------ */
+    .report-footer {
+      text-align: center;
+      color: #aaa;
+      font-size: 0.78rem;
+      margin-top: 12px;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Mobile                                                               */
+    /* ------------------------------------------------------------------ */
+    @media (max-width: 640px) {
+      body { padding: 16px 12px 48px; }
+      .report-header { padding: 20px 16px; }
+      .report-header h1 { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- ================================================================ -->
+    <!-- Report Header                                                      -->
+    <!-- ================================================================ -->
+    <div class="report-header">
+      <h1>{{ report_title }}</h1>
+      <div class="subtitle">WebLife Ventures · Internal Use Only</div>
+      <div class="meta-grid">
+        <div class="meta-item">
+          <span class="label">Period</span>
+          <span class="value">{{ date_range }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Working Days</span>
+          <span class="value">{{ period_working_days }} days</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Hours Threshold (Red)</span>
+          <span class="value">{{ prorated_red }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Hours Threshold (Overwork)</span>
+          <span class="value">{{ prorated_orange }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Employees Covered</span>
+          <span class="value">{{ total_employees }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Employees Flagged</span>
+          <span class="value">{{ total_flagged }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Generated</span>
+          <span class="value">{{ generated_at }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- Benchmark Strip                                                    -->
+    <!-- ================================================================ -->
+    <div class="benchmark-strip">
+      <div class="strip-title">SLA Thresholds — This Period</div>
+      <div class="benchmarks">
+        <div class="benchmark-item">
+          <span class="b-label">Activity (A)</span>
+          <span class="b-red">🔴 {{ thresh_activity_red }}</span>
+          <span class="b-yellow">⚠️ {{ thresh_activity_yellow }}</span>
+        </div>
+        <div class="benchmark-item">
+          <span class="b-label">Hours (H)</span>
+          <span class="b-red">🔴 {{ thresh_hours_red }}</span>
+          <span class="b-orange">🟠 {{ thresh_hours_orange }}</span>
+        </div>
+        <div class="benchmark-item">
+          <span class="b-label">Break (B)</span>
+          <span class="b-red">🔴 {{ thresh_break_red }}</span>
+          <span class="b-yellow">⚠️ {{ thresh_break_yellow }}</span>
+        </div>
+        <div class="benchmark-item">
+          <span class="b-label">Manual (M)</span>
+          <span class="b-red">🔴 {{ thresh_manual_red }}</span>
+          <span class="b-yellow">⚠️ {{ thresh_manual_yellow }}</span>
+        </div>
+        <div class="benchmark-item">
+          <span class="b-label">Low Act ≤20%</span>
+          <span class="b-red">🔴 {{ thresh_low20_red }}</span>
+          <span class="b-yellow">⚠️ {{ thresh_low20_yellow }}</span>
+        </div>
+        <div class="benchmark-item">
+          <span class="b-label">Low Act ≤30%</span>
+          <span class="b-red">🔴 {{ thresh_low30_red }}</span>
+          <span class="b-yellow">⚠️ {{ thresh_low30_yellow }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- Section 1: Top 15 Violators                                       -->
+    <!-- ================================================================ -->
+    <div class="section-header">
+      <h2>Section 1 — Top Violators</h2>
+      <span class="count-badge">Top {{ top15 | length }}</span>
+    </div>
+    <p class="section-note">
+      Ranked by weighted severity score. Red rows = critical multi-metric violations.
+      Scores reflect metric priority: Activity &gt; Manual &gt; Hours &gt; Low Activity &gt; Break.
+      Break ⚠️ contributes to score but is excluded from displayed flag count.
+    </p>
+
+    {% if top15 %}
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th class="center">#</th>
+            <th>Member</th>
+            <th>Team</th>
+            <th class="center">Activity %</th>
+            <th class="center">Hours</th>
+            <th class="center">Break</th>
+            <th class="center">Manual</th>
+            <th class="center">Low Act ≤20%</th>
+            <th class="center">Low Act ≤30%</th>
+            <th class="center">Flags</th>
+            <th class="center">Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in top15 %}
+          <tr class="{{ row.row_class }}">
+            <td class="rank">{{ row.rank }}</td>
+            <td class="member-name">{{ row.member }}</td>
+            <td class="team-name">{{ row.team }}</td>
+            <td class="metric-cell center">{{ row.activity_cell }}</td>
+            <td class="metric-cell center">{{ row.hours_cell }}</td>
+            <td class="metric-cell center">{{ row.break_cell }}</td>
+            <td class="metric-cell center">{{ row.manual_cell }}</td>
+            <td class="metric-cell center">{{ row.low20_cell }}</td>
+            <td class="metric-cell center">{{ row.low30_cell }}</td>
+            <td class="flags-cell">{{ row.flags_badge }}</td>
+            <td class="score-cell">{{ row.score }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty-state">No violations detected for this period.</div>
+    {% endif %}
+
+    <!-- ================================================================ -->
+    <!-- Section 2: Hours Violators                                        -->
+    <!-- ================================================================ -->
+    <div class="section-header">
+      <h2>Section 2 — Hours Violators</h2>
+      <span class="count-badge">{{ hours_violator_count }} employees</span>
+    </div>
+    <p class="section-note">
+      All employees below the prorated expected hours threshold for this period.
+      Sorted by hours worked ascending (lowest first).
+    </p>
+
+    <div class="hours-threshold-note">
+      <strong>Prorated threshold for this period:</strong>
+      {{ prorated_red }} expected &nbsp;·&nbsp;
+      {{ period_working_days }} working days &nbsp;·&nbsp;
+      Employees below this threshold are flagged 🔴
+    </div>
+
+    {% if hours_violators %}
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Member</th>
+            <th>Team</th>
+            <th class="center">Hours Worked</th>
+            <th class="center">Expected</th>
+            <th class="center">Shortfall</th>
+            <th class="center">Other Flags</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in hours_violators %}
+          <tr class="severity-critical">
+            <td class="member-name">{{ row.member }}</td>
+            <td class="team-name">{{ row.team }}</td>
+            <td class="center">🔴 {{ row.hours_worked }}</td>
+            <td class="center">{{ row.expected_hours }}</td>
+            <td class="shortfall center">–{{ row.shortfall }}</td>
+            <td class="flags-cell">{{ row.other_flags }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty-state">No hours violations for this period — all employees met the {{ prorated_red }} threshold.</div>
+    {% endif %}
+
+    <!-- ================================================================ -->
+    <!-- Footer                                                             -->
+    <!-- ================================================================ -->
+    <div class="report-footer">
+      WebLife Ventures Performance Reporting System &nbsp;·&nbsp;
+      Generated {{ generated_at }} &nbsp;·&nbsp;
+      Internal use only — do not distribute
+    </div>
+
+  </div>
+</body>
+</html>
