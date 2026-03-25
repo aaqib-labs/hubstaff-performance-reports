@@ -79,6 +79,8 @@ The input CSV always has these columns (Hubstaff export format):
 
 **Always re-evaluate all flags from raw data.** Pre-populated flag columns are for reference; the scripts are the authoritative source of flag logic.
 
+**Important — H⚠️ in the pre-populated SLA column:** The upstream CSV builder adds a yellow hours warning (H⚠️) for employees slightly below 160h. Our system has NO yellow band for hours — only 🔴 red (below prorated threshold) and 🟠 orange (overwork). The script correctly ignores H⚠️ and re-evaluates hours as red or orange only. This is expected and correct — do not treat H⚠️ entries as anomalies.
+
 ---
 
 ## Threshold Logic
@@ -103,11 +105,16 @@ Print both calculated thresholds to console before processing. Count Mon–Fri o
 
 ## Personnel Index Rule
 
-Team and role assignments MUST come from `data/personnel/personnel_index.md`.
-Do NOT use Hubstaff `Team(s)` column strings to infer role, venture, or department.
-Explicit member lists in the index override all other matching logic.
+The `Team` column displayed in reports comes directly from the CSV's `Team(s)` column — the script does not do a personnel index lookup for team names.
 
-**Friday Solutions (FS-OPS):** Tracked via TMetric, not Hubstaff. Data is merged into the master table CSV upstream. Treat them identically to Hubstaff employees in all reports.
+The personnel index (`data/personnel/personnel_index.md`) is used for:
+- Context when interpreting anomalies (e.g. role-appropriate low activity for executives)
+- Confirming whether a name in the CSV maps to a known employee
+- Flagging name mismatches between the CSV and the index (e.g. name changes, new hires not yet added)
+
+If a name in the CSV does not match anyone in the index, flag it to Aaqib before finalising — do not silently skip or guess.
+
+**Friday Solutions (FS-OPS):** Will have a separate dedicated report page. Do not include FS members in the standard bi-weekly Hubstaff report unless explicitly instructed.
 
 ---
 
