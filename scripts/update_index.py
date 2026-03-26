@@ -21,6 +21,7 @@ DOCS_DIR = REPO_ROOT / "docs"
 # Maps filename prefixes to human-readable report type labels
 REPORT_TYPE_MAP = {
     "biweekly_top_violators": "Bi-Weekly Top Violators",
+    "fs_report": "Friday Solutions",
     "pattern_analysis": "3-Month Pattern Analysis",
     "peer_comparison": "Role-Based Peer Comparison",
 }
