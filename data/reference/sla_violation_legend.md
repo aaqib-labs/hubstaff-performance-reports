@@ -32,7 +32,7 @@
 
 1. Red flags ALWAYS take precedence over yellow for the same metric
 2. NEVER prorate or modify thresholds that are explicitly provided — only auto-prorate when computing from a date range
-3. Yellow break flags (B ⚠️) ARE included in displayed total flag counts
+3. Yellow break flags (B ⚠️) are EXCLUDED from displayed total flag counts
 4. One metric = one flag maximum (red overrides yellow; never both for same metric)
 5. All employees in the master table are included — no permanent exclusions
 6. Cycle-specific exclusions (offboarded staff, new hires in grace period) are handled via follow-up prompt after initial report generation
