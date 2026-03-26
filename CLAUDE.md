@@ -135,8 +135,11 @@ If a name in the CSV does not match anyone in the index, flag it to Aaqib before
 
 ## Exclusions
 
-No permanent exclusions. All employees in the master table are included in the initial report.
-Cycle-specific exclusions (recently offboarded, new hires in grace period) are handled via a follow-up prompt after the initial report is generated. Never apply exclusions pre-emptively.
+**Permanent exclusions (always applied automatically by the script):**
+- **Contractors** — all personnel listed under the Contractors section of `data/personnel/personnel_index.md`
+- **Resigned personnel** — add to the `PERMANENT_EXCLUSIONS` list in `generate_biweekly_report.py` as they are confirmed offboarded
+
+**Cycle-specific exclusions** (new hires in grace period, etc.) are passed via `--exclude "Name 1,Name 2"` after the initial report is generated.
 
 ---
 

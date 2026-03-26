@@ -549,6 +549,11 @@ def main():
     parser.add_argument("--input", required=True, help="Path to master table CSV")
     parser.add_argument("--start", required=True, help="Period start date YYYY-MM-DD")
     parser.add_argument("--end", required=True, help="Period end date YYYY-MM-DD")
+    parser.add_argument(
+        "--exclude",
+        default="",
+        help="Comma-separated member names to exclude (cycle-specific, e.g. new hires in grace period)",
+    )
     args = parser.parse_args()
 
     start = date.fromisoformat(args.start)
@@ -583,6 +588,33 @@ def main():
     if missing:
         print(f"WARNING: Missing expected columns: {missing}", file=sys.stderr)
         print(f"Available columns: {list(df.columns)}", file=sys.stderr)
+
+    # Permanent exclusions: contractors and resigned personnel (per personnel_index.md)
+    PERMANENT_EXCLUSIONS = [
+        # Contractors
+        "Nouman Khan",
+        "Amjad Ali",
+        "Abdullah Shinwari",
+        "Hammad Rafique",
+        "Tim Steele",
+        "Hira Tariq",
+        "Muhammad Talib",
+        "Nangyial Ahmad",
+        "Hafiz Aqeel",
+        "Artyom Velmojko",
+        # Resigned — add names here as they are confirmed offboarded
+    ]
+
+    # Cycle-specific exclusions passed via --exclude
+    cycle_exclusions = [n.strip() for n in args.exclude.split(",") if n.strip()]
+
+    all_exclusions = PERMANENT_EXCLUSIONS + cycle_exclusions
+    if all_exclusions:
+        before = len(df)
+        df = df[~df["member"].isin(all_exclusions)].reset_index(drop=True)
+        excluded_count = before - len(df)
+        print(f"Excluded {excluded_count} employee(s): {', '.join(all_exclusions)}")
+        print(f"Remaining: {len(df)} employees.")
 
     # --- Step 3: Build report data ---
     context = build_report_data(df, prorated_red, prorated_orange, start, end)
