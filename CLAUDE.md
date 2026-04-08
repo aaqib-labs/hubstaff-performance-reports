@@ -25,17 +25,27 @@ At the start of every session, before doing anything else:
 ## Folder Structure
 
 ```
-data/input/          Master table CSVs dropped here each cycle
+data/input/
+  monthly/           Full calendar month CSVs      → HS-YYYY-MM-master.csv
+  biweekly/          Partial/bi-weekly period CSVs → HS-YYYY-MM-DD_to_YYYY-MM-DD.csv
+                                                     FS-YYYY-MM-DD_to_YYYY-MM-DD.csv
 data/personnel/      Personnel Index — authoritative role/team source
 data/reference/      SLA thresholds and violation legend
 scripts/             Python report generation scripts
+  utils.py           Shared helpers (working-days, proration) — import from here
 templates/           Jinja2 HTML report templates
-reports/             Archived reports by cycle: YYYY-MM-DD_to_YYYY-MM-DD/
-docs/                GitHub Pages source — index.html + copied reports
+docs/                GitHub Pages source — index.html + all report HTML files
 CLAUDE.md            This file
 ```
 
-**GitHub Pages serves from `/docs`.** Every generated report is both archived in `/reports/` and copied into `/docs/`. Never rename or remove the `/docs` folder.
+**File naming conventions (strictly enforced):**
+| Type | Prefix | Format | Example |
+|------|--------|--------|---------|
+| Hubstaff full month | `HS-` | `HS-YYYY-MM-master.csv` | `HS-2026-03-master.csv` |
+| Hubstaff bi-weekly | `HS-` | `HS-YYYY-MM-DD_to_YYYY-MM-DD.csv` | `HS-2026-03-01_to_2026-03-24.csv` |
+| Friday Solutions | `FS-` | `FS-YYYY-MM-DD_to_YYYY-MM-DD.csv` | `FS-2026-03-01_to_2026-03-24.csv` |
+
+**GitHub Pages serves from `/docs`.** All generated reports are written directly to `/docs/` — there is no separate `/reports/` archive folder. Never rename or remove the `/docs` folder.
 
 ---
 
@@ -43,12 +53,11 @@ CLAUDE.md            This file
 
 When asked to "generate the bi-weekly report for [date range]":
 
-1. Find the master table CSV in `data/input/`
-2. Run `python scripts/generate_biweekly_report.py --input data/input/[FILE].csv --start YYYY-MM-DD --end YYYY-MM-DD`
-3. Script outputs HTML to `reports/[start]_to_[end]/biweekly_top_violators.html`
-4. Script copies report to `docs/` and updates `docs/index.html`
-5. Commit with message: `Report: Bi-Weekly [start] to [end]`
-6. Push to GitHub
+1. Find the master table CSV in `data/input/biweekly/`
+2. Run `python scripts/generate_biweekly_report.py --input data/input/biweekly/[FILE].csv --start YYYY-MM-DD --end YYYY-MM-DD`
+3. Script writes HTML directly to `docs/[start]_to_[end]_biweekly_top_violators.html` and updates `docs/index.html`
+4. Commit with message: `Report: Bi-Weekly [start] to [end]`
+5. Push to GitHub
 
 If any data anomaly is detected (unexpected columns, missing data, parse errors), flag it before finalising.
 
@@ -99,7 +108,9 @@ See `data/reference/sla_violation_legend.md` — this is the ONLY source of trut
 prorated_red    = (working_days_in_period / working_days_in_full_month) × 160
 prorated_orange = (working_days_in_period / working_days_in_full_month) × 200
 ```
-Print both calculated thresholds to console before processing. Count Mon–Fri only (US holiday exclusion is a TODO until WebLife holiday calendar is provided).
+Print both calculated thresholds to console before processing. Count Mon–Fri only.
+
+**Holiday handling:** Do NOT attempt to subtract US holidays from working-day counts. Hubstaff and TMetric already include approved time-off and holiday hours in the employee's `Total Worked Hours` figure. The raw CSV total is the authoritative hours count — no further adjustment is needed.
 
 ---
 
@@ -175,10 +186,12 @@ Score = sum of (base × multiplier) across all flags
 
 | Script | Purpose |
 |--------|---------|
-| `scripts/generate_biweekly_report.py` | Full bi-weekly report generation |
-| `scripts/update_index.py` | Regenerate `docs/index.html` from archived reports |
-| `scripts/generate_pattern_analysis.py` | 3-month repeated pattern analysis (stub) |
-| `scripts/generate_peer_comparison.py` | Role-based peer comparison (stub) |
+| `scripts/utils.py` | Shared helpers — working-days, proration, threshold header. Import from here, never duplicate. |
+| `scripts/generate_biweekly_report.py` | Hubstaff bi-weekly report generation |
+| `scripts/generate_fs_report.py` | Friday Solutions (TMetric) report generation |
+| `scripts/update_index.py` | Regenerate `docs/index.html` from all reports in `/docs/` |
+| `scripts/generate_pattern_analysis.py` | 3-month repeated pattern analysis (stub — not yet implemented) |
+| `scripts/generate_peer_comparison.py` | Role-based peer comparison (stub — not yet implemented) |
 
 ---
 

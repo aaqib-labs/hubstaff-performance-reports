@@ -32,8 +32,8 @@ Logic to implement:
      - Section 2: Individual outlier summary (metric deviation from team avg)
      - Section 3: Teams with systemic issues (majority of team flagged)
   7. Include role-based exception notes from personnel_index.md
-  8. Output to /reports/[date-range]/peer_comparison.html
-  9. Copy to /docs/ and update /docs/index.html
+  8. Output to /docs/[date-range]_peer_comparison.html
+  9. Update /docs/index.html
 
 Key consideration: executives and meeting-heavy roles will naturally show
 low Activity %. These should be noted but not suppressed — the report
@@ -73,10 +73,9 @@ def main():
     print("See TODO block in this script for planned logic.")
 
     # Placeholder output
-    date_range = f"{args.start}_to_{args.end}"
-    output_dir = REPO_ROOT / "reports" / date_range
-    output_dir.mkdir(parents=True, exist_ok=True)
-    placeholder_path = output_dir / "peer_comparison.html"
+    docs_dir = REPO_ROOT / "docs"
+    docs_dir.mkdir(parents=True, exist_ok=True)
+    placeholder_path = docs_dir / "peer_comparison_placeholder.html"
     placeholder_path.write_text(
         "<html><body><h1>Peer Comparison — Coming Soon</h1>"
         "<p>This report type is not yet implemented.</p></body></html>",

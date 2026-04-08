@@ -1,8 +1,8 @@
 """
 WebLife Ventures — GitHub Pages Index Regenerator
 ==================================================
-Scans /reports/ for all cycle subfolders and HTML reports,
-then regenerates /docs/index.html as a clean dashboard (newest first).
+Scans /docs/ for all report HTML files and regenerates
+/docs/index.html as a clean dashboard (newest first).
 
 Can be called standalone:
     python scripts/update_index.py
@@ -15,7 +15,6 @@ from datetime import datetime
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).parent.parent
-REPORTS_DIR = REPO_ROOT / "reports"
 DOCS_DIR = REPO_ROOT / "docs"
 
 # Maps filename prefixes to human-readable report type labels
@@ -134,60 +133,51 @@ INDEX_TEMPLATE = """\
 
 def discover_reports() -> list[dict]:
     """
-    Scan /reports/<cycle_folder>/*.html and return a list of report dicts,
+    Scan /docs/ for flat report HTML files and return a list of report dicts,
     sorted newest first.
+    Filename pattern: YYYY-MM-DD_to_YYYY-MM-DD_<report_type>.html
     """
     entries = []
 
-    if not REPORTS_DIR.exists():
+    if not DOCS_DIR.exists():
         return entries
 
-    # Match folder names like: 2026-03-01_to_2026-03-11
-    folder_pattern = re.compile(r"^(\d{4}-\d{2}-\d{2})_to_(\d{4}-\d{2}-\d{2})$")
+    # Match flat filenames like: 2026-03-01_to_2026-03-24_biweekly_top_violators.html
+    file_pattern = re.compile(r"^(\d{4}-\d{2}-\d{2})_to_(\d{4}-\d{2}-\d{2})_(.+)\.html$")
 
-    for cycle_dir in sorted(REPORTS_DIR.iterdir(), reverse=True):
-        if not cycle_dir.is_dir():
+    for html_file in sorted(DOCS_DIR.glob("*.html"), reverse=True):
+        if html_file.name == "index.html":
             continue
-        m = folder_pattern.match(cycle_dir.name)
+        m = file_pattern.match(html_file.name)
         if not m:
             continue
 
-        start_str, end_str = m.group(1), m.group(2)
+        start_str, end_str, type_stem = m.group(1), m.group(2), m.group(3)
         try:
             start_dt = datetime.strptime(start_str, "%Y-%m-%d")
             end_dt = datetime.strptime(end_str, "%Y-%m-%d")
         except ValueError:
             continue
 
-        period_label = (
-            f"{start_dt.strftime('%b %d')} – {end_dt.strftime('%b %d, %Y')}"
-        )
+        period_label = f"{start_dt.strftime('%b %d')} – {end_dt.strftime('%b %d, %Y')}"
 
-        for html_file in sorted(cycle_dir.glob("*.html"), reverse=True):
-            # Determine report type from filename
-            stem = html_file.stem
-            report_type = "Report"
-            for key, label in REPORT_TYPE_MAP.items():
-                if key in stem:
-                    report_type = label
-                    break
+        report_type = "Report"
+        for key, label in REPORT_TYPE_MAP.items():
+            if key in type_stem:
+                report_type = label
+                break
 
-            # The docs link uses the flat filename convention
-            docs_filename = f"{cycle_dir.name}_{html_file.name}"
-            docs_link = docs_filename  # relative link within /docs/
+        mtime = html_file.stat().st_mtime
+        generated_at = datetime.fromtimestamp(mtime).strftime("%Y-%m-%d %H:%M")
 
-            # Get file modification time as "generated at"
-            mtime = html_file.stat().st_mtime
-            generated_at = datetime.fromtimestamp(mtime).strftime("%Y-%m-%d %H:%M")
-
-            entries.append({
-                "period_label": period_label,
-                "start_str": start_str,
-                "report_type": report_type,
-                "generated_at": generated_at,
-                "docs_link": docs_link,
-                "filename": html_file.name,
-            })
+        entries.append({
+            "period_label": period_label,
+            "start_str": start_str,
+            "report_type": report_type,
+            "generated_at": generated_at,
+            "docs_link": html_file.name,
+            "filename": html_file.name,
+        })
 
     return entries
 

@@ -18,18 +18,23 @@ Same SLA thresholds and scoring as the Hubstaff report.
 
 import argparse
 import os
-import shutil
 import sys
-from datetime import date, timedelta
+from datetime import date
 from pathlib import Path
 
 import pandas as pd
 from jinja2 import Environment, FileSystemLoader
 
-REPO_ROOT = Path(__file__).parent.parent
+from utils import (
+    calculate_prorated_thresholds,
+    count_working_days,
+    get_month_working_days,
+    print_threshold_header,
+    DOCS_DIR,
+)
+
+REPO_ROOT     = Path(__file__).parent.parent
 TEMPLATES_DIR = REPO_ROOT / "templates"
-REPORTS_DIR = REPO_ROOT / "reports"
-DOCS_DIR = REPO_ROOT / "docs"
 
 # SLA thresholds (same source of truth as Hubstaff report)
 ACTIVITY_RED    = 35.0
@@ -50,35 +55,6 @@ MULTIPLIERS = {
     "H_orange": 2,
 }
 
-
-# ---------------------------------------------------------------------------
-# Working days helpers (shared logic with Hubstaff script)
-# ---------------------------------------------------------------------------
-
-def count_working_days(start: date, end: date) -> int:
-    count = 0
-    current = start
-    while current <= end:
-        if current.weekday() < 5:
-            count += 1
-        current += timedelta(days=1)
-    return count
-
-
-def get_month_working_days(ref_date: date) -> int:
-    month_start = ref_date.replace(day=1)
-    if ref_date.month == 12:
-        month_end = ref_date.replace(year=ref_date.year + 1, month=1, day=1) - timedelta(days=1)
-    else:
-        month_end = ref_date.replace(month=ref_date.month + 1, day=1) - timedelta(days=1)
-    return count_working_days(month_start, month_end)
-
-
-def calculate_prorated_thresholds(start: date, end: date) -> tuple[float, float]:
-    period_days = count_working_days(start, end)
-    month_days  = get_month_working_days(start)
-    ratio = period_days / month_days
-    return round(ratio * HOURS_BASE, 2), round(ratio * HOURS_OVERWORK_BASE, 2)
 
 
 # ---------------------------------------------------------------------------
@@ -325,19 +301,13 @@ def render_report(context: dict) -> str:
     return template.render(**context)
 
 
-def write_report(html: str, start: date, end: date) -> tuple[Path, Path]:
+def write_report(html: str, start: date, end: date) -> Path:
+    """Write report directly to /docs/. Returns docs_path."""
     folder_name = f"{start.isoformat()}_to_{end.isoformat()}"
-    report_dir  = REPORTS_DIR / folder_name
-    report_dir.mkdir(parents=True, exist_ok=True)
-
-    report_path = report_dir / "fs_report.html"
-    report_path.write_text(html, encoding="utf-8")
-
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
     docs_path = DOCS_DIR / f"{folder_name}_fs_report.html"
-    shutil.copy2(report_path, docs_path)
-
-    return report_path, docs_path
+    docs_path.write_text(html, encoding="utf-8")
+    return docs_path
 
 
 def update_index():
@@ -366,17 +336,7 @@ def main():
         sys.exit(1)
 
     prorated_red, prorated_orange = calculate_prorated_thresholds(start, end)
-    period_days = count_working_days(start, end)
-    month_days  = get_month_working_days(start)
-
-    print("=" * 60)
-    print(f"Period:                 {start} to {end}")
-    print(f"Working days (period):  {period_days}")
-    print(f"Working days (month):   {month_days}")
-    print(f"Prorated red threshold: {prorated_red}h  (< this = 🔴)")
-    print(f"Prorated orange:        {prorated_orange}h  (≥ this = 🟠 overwork)")
-    print("NOTE: US holiday exclusion not yet applied (TODO).")
-    print("=" * 60)
+    print_threshold_header(start, end, prorated_red, prorated_orange)
 
     print(f"Loading: {csv_path}")
     df = load_tmetric_csv(csv_path)
@@ -387,9 +347,8 @@ def main():
     print(f"Hours violators:   {context['hours_violator_count']}")
 
     html = render_report(context)
-    report_path, docs_path = write_report(html, start, end)
-    print(f"Report written:    {report_path}")
-    print(f"Docs copy:         {docs_path}")
+    docs_path = write_report(html, start, end)
+    print(f"Report written:    {docs_path}")
 
     update_index()
     print(f"Index updated:     {DOCS_DIR / 'index.html'}")

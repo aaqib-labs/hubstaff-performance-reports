@@ -28,8 +28,8 @@ Logic to implement:
      - Section 1: Persistent Violators (3/3 periods)
      - Section 2: Recurring Risk (2/3 periods)
      - Section 3: Trend heatmap table (member × period × metric)
-  9. Output to /reports/pattern_[start]_to_[end]/pattern_analysis.html
- 10. Copy to /docs/ and update /docs/index.html
+  9. Output to /docs/[start]_to_[end]_pattern_analysis.html
+ 10. Update /docs/index.html
 ---------------------------------------------------------------------
 """
 
@@ -72,9 +72,9 @@ def main():
     print("See TODO block in this script for planned logic.")
 
     # Placeholder output
-    output_dir = REPO_ROOT / "reports" / "pattern_analysis_placeholder"
-    output_dir.mkdir(parents=True, exist_ok=True)
-    placeholder_path = output_dir / "pattern_analysis.html"
+    docs_dir = REPO_ROOT / "docs"
+    docs_dir.mkdir(parents=True, exist_ok=True)
+    placeholder_path = docs_dir / "pattern_analysis_placeholder.html"
     placeholder_path.write_text(
         "<html><body><h1>Pattern Analysis — Coming Soon</h1>"
         "<p>This report type is not yet implemented.</p></body></html>",

@@ -10,7 +10,6 @@ Usage:
         --end 2026-03-11
 
 Outputs:
-    reports/<start>_to_<end>/biweekly_top_violators.html
     docs/<start>_to_<end>_biweekly_top_violators.html
     docs/index.html  (updated)
 
@@ -38,26 +37,32 @@ Hours Proration
 prorated_red    = (working_days_in_period / working_days_in_month) × 160
 prorated_orange = (working_days_in_period / working_days_in_month) × 200
 Working days = Monday–Friday only.
-TODO: Exclude US holidays on WebLife calendar once that calendar is provided.
+Note: US holidays and approved time-off are already included in Hubstaff
+Total Worked Hours — no further exclusion is needed here.
 """
 
 import argparse
 import os
-import shutil
 import sys
-from datetime import date, timedelta
+from datetime import date
 from pathlib import Path
 
 import pandas as pd
 from jinja2 import Environment, FileSystemLoader
 
+from utils import (
+    calculate_prorated_thresholds,
+    count_working_days,
+    get_month_working_days,
+    print_threshold_header,
+    DOCS_DIR,
+)
+
 # ---------------------------------------------------------------------------
 # Paths
 # ---------------------------------------------------------------------------
-REPO_ROOT = Path(__file__).parent.parent
+REPO_ROOT     = Path(__file__).parent.parent
 TEMPLATES_DIR = REPO_ROOT / "templates"
-REPORTS_DIR = REPO_ROOT / "reports"
-DOCS_DIR = REPO_ROOT / "docs"
 
 # ---------------------------------------------------------------------------
 # SLA Thresholds (authoritative — matches data/reference/sla_violation_legend.md)
@@ -95,45 +100,6 @@ MULTIPLIERS = {
     "B": 1,
 }
 
-
-# ---------------------------------------------------------------------------
-# Working days calculation
-# ---------------------------------------------------------------------------
-
-def count_working_days(start: date, end: date) -> int:
-    """Count Mon–Fri days between start and end (inclusive).
-    TODO: Subtract US holidays on the WebLife calendar once provided.
-    """
-    count = 0
-    current = start
-    while current <= end:
-        if current.weekday() < 5:  # 0=Mon … 4=Fri
-            count += 1
-        current += timedelta(days=1)
-    return count
-
-
-def get_month_working_days(ref_date: date) -> int:
-    """Count Mon–Fri days in the full calendar month of ref_date."""
-    month_start = ref_date.replace(day=1)
-    # Last day of month
-    if ref_date.month == 12:
-        month_end = ref_date.replace(year=ref_date.year + 1, month=1, day=1) - timedelta(days=1)
-    else:
-        month_end = ref_date.replace(month=ref_date.month + 1, day=1) - timedelta(days=1)
-    return count_working_days(month_start, month_end)
-
-
-def calculate_prorated_thresholds(start: date, end: date) -> tuple[float, float]:
-    """Return (prorated_red, prorated_orange) for the given period."""
-    period_days = count_working_days(start, end)
-    month_days = get_month_working_days(start)
-    if month_days == 0:
-        raise ValueError("Month working days calculated as 0 — check date inputs.")
-    ratio = period_days / month_days
-    prorated_red = round(ratio * HOURS_BASE, 2)
-    prorated_orange = round(ratio * HOURS_OVERWORK_BASE, 2)
-    return prorated_red, prorated_orange
 
 
 # ---------------------------------------------------------------------------
@@ -515,22 +481,14 @@ def render_report(context: dict) -> str:
 # Output file management
 # ---------------------------------------------------------------------------
 
-def write_report(html: str, start: date, end: date) -> tuple[Path, Path]:
-    """Write report to /reports/ and /docs/. Returns (reports_path, docs_path)."""
+def write_report(html: str, start: date, end: date) -> Path:
+    """Write report directly to /docs/. Returns docs_path."""
     folder_name = f"{start.isoformat()}_to_{end.isoformat()}"
-    report_dir = REPORTS_DIR / folder_name
-    report_dir.mkdir(parents=True, exist_ok=True)
-
-    report_path = report_dir / "biweekly_top_violators.html"
-    report_path.write_text(html, encoding="utf-8")
-
-    # Copy to /docs/
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
     docs_filename = f"{folder_name}_biweekly_top_violators.html"
     docs_path = DOCS_DIR / docs_filename
-    shutil.copy2(report_path, docs_path)
-
-    return report_path, docs_path
+    docs_path.write_text(html, encoding="utf-8")
+    return docs_path
 
 
 def update_index(start: date, end: date):
@@ -566,16 +524,7 @@ def main():
 
     # --- Step 1: Calculate prorated thresholds ---
     prorated_red, prorated_orange = calculate_prorated_thresholds(start, end)
-    period_days = count_working_days(start, end)
-    month_days = get_month_working_days(start)
-    print("=" * 60)
-    print(f"Period:            {start} to {end}")
-    print(f"Working days (period):  {period_days}")
-    print(f"Working days (month):   {month_days}")
-    print(f"Prorated red threshold: {prorated_red}h  (< this = 🔴)")
-    print(f"Prorated orange:        {prorated_orange}h  (≥ this = 🟠 overwork)")
-    print("NOTE: US holiday exclusion not yet applied (TODO).")
-    print("=" * 60)
+    print_threshold_header(start, end, prorated_red, prorated_orange)
 
     # --- Step 2: Load and clean data ---
     print(f"Loading: {csv_path}")
@@ -625,9 +574,8 @@ def main():
     html = render_report(context)
 
     # --- Step 5: Write output files ---
-    report_path, docs_path = write_report(html, start, end)
-    print(f"Report written:    {report_path}")
-    print(f"Docs copy:         {docs_path}")
+    docs_path = write_report(html, start, end)
+    print(f"Report written:    {docs_path}")
 
     # --- Step 6: Update index ---
     update_index(start, end)
