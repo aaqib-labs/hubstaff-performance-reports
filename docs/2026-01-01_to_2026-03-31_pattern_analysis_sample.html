@@ -1,0 +1,2075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Repeated Pattern Analysis Report — Q1 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f7fafc;
+      color: #1a202c;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .page-wrap { max-width: 1380px; margin: 0 auto; padding: 0 0 72px; }
+
+    /* ------------------------------------------------------------------ */
+    /* Header                                                               */
+    /* ------------------------------------------------------------------ */
+    .page-header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #1d4ed8 100%);
+      padding: 40px 44px 36px;
+      position: relative;
+      overflow: hidden;
+    }
+    .page-header::after {
+      content: ''; position: absolute; top: -50px; right: -50px;
+      width: 300px; height: 300px; border-radius: 50%;
+      background: rgba(255,255,255,0.04); pointer-events: none;
+    }
+    .page-header::before {
+      content: ''; position: absolute; bottom: -70px; right: 140px;
+      width: 200px; height: 200px; border-radius: 50%;
+      background: rgba(255,255,255,0.03); pointer-events: none;
+    }
+    .header-top {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px; margin-bottom: 28px;
+    }
+    .brand {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 8px;
+    }
+    .page-header h1 {
+      font-size: 2rem; font-weight: 800; color: #fff;
+      line-height: 1.15; letter-spacing: -0.03em;
+    }
+    .period-badge {
+      background: rgba(255,255,255,0.13); border: 1px solid rgba(255,255,255,0.22);
+      color: rgba(255,255,255,0.92); padding: 7px 18px; border-radius: 999px;
+      font-size: 0.84rem; font-weight: 600; white-space: nowrap;
+      align-self: flex-start; margin-top: 6px;
+    }
+    .header-meta { display: flex; flex-wrap: wrap; gap: 32px; }
+    .header-meta-item .h-label {
+      font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.09em; color: rgba(255,255,255,0.38); margin-bottom: 3px;
+    }
+    .header-meta-item .h-value {
+      font-size: 0.92rem; font-weight: 600; color: rgba(255,255,255,0.92);
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Sample banner                                                        */
+    /* ------------------------------------------------------------------ */
+    .sample-banner {
+      background: #fefce8; border-bottom: 2px solid #fbbf24;
+      padding: 12px 32px; font-size: 0.85rem; color: #92400e;
+      font-weight: 600; display: flex; align-items: center; gap: 10px;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* KPI Stat Tiles (task-agency style)                                   */
+    /* ------------------------------------------------------------------ */
+    .stats-row {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 16px; padding: 24px 28px; background: #fff;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .stat-tile {
+      padding: 18px 20px; border-radius: 10px;
+      display: flex; flex-direction: column; gap: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+    }
+    .stat-tile.blue   { background: linear-gradient(135deg,#ebf8ff,#e6fffa); border: 1px solid #90cdf4; }
+    .stat-tile.red    { background: linear-gradient(135deg,#fff5f5,#fff); border: 1px solid #fed7d7; }
+    .stat-tile.amber  { background: linear-gradient(135deg,#fffff0,#fff); border: 1px solid #fefcbf; }
+    .stat-tile.slate  { background: linear-gradient(135deg,#faf5ff,#fff); border: 1px solid #e9d8fd; }
+    .stat-tile .t-label {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+    .stat-tile.blue  .t-label { color: #2b6cb0; }
+    .stat-tile.red   .t-label { color: #c53030; }
+    .stat-tile.amber .t-label { color: #b7791f; }
+    .stat-tile.slate .t-label { color: #553c9a; }
+    .stat-tile .t-value {
+      font-size: 2rem; font-weight: 800; line-height: 1; letter-spacing: -0.04em;
+    }
+    .stat-tile.blue  .t-value { color: #2b6cb0; }
+    .stat-tile.red   .t-value { color: #c53030; }
+    .stat-tile.amber .t-value { color: #b7791f; }
+    .stat-tile.slate .t-value { color: #553c9a; }
+    .stat-tile .t-sub { font-size: 0.78rem; color: #718096; }
+
+    /* ------------------------------------------------------------------ */
+    /* Content                                                              */
+    /* ------------------------------------------------------------------ */
+    .content { padding: 28px; }
+
+    /* ------------------------------------------------------------------ */
+    /* Section Cards                                                        */
+    /* ------------------------------------------------------------------ */
+    .section-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      border: 1px solid #e2e8f0;
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+    .section-card-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 20px;
+      border-bottom: 1px solid #edf2f7;
+    }
+    .section-card-header.is-red   { background: linear-gradient(135deg,#fff5f5,#fff); border-top: 3px solid #e53e3e; }
+    .section-card-header.is-yellow { background: linear-gradient(135deg,#fffff0,#fff); border-top: 3px solid #d69e2e; }
+    .section-num {
+      width: 28px; height: 28px; border-radius: 7px;
+      font-size: 0.82rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .section-num.red-num    { background: #e53e3e; color: #fff; }
+    .section-num.yellow-num { background: #d69e2e; color: #fff; }
+    .section-card-header h2 { font-size: 1.05rem; font-weight: 700; color: #1a202c; }
+    .section-subtitle {
+      font-size: 0.76rem; color: #718096; font-weight: 500;
+      background: #edf2f7; padding: 3px 10px; border-radius: 999px;
+    }
+    .count-pill {
+      margin-left: auto; font-size: 0.74rem; font-weight: 700;
+      padding: 3px 12px; border-radius: 999px;
+    }
+    .count-pill.red-pill    { background: #fff5f5; color: #c53030; border: 1px solid #fed7d7; }
+    .count-pill.yellow-pill { background: #fffff0; color: #b7791f; border: 1px solid #fefcbf; }
+
+    .section-summary {
+      margin: 0; padding: 12px 20px;
+      background: #f7fafc; border-top: 1px solid #edf2f7;
+      font-size: 0.84rem; color: #4a5568; line-height: 1.6;
+    }
+    .section-summary strong { font-weight: 700; color: #1a202c; }
+
+    /* ------------------------------------------------------------------ */
+    /* Empty state                                                          */
+    /* ------------------------------------------------------------------ */
+    .empty-state {
+      padding: 32px; text-align: center; color: #a0aec0;
+      font-size: 0.88rem; border: 2px dashed #e2e8f0;
+      margin: 16px 20px 20px; border-radius: 8px;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Tables                                                               */
+    /* ------------------------------------------------------------------ */
+    .table-wrapper { overflow-x: auto; }
+    table {
+      width: 100%; border-collapse: collapse;
+      font-size: 14px; font-family: 'DM Sans', sans-serif;
+    }
+    thead tr { background: #1a202c; }
+    thead th {
+      color: #a0aec0; padding: 11px 14px;
+      font-size: 12px; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      white-space: nowrap; text-align: left;
+      border-right: 1px solid #2d3748;
+    }
+    thead th:last-child { border-right: none; }
+    thead th.center { text-align: center; }
+
+    tbody tr { background: #fff; border-bottom: 1px solid #edf2f7; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:nth-child(even) { background: #f8fafc; }
+    tbody tr:hover { background: #ebf8ff !important; }
+    tbody td {
+      padding: 11px 14px; vertical-align: middle; white-space: nowrap;
+      border-right: 1px solid #f0f4f8; color: #1a202c;
+    }
+    tbody td:last-child { border-right: none; }
+
+    /* Severity marker — first td only gets a 3px left accent */
+    tr.sev-red    td:first-child { box-shadow: inset 3px 0 0 #e53e3e; }
+    tr.sev-orange td:first-child { box-shadow: inset 3px 0 0 #dd6b20; }
+    tr.sev-yellow td:first-child { box-shadow: inset 3px 0 0 #d69e2e; }
+    tr.sev-clean  td:first-child { box-shadow: inset 3px 0 0 #e2e8f0; }
+
+    /* Rank */
+    td.rank { text-align: center; width: 40px; font-weight: 800; font-size: 14px; color: #a0aec0; }
+    tr.sev-red    td.rank { color: #c53030; }
+    tr.sev-orange td.rank { color: #c05621; }
+    tr.sev-yellow td.rank { color: #b7791f; }
+
+    /* Member / Team */
+    td.member-name { font-weight: 700; color: #1a202c; min-width: 130px; }
+    td.team-name {
+      color: #718096; font-size: 13px; max-width: 140px;
+      overflow: hidden; text-overflow: ellipsis;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Month value pills                                                    */
+    /* ------------------------------------------------------------------ */
+    .val-pill {
+      display: inline-block; padding: 3px 10px; border-radius: 5px;
+      font-size: 13px; font-weight: 700; text-align: center;
+      font-family: 'DM Mono', monospace;
+      font-variant-numeric: tabular-nums; white-space: nowrap;
+    }
+    .val-pill.pill-red    { background: #fed7d7; color: #9b2c2c; }
+    .val-pill.pill-orange { background: #fbd38d; color: #7b341e; }
+    .val-pill.pill-yellow { background: #fefcbf; color: #744210; }
+    .val-pill.pill-clean  { color: #4a5568; }
+    td.val-cell { text-align: center; white-space: nowrap; }
+
+    /* Months count */
+    td.months-cell { text-align: center; font-weight: 800; font-size: 15px; }
+    td.months-cell.all-three { color: #c53030; }
+    td.months-cell.two       { color: #b7791f; }
+
+    /* Action */
+    td.action-cell { font-size: 13px; font-weight: 500; white-space: nowrap; }
+    .action-immediate { color: #c53030; font-weight: 700; }
+    .action-exec      { color: #c05621; font-weight: 600; }
+    .action-monitor   { color: #b7791f; font-weight: 600; }
+    .action-escalate  { color: #718096; }
+
+    /* Trend pills */
+    td.trend-cell { text-align: center; white-space: nowrap; }
+    .trend-pill {
+      display: inline-block; padding: 3px 10px; border-radius: 4px;
+      font-size: 12px; font-weight: 700; white-space: nowrap;
+      letter-spacing: 0.01em;
+    }
+    .trend-up     { background: #fed7d7; color: #9b2c2c; }
+    .trend-down   { background: #c6f6d5; color: #22543d; }
+    .trend-stable { background: #e2e8f0; color: #4a5568; }
+    .trend-bgb    { background: #fefcbf; color: #744210; }
+
+    /* ------------------------------------------------------------------ */
+    /* Executive Summary Card                                               */
+    /* ------------------------------------------------------------------ */
+    .exec-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      border: 1px solid #e2e8f0;
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+    .exec-card-header {
+      padding: 20px 24px 16px;
+      background: linear-gradient(135deg,#ebf8ff,#e6fffa);
+      border-bottom: 2px solid #90cdf4;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .exec-icon {
+      width: 40px; height: 40px; border-radius: 999px;
+      background: #3182ce; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .exec-card-header h2 { font-size: 1.2rem; font-weight: 800; color: #1e4e8c; }
+    .exec-card-header p  { font-size: 0.82rem; color: #4a5568; margin-top: 2px; }
+
+    .exec-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 0; padding: 0;
+    }
+    .exec-col { padding: 20px 24px; }
+    .exec-col:last-child { border-left: 1px solid #edf2f7; }
+    .exec-col-title {
+      font-size: 0.74rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.09em; color: #a0aec0; margin-bottom: 14px;
+    }
+    .exec-item {
+      padding: 10px 0; border-bottom: 1px solid #f7fafc;
+      display: flex; flex-direction: column; gap: 3px;
+    }
+    .exec-item:last-child { border-bottom: none; }
+    .exec-item-row { display: flex; align-items: center; gap: 8px; }
+    .exec-item-title { font-size: 0.85rem; font-weight: 700; color: #1a202c; }
+    .exec-item-names { font-size: 0.80rem; color: #718096; }
+    .exec-count {
+      display: inline-block; font-size: 0.72rem; font-weight: 700;
+      padding: 2px 9px; border-radius: 999px;
+    }
+    .exec-count.red   { background: #fff5f5; color: #c53030; border: 1px solid #fed7d7; }
+    .exec-count.amber { background: #fffff0; color: #b7791f; border: 1px solid #fefcbf; }
+
+    .multi-section {
+      padding: 18px 24px 22px;
+      border-top: 1px solid #edf2f7;
+      background: #f7fafc;
+    }
+    .multi-title {
+      font-size: 0.74rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.09em; color: #a0aec0; margin-bottom: 14px;
+    }
+    .multi-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+    .multi-chip {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #fff; border: 1px solid #fed7d7;
+      padding: 7px 14px; border-radius: 9px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .chip-name  { font-weight: 600; font-size: 0.84rem; color: #1a202c; }
+    .chip-count {
+      font-size: 0.74rem; font-weight: 700; color: #c53030;
+      background: #fff5f5; padding: 2px 8px; border-radius: 999px;
+      border: 1px solid #fed7d7;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Footer                                                               */
+    /* ------------------------------------------------------------------ */
+    .page-footer {
+      margin-top: 16px; padding: 0 28px;
+      display: flex; justify-content: space-between;
+      align-items: center; flex-wrap: wrap; gap: 8px;
+    }
+    .page-footer span { font-size: 0.78rem; color: #a0aec0; }
+    .footer-dot { color: #e2e8f0; }
+
+    /* ------------------------------------------------------------------ */
+    /* Responsive                                                           */
+    /* ------------------------------------------------------------------ */
+    @media (max-width: 900px) {
+      .stats-row    { grid-template-columns: repeat(2,1fr); padding: 16px; }
+      .exec-grid    { grid-template-columns: 1fr; }
+      .exec-col:last-child { border-left: none; border-top: 1px solid #edf2f7; }
+      .content      { padding: 16px; }
+      .page-footer  { padding: 0 16px; flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 540px) {
+      .page-header  { padding: 24px 20px; }
+      .page-header h1 { font-size: 1.4rem; }
+      .stats-row    { grid-template-columns: 1fr 1fr; gap: 10px; }
+      .header-meta  { gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <!-- ================================================================== -->
+  <!-- Header                                                               -->
+  <!-- ================================================================== -->
+  <div class="page-header">
+    <div class="header-top">
+      <div>
+        <div class="brand">WebLife Ventures &nbsp;·&nbsp; Internal Use Only</div>
+        <h1>Repeated Pattern Analysis Report</h1>
+      </div>
+      <div class="period-badge">Q1 2026</div>
+    </div>
+    <div class="header-meta">
+      <div class="header-meta-item">
+        <div class="h-label">Report Period</div>
+        <div class="h-value">January 01, 2026 — March 31, 2026</div>
+      </div>
+      <div class="header-meta-item">
+        <div class="h-label">Months</div>
+        <div class="h-value">January 2026 · February 2026 · March 2026</div>
+      </div>
+      <div class="header-meta-item">
+        <div class="h-label">Employees Analysed</div>
+        <div class="h-value">13</div>
+      </div>
+      <div class="header-meta-item">
+        <div class="h-label">Meeting Type</div>
+        <div class="h-value">Bi-Weekly Performance Review</div>
+      </div>
+      <div class="header-meta-item">
+        <div class="h-label">Generated</div>
+        <div class="h-value">2026-04-08 22:39</div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="sample-banner">
+    ⚠️ SAMPLE REPORT — subset of employees only. For structure review. Run without --sample for the full report.
+  </div>
+  
+
+  <!-- ================================================================== -->
+  <!-- KPI Stat Tiles                                                       -->
+  <!-- ================================================================== -->
+  <div class="stats-row">
+    <div class="stat-tile blue">
+      <div class="t-label">Employees Analysed</div>
+      <div class="t-value">13</div>
+      <div class="t-sub">across 3 months</div>
+    </div>
+    <div class="stat-tile red">
+      <div class="t-label">Critical Red Violations</div>
+      <div class="t-value">17</div>
+      <div class="t-sub">employee appearances in red categories</div>
+    </div>
+    <div class="stat-tile amber">
+      <div class="t-label">Yellow Warnings</div>
+      <div class="t-value">14</div>
+      <div class="t-sub">employee appearances in yellow categories</div>
+    </div>
+    <div class="stat-tile slate">
+      <div class="t-label">Multi-Category Violators</div>
+      <div class="t-value">9</div>
+      <div class="t-sub">employees flagged in 2+ categories</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ================================================================ -->
+    <!-- 12 Violation Sections                                             -->
+    <!-- ================================================================ -->
+    
+    <div class="section-card" id="sec-act_red">
+
+      <div class="section-card-header is-red">
+        <div class="section-num red-num">1</div>
+        <h2>Activity Level Violations</h2>
+        <span class="section-subtitle">A &lt; 35%</span>
+        
+        <span class="count-pill red-pill">
+          5 employees
+        </span>
+        
+      </div>
+
+      
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th class="center">#</th>
+              <th>Employee</th>
+              <th>Team / Department</th>
+              
+              <th class="center">January 2026</th>
+              
+              <th class="center">February 2026</th>
+              
+              <th class="center">March 2026</th>
+              
+              <th class="center">Pattern</th>
+              <th class="center">Months</th>
+              <th>Action Required</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            
+            <tr class="sev-red">
+              <td class="rank">1</td>
+              <td class="member-name">Ali Asghar</td>
+              <td class="team-name" title="allintalent, Sales - BDR, Sales - Management">allintalent, Sales - BDR, Sales - Management</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">26.0% 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">34.0% 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">32.0% 🔴</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-down">⬇️ Improving</span>
+              </td>
+              <td class="months-cell all-three">
+                3
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-immediate">⚡ Immediate escalation</span>
+                
+              </td>
+            </tr>
+            
+            
+            <tr class="sev-red">
+              <td class="rank">2</td>
+              <td class="member-name">jorn wossner</td>
+              <td class="team-name" title="Leadership">Leadership</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">31.0% 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">36.0% ⚠️</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">31.0% 🔴</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-stable">➡️ Flat</span>
+              </td>
+              <td class="months-cell two">
+                2
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-exec">🔍 Executive review</span>
+                
+              </td>
+            </tr>
+            
+            
+            <tr class="sev-red">
+              <td class="rank">3</td>
+              <td class="member-name">Prajwal Kumar</td>
+              <td class="team-name" title="Marketing - Paid Media">Marketing - Paid Media</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">34.0% 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">35.0% ⚠️</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">33.0% 🔴</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-stable">➡️ Flat</span>
+              </td>
+              <td class="months-cell two">
+                2
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-exec">🔍 Executive review</span>
+                
+              </td>
+            </tr>
+            
+            
+            <tr class="sev-yellow">
+              <td class="rank">4</td>
+              <td class="member-name">Dharshika Perera</td>
+              <td class="team-name" title="Accounting, Labs - all">Accounting, Labs - all</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">31.0% 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">24.0% 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">38.0% ⚠️</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-down">⬇️ Improving</span>
+              </td>
+              <td class="months-cell two">
+                2
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-escalate">📋 Escalate if continues</span>
+                
+              </td>
+            </tr>
+            
+            
+            <tr class="sev-yellow">
+              <td class="rank">5</td>
+              <td class="member-name">Natalia Jayasundera</td>
+              <td class="team-name" title="allintalent, HR, Labs - all">allintalent, HR, Labs - all</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">31.0% 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">34.0% 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">40.0% ⚠️</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-down">⬇️ Improving</span>
+              </td>
+              <td class="months-cell two">
+                2
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-escalate">📋 Escalate if continues</span>
+                
+              </td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-summary">
+        <strong>Summary:</strong>
+        5 employees with repeated activity level violations.
+        Top violators:
+        Ali Asghar, jorn wossner, Prajwal Kumar and 2 more.
+      </div>
+
+      
+
+    </div>
+    
+    <div class="section-card" id="sec-act_yel">
+
+      <div class="section-card-header is-yellow">
+        <div class="section-num yellow-num">2</div>
+        <h2>Activity Level Yellow Warnings</h2>
+        <span class="section-subtitle">A 35–45%</span>
+        
+        <span class="count-pill yellow-pill">
+          4 employees
+        </span>
+        
+      </div>
+
+      
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th class="center">#</th>
+              <th>Employee</th>
+              <th>Team / Department</th>
+              
+              <th class="center">January 2026</th>
+              
+              <th class="center">February 2026</th>
+              
+              <th class="center">March 2026</th>
+              
+              <th class="center">Pattern</th>
+              <th class="center">Months</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            
+            <tr class="sev-yellow">
+              <td class="rank">1</td>
+              <td class="member-name">Irene Padilla</td>
+              <td class="team-name" title="Accounting, WeAssist">Accounting, WeAssist</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">37.0% ⚠️</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">42.0% ⚠️</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">43.0% ⚠️</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-down">⬇️ Improving</span>
+              </td>
+              <td class="months-cell all-three">
+                3
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-monitor">👁 Monitor closely</span>
+                
+              </td>
+            </tr>
+            
+            
+            <tr class="sev-yellow">
+              <td class="rank">2</td>
+              <td class="member-name">leora megan</td>
+              <td class="team-name" title="Labs - all, VP - Customer Ops - Customer Relations">Labs - all, VP - Customer Ops - Customer Relations</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">36.0% ⚠️</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">37.0% ⚠️</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">35.0% ⚠️</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-stable">➡️ Flat</span>
+              </td>
+              <td class="months-cell all-three">
+                3
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-monitor">👁 Monitor closely</span>
+                
+              </td>
+            </tr>
+            
+            
+            <tr class="sev-yellow">
+              <td class="rank">3</td>
+              <td class="member-name">Jebby Rochelle</td>
+              <td class="team-name" title="Framework Friday, Labs - all">Framework Friday, Labs - all</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">36.0% ⚠️</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-clean">46.0% ✅</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">40.0% ⚠️</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-bgb">🔄 Bad→Good→Bad</span>
+              </td>
+              <td class="months-cell two">
+                2
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-escalate">📋 Escalate if continues</span>
+                
+              </td>
+            </tr>
+            
+            
+            <tr class="sev-yellow">
+              <td class="rank">4</td>
+              <td class="member-name">Kushani Kalpage</td>
+              <td class="team-name" title="allintalent, Labs - all">allintalent, Labs - all</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">38.0% ⚠️</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-clean">46.0% ✅</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">44.0% ⚠️</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-bgb">🔄 Bad→Good→Bad</span>
+              </td>
+              <td class="months-cell two">
+                2
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-escalate">📋 Escalate if continues</span>
+                
+              </td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-summary">
+        <strong>Summary:</strong>
+        4 employees with repeated activity level yellow warnings.
+        Top violators:
+        Irene Padilla, leora megan, Jebby Rochelle and 1 more.
+      </div>
+
+      
+
+    </div>
+    
+    <div class="section-card" id="sec-ovr">
+
+      <div class="section-card-header is-yellow">
+        <div class="section-num yellow-num">3</div>
+        <h2>Overwork Pattern: Hours Violations</h2>
+        <span class="section-subtitle">H ≥ 200.0h (prorated)</span>
+        
+        <span class="count-pill yellow-pill">
+          1 employee
+        </span>
+        
+      </div>
+
+      
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th class="center">#</th>
+              <th>Employee</th>
+              <th>Team / Department</th>
+              
+              <th class="center">January 2026</th>
+              
+              <th class="center">February 2026</th>
+              
+              <th class="center">March 2026</th>
+              
+              <th class="center">Pattern</th>
+              <th class="center">Months</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            
+            <tr class="sev-clean">
+              <td class="rank">1</td>
+              <td class="member-name">jorn wossner</td>
+              <td class="team-name" title="Leadership">Leadership</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-orange">214.6h 🟠</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-orange">207.7h 🟠</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-clean">118.7h ✅</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-down">⬇️ Improving</span>
+              </td>
+              <td class="months-cell two">
+                2
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-escalate">📋 Escalate if continues</span>
+                
+              </td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-summary">
+        <strong>Summary:</strong>
+        1 employee with repeated overwork pattern: hours violations.
+        Top violators:
+        jorn wossner.
+      </div>
+
+      
+
+    </div>
+    
+    <div class="section-card" id="sec-low_hrs">
+
+      <div class="section-card-header is-red">
+        <div class="section-num red-num">4</div>
+        <h2>Low Hours Violations</h2>
+        <span class="section-subtitle">H &lt; 160.0h (prorated)</span>
+        
+        <span class="count-pill red-pill">
+          5 employees
+        </span>
+        
+      </div>
+
+      
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th class="center">#</th>
+              <th>Employee</th>
+              <th>Team / Department</th>
+              
+              <th class="center">January 2026</th>
+              
+              <th class="center">February 2026</th>
+              
+              <th class="center">March 2026</th>
+              
+              <th class="center">Pattern</th>
+              <th class="center">Months</th>
+              <th>Action Required</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            
+            <tr class="sev-red">
+              <td class="rank">1</td>
+              <td class="member-name">Shaarukshan Seralathan</td>
+              <td class="team-name" title="Labs - all">Labs - all</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">59.8h 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">136.2h 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">132.4h 🔴</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-down">⬇️ Improving</span>
+              </td>
+              <td class="months-cell all-three">
+                3
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-immediate">⚡ Immediate escalation</span>
+                
+              </td>
+            </tr>
+            
+            
+            <tr class="sev-red">
+              <td class="rank">2</td>
+              <td class="member-name">Brayden Robinson</td>
+              <td class="team-name" title="Media">Media</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">144.3h 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-clean">186.1h ✅</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">156.3h 🔴</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-bgb">🔄 Bad→Good→Bad</span>
+              </td>
+              <td class="months-cell two">
+                2
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-exec">🔍 Executive review</span>
+                
+              </td>
+            </tr>
+            
+            
+            <tr class="sev-red">
+              <td class="rank">3</td>
+              <td class="member-name">Kianna Xue</td>
+              <td class="team-name" title="Venia Products  - All, VP - Systems - CRM Automation Product Owner">Venia Products  - All, VP - Systems - CRM Automation Product Owner</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-clean">204.7h ✅</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">136.1h 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">112.9h 🔴</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-up">⬆️ Worsening</span>
+              </td>
+              <td class="months-cell two">
+                2
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-exec">🔍 Executive review</span>
+                
+              </td>
+            </tr>
+            
+            
+            <tr class="sev-clean">
+              <td class="rank">4</td>
+              <td class="member-name">Natalia Jayasundera</td>
+              <td class="team-name" title="allintalent, HR, Labs - all">allintalent, HR, Labs - all</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">153.2h 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">142.8h 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-clean">184.8h ✅</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-down">⬇️ Improving</span>
+              </td>
+              <td class="months-cell two">
+                2
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-escalate">📋 Escalate if continues</span>
+                
+              </td>
+            </tr>
+            
+            
+            <tr class="sev-clean">
+              <td class="rank">5</td>
+              <td class="member-name">Prajwal Kumar</td>
+              <td class="team-name" title="Marketing - Paid Media">Marketing - Paid Media</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">132.3h 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">156.3h 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-clean">169.1h ✅</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-down">⬇️ Improving</span>
+              </td>
+              <td class="months-cell two">
+                2
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-escalate">📋 Escalate if continues</span>
+                
+              </td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-summary">
+        <strong>Summary:</strong>
+        5 employees with repeated low hours violations.
+        Top violators:
+        Shaarukshan Seralathan, Brayden Robinson, Kianna Xue and 2 more.
+      </div>
+
+      
+
+    </div>
+    
+    <div class="section-card" id="sec-man_red">
+
+      <div class="section-card-header is-red">
+        <div class="section-num red-num">5</div>
+        <h2>Manual Time Violations</h2>
+        <span class="section-subtitle">M ≥ 10%</span>
+        
+      </div>
+
+      
+      <div class="empty-state">
+        No repeated violations identified for this category — 2+ months required.
+      </div>
+      
+
+    </div>
+    
+    <div class="section-card" id="sec-man_yel">
+
+      <div class="section-card-header is-yellow">
+        <div class="section-num yellow-num">6</div>
+        <h2>Manual Time Yellow Warnings</h2>
+        <span class="section-subtitle">M 5–10%</span>
+        
+        <span class="count-pill yellow-pill">
+          1 employee
+        </span>
+        
+      </div>
+
+      
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th class="center">#</th>
+              <th>Employee</th>
+              <th>Team / Department</th>
+              
+              <th class="center">January 2026</th>
+              
+              <th class="center">February 2026</th>
+              
+              <th class="center">March 2026</th>
+              
+              <th class="center">Pattern</th>
+              <th class="center">Months</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            
+            <tr class="sev-yellow">
+              <td class="rank">1</td>
+              <td class="member-name">jorn wossner</td>
+              <td class="team-name" title="Leadership">Leadership</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-clean">2.6% ✅</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">9.1% ⚠️</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">5.1% ⚠️</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-stable">➡️ Flat</span>
+              </td>
+              <td class="months-cell two">
+                2
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-escalate">📋 Escalate if continues</span>
+                
+              </td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-summary">
+        <strong>Summary:</strong>
+        1 employee with repeated manual time yellow warnings.
+        Top violators:
+        jorn wossner.
+      </div>
+
+      
+
+    </div>
+    
+    <div class="section-card" id="sec-l20_red">
+
+      <div class="section-card-header is-red">
+        <div class="section-num red-num">7</div>
+        <h2>Low Activity ≤20% Violations</h2>
+        <span class="section-subtitle">≥ 15% of worked hours</span>
+        
+      </div>
+
+      
+      <div class="empty-state">
+        No repeated violations identified for this category — 2+ months required.
+      </div>
+      
+
+    </div>
+    
+    <div class="section-card" id="sec-l20_yel">
+
+      <div class="section-card-header is-yellow">
+        <div class="section-num yellow-num">8</div>
+        <h2>Low Activity ≤20% Warnings</h2>
+        <span class="section-subtitle">7.5–15% of worked hours</span>
+        
+        <span class="count-pill yellow-pill">
+          4 employees
+        </span>
+        
+      </div>
+
+      
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th class="center">#</th>
+              <th>Employee</th>
+              <th>Team / Department</th>
+              
+              <th class="center">January 2026</th>
+              
+              <th class="center">February 2026</th>
+              
+              <th class="center">March 2026</th>
+              
+              <th class="center">Pattern</th>
+              <th class="center">Months</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            
+            <tr class="sev-yellow">
+              <td class="rank">1</td>
+              <td class="member-name">Natalia Jayasundera</td>
+              <td class="team-name" title="allintalent, HR, Labs - all">allintalent, HR, Labs - all</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">7.9% ⚠️</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">9.0% ⚠️</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">7.7% ⚠️</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-stable">➡️ Flat</span>
+              </td>
+              <td class="months-cell all-three">
+                3
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-monitor">👁 Monitor closely</span>
+                
+              </td>
+            </tr>
+            
+            
+            <tr class="sev-yellow">
+              <td class="rank">2</td>
+              <td class="member-name">Prajwal Kumar</td>
+              <td class="team-name" title="Marketing - Paid Media">Marketing - Paid Media</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">10.7% ⚠️</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">13.8% ⚠️</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">11.6% ⚠️</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-stable">➡️ Flat</span>
+              </td>
+              <td class="months-cell all-three">
+                3
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-monitor">👁 Monitor closely</span>
+                
+              </td>
+            </tr>
+            
+            
+            <tr class="sev-yellow">
+              <td class="rank">3</td>
+              <td class="member-name">Ali Asghar</td>
+              <td class="team-name" title="allintalent, Sales - BDR, Sales - Management">allintalent, Sales - BDR, Sales - Management</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">20.4% 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">11.5% ⚠️</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">8.9% ⚠️</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-down">⬇️ Improving</span>
+              </td>
+              <td class="months-cell two">
+                2
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-escalate">📋 Escalate if continues</span>
+                
+              </td>
+            </tr>
+            
+            
+            <tr class="sev-clean">
+              <td class="rank">4</td>
+              <td class="member-name">jorn wossner</td>
+              <td class="team-name" title="Leadership">Leadership</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">12.0% ⚠️</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">9.1% ⚠️</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-clean">5.2% ✅</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-down">⬇️ Improving</span>
+              </td>
+              <td class="months-cell two">
+                2
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-escalate">📋 Escalate if continues</span>
+                
+              </td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-summary">
+        <strong>Summary:</strong>
+        4 employees with repeated low activity ≤20% warnings.
+        Top violators:
+        Natalia Jayasundera, Prajwal Kumar, Ali Asghar and 1 more.
+      </div>
+
+      
+
+    </div>
+    
+    <div class="section-card" id="sec-l30_red">
+
+      <div class="section-card-header is-red">
+        <div class="section-num red-num">9</div>
+        <h2>Low Activity ≤30% Violations</h2>
+        <span class="section-subtitle">≥ 20% of worked hours</span>
+        
+        <span class="count-pill red-pill">
+          7 employees
+        </span>
+        
+      </div>
+
+      
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th class="center">#</th>
+              <th>Employee</th>
+              <th>Team / Department</th>
+              
+              <th class="center">January 2026</th>
+              
+              <th class="center">February 2026</th>
+              
+              <th class="center">March 2026</th>
+              
+              <th class="center">Pattern</th>
+              <th class="center">Months</th>
+              <th>Action Required</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            
+            <tr class="sev-red">
+              <td class="rank">1</td>
+              <td class="member-name">Ali Asghar</td>
+              <td class="team-name" title="allintalent, Sales - BDR, Sales - Management">allintalent, Sales - BDR, Sales - Management</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">57.6% 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">33.5% 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">39.1% 🔴</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-down">⬇️ Improving</span>
+              </td>
+              <td class="months-cell all-three">
+                3
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-immediate">⚡ Immediate escalation</span>
+                
+              </td>
+            </tr>
+            
+            
+            <tr class="sev-red">
+              <td class="rank">2</td>
+              <td class="member-name">Dharshika Perera</td>
+              <td class="team-name" title="Accounting, Labs - all">Accounting, Labs - all</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">34.3% 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">78.5% 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">24.7% 🔴</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-down">⬇️ Improving</span>
+              </td>
+              <td class="months-cell all-three">
+                3
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-immediate">⚡ Immediate escalation</span>
+                
+              </td>
+            </tr>
+            
+            
+            <tr class="sev-red">
+              <td class="rank">3</td>
+              <td class="member-name">jorn wossner</td>
+              <td class="team-name" title="Leadership">Leadership</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">42.6% 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">30.4% 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">50.4% 🔴</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-up">⬆️ Worsening</span>
+              </td>
+              <td class="months-cell all-three">
+                3
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-immediate">⚡ Immediate escalation</span>
+                
+              </td>
+            </tr>
+            
+            
+            <tr class="sev-red">
+              <td class="rank">4</td>
+              <td class="member-name">Kushani Kalpage</td>
+              <td class="team-name" title="allintalent, Labs - all">allintalent, Labs - all</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">31.3% 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">20.5% 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">20.7% 🔴</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-down">⬇️ Improving</span>
+              </td>
+              <td class="months-cell all-three">
+                3
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-immediate">⚡ Immediate escalation</span>
+                
+              </td>
+            </tr>
+            
+            
+            <tr class="sev-red">
+              <td class="rank">5</td>
+              <td class="member-name">leora megan</td>
+              <td class="team-name" title="Labs - all, VP - Customer Ops - Customer Relations">Labs - all, VP - Customer Ops - Customer Relations</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">28.7% 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">33.4% 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">22.0% 🔴</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-down">⬇️ Improving</span>
+              </td>
+              <td class="months-cell all-three">
+                3
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-immediate">⚡ Immediate escalation</span>
+                
+              </td>
+            </tr>
+            
+            
+            <tr class="sev-red">
+              <td class="rank">6</td>
+              <td class="member-name">Prajwal Kumar</td>
+              <td class="team-name" title="Marketing - Paid Media">Marketing - Paid Media</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">31.5% 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">28.0% 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">39.3% 🔴</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-up">⬆️ Worsening</span>
+              </td>
+              <td class="months-cell all-three">
+                3
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-immediate">⚡ Immediate escalation</span>
+                
+              </td>
+            </tr>
+            
+            
+            <tr class="sev-red">
+              <td class="rank">7</td>
+              <td class="member-name">Shaarukshan Seralathan</td>
+              <td class="team-name" title="Labs - all">Labs - all</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">23.6% 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">23.2% 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">36.3% 🔴</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-up">⬆️ Worsening</span>
+              </td>
+              <td class="months-cell all-three">
+                3
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-immediate">⚡ Immediate escalation</span>
+                
+              </td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-summary">
+        <strong>Summary:</strong>
+        7 employees with repeated low activity ≤30% violations.
+        Top violators:
+        Ali Asghar, Dharshika Perera, jorn wossner and 4 more.
+      </div>
+
+      
+
+    </div>
+    
+    <div class="section-card" id="sec-l30_yel">
+
+      <div class="section-card-header is-yellow">
+        <div class="section-num yellow-num">10</div>
+        <h2>Low Activity ≤30% Warnings</h2>
+        <span class="section-subtitle">10–20% of worked hours</span>
+        
+        <span class="count-pill yellow-pill">
+          1 employee
+        </span>
+        
+      </div>
+
+      
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th class="center">#</th>
+              <th>Employee</th>
+              <th>Team / Department</th>
+              
+              <th class="center">January 2026</th>
+              
+              <th class="center">February 2026</th>
+              
+              <th class="center">March 2026</th>
+              
+              <th class="center">Pattern</th>
+              <th class="center">Months</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            
+            <tr class="sev-yellow">
+              <td class="rank">1</td>
+              <td class="member-name">Natalia Jayasundera</td>
+              <td class="team-name" title="allintalent, HR, Labs - all">allintalent, HR, Labs - all</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-red">33.5% 🔴</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">19.4% ⚠️</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">12.1% ⚠️</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-down">⬇️ Improving</span>
+              </td>
+              <td class="months-cell two">
+                2
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-escalate">📋 Escalate if continues</span>
+                
+              </td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-summary">
+        <strong>Summary:</strong>
+        1 employee with repeated low activity ≤30% warnings.
+        Top violators:
+        Natalia Jayasundera.
+      </div>
+
+      
+
+    </div>
+    
+    <div class="section-card" id="sec-brk_red">
+
+      <div class="section-card-header is-red">
+        <div class="section-num red-num">11</div>
+        <h2>Break Time Violations</h2>
+        <span class="section-subtitle">B ≥ 12%</span>
+        
+      </div>
+
+      
+      <div class="empty-state">
+        No repeated violations identified for this category — 2+ months required.
+      </div>
+      
+
+    </div>
+    
+    <div class="section-card" id="sec-brk_yel">
+
+      <div class="section-card-header is-yellow">
+        <div class="section-num yellow-num">12</div>
+        <h2>Break Time Warnings</h2>
+        <span class="section-subtitle">B 10–12%</span>
+        
+        <span class="count-pill yellow-pill">
+          3 employees
+        </span>
+        
+      </div>
+
+      
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th class="center">#</th>
+              <th>Employee</th>
+              <th>Team / Department</th>
+              
+              <th class="center">January 2026</th>
+              
+              <th class="center">February 2026</th>
+              
+              <th class="center">March 2026</th>
+              
+              <th class="center">Pattern</th>
+              <th class="center">Months</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            
+            <tr class="sev-yellow">
+              <td class="rank">1</td>
+              <td class="member-name">Irene Padilla</td>
+              <td class="team-name" title="Accounting, WeAssist">Accounting, WeAssist</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">10.2% ⚠️</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">10.4% ⚠️</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">10.5% ⚠️</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-stable">➡️ Flat</span>
+              </td>
+              <td class="months-cell all-three">
+                3
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-monitor">👁 Monitor closely</span>
+                
+              </td>
+            </tr>
+            
+            
+            <tr class="sev-yellow">
+              <td class="rank">2</td>
+              <td class="member-name">leora megan</td>
+              <td class="team-name" title="Labs - all, VP - Customer Ops - Customer Relations">Labs - all, VP - Customer Ops - Customer Relations</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">10.2% ⚠️</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">10.0% ⚠️</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">10.3% ⚠️</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-stable">➡️ Flat</span>
+              </td>
+              <td class="months-cell all-three">
+                3
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-monitor">👁 Monitor closely</span>
+                
+              </td>
+            </tr>
+            
+            
+            <tr class="sev-yellow">
+              <td class="rank">3</td>
+              <td class="member-name">Ali Asghar</td>
+              <td class="team-name" title="allintalent, Sales - BDR, Sales - Management">allintalent, Sales - BDR, Sales - Management</td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">11.4% ⚠️</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-clean">9.6% ✅</span>
+              </td>
+              
+              <td class="val-cell">
+                <span class="val-pill pill-yellow">10.1% ⚠️</span>
+              </td>
+              
+              <td class="trend-cell">
+                <span class="trend-pill trend-bgb">🔄 Bad→Good→Bad</span>
+              </td>
+              <td class="months-cell two">
+                2
+              </td>
+              <td class="action-cell">
+                
+                  <span class="action-escalate">📋 Escalate if continues</span>
+                
+              </td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-summary">
+        <strong>Summary:</strong>
+        3 employees with repeated break time warnings.
+        Top violators:
+        Irene Padilla, leora megan, Ali Asghar.
+      </div>
+
+      
+
+    </div>
+    
+
+    <!-- ================================================================ -->
+    <!-- Executive Summary                                                 -->
+    <!-- ================================================================ -->
+    <div class="exec-card" id="exec-summary">
+
+      <div class="exec-card-header">
+        <div class="exec-icon">
+          <svg width="22" height="22" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/>
+          </svg>
+        </div>
+        <div>
+          <h2>Executive Summary</h2>
+          <p>January 01, 2026 — March 31, 2026 &nbsp;·&nbsp; Bi-Weekly Performance Review &nbsp;·&nbsp; Repeated pattern violations requiring management action</p>
+        </div>
+      </div>
+
+      <div class="exec-grid">
+
+        <div class="exec-col">
+          <div class="exec-col-title">🔴 Critical Actions Required — This Week</div>
+          
+            
+            <div class="exec-item">
+              <div class="exec-item-row">
+                <span class="exec-item-title">Activity Level Violations</span>
+                <span class="exec-count red">5 emps</span>
+              </div>
+              <div class="exec-item-names">Ali Asghar, jorn wossner, Prajwal Kumar...</div>
+            </div>
+            
+            <div class="exec-item">
+              <div class="exec-item-row">
+                <span class="exec-item-title">Low Hours Violations</span>
+                <span class="exec-count red">5 emps</span>
+              </div>
+              <div class="exec-item-names">Shaarukshan Seralathan, Brayden Robinson, Kianna Xue...</div>
+            </div>
+            
+            <div class="exec-item">
+              <div class="exec-item-row">
+                <span class="exec-item-title">Low Activity ≤30% Violations</span>
+                <span class="exec-count red">7 emps</span>
+              </div>
+              <div class="exec-item-names">Ali Asghar, Dharshika Perera, jorn wossner...</div>
+            </div>
+            
+          
+        </div>
+
+        <div class="exec-col">
+          <div class="exec-col-title">⚠️ High Priority Review — This Month</div>
+          
+            
+            <div class="exec-item">
+              <div class="exec-item-row">
+                <span class="exec-item-title">Activity Level Yellow Warnings</span>
+                <span class="exec-count amber">4 emps</span>
+              </div>
+              <div class="exec-item-names">Irene Padilla, leora megan, Jebby Rochelle...</div>
+            </div>
+            
+            <div class="exec-item">
+              <div class="exec-item-row">
+                <span class="exec-item-title">Overwork Pattern: Hours Violations</span>
+                <span class="exec-count amber">1 emp</span>
+              </div>
+              <div class="exec-item-names">jorn wossner</div>
+            </div>
+            
+            <div class="exec-item">
+              <div class="exec-item-row">
+                <span class="exec-item-title">Manual Time Yellow Warnings</span>
+                <span class="exec-count amber">1 emp</span>
+              </div>
+              <div class="exec-item-names">jorn wossner</div>
+            </div>
+            
+            <div class="exec-item">
+              <div class="exec-item-row">
+                <span class="exec-item-title">Low Activity ≤20% Warnings</span>
+                <span class="exec-count amber">4 emps</span>
+              </div>
+              <div class="exec-item-names">Natalia Jayasundera, Prajwal Kumar, Ali Asghar...</div>
+            </div>
+            
+            <div class="exec-item">
+              <div class="exec-item-row">
+                <span class="exec-item-title">Low Activity ≤30% Warnings</span>
+                <span class="exec-count amber">1 emp</span>
+              </div>
+              <div class="exec-item-names">Natalia Jayasundera</div>
+            </div>
+            
+            <div class="exec-item">
+              <div class="exec-item-row">
+                <span class="exec-item-title">Break Time Warnings</span>
+                <span class="exec-count amber">3 emps</span>
+              </div>
+              <div class="exec-item-names">Irene Padilla, leora megan, Ali Asghar</div>
+            </div>
+            
+          
+        </div>
+
+      </div>
+
+      
+      <div class="multi-section">
+        <div class="multi-title">🚨 Multi-Category Violators — Highest Priority Intervention</div>
+        <div class="multi-chips">
+          
+          <div class="multi-chip">
+            <span class="chip-name">jorn wossner</span>
+            <span class="chip-count">5 categories</span>
+          </div>
+          
+          <div class="multi-chip">
+            <span class="chip-name">Ali Asghar</span>
+            <span class="chip-count">4 categories</span>
+          </div>
+          
+          <div class="multi-chip">
+            <span class="chip-name">Prajwal Kumar</span>
+            <span class="chip-count">4 categories</span>
+          </div>
+          
+          <div class="multi-chip">
+            <span class="chip-name">Natalia Jayasundera</span>
+            <span class="chip-count">4 categories</span>
+          </div>
+          
+          <div class="multi-chip">
+            <span class="chip-name">leora megan</span>
+            <span class="chip-count">3 categories</span>
+          </div>
+          
+          <div class="multi-chip">
+            <span class="chip-name">Dharshika Perera</span>
+            <span class="chip-count">2 categories</span>
+          </div>
+          
+          <div class="multi-chip">
+            <span class="chip-name">Irene Padilla</span>
+            <span class="chip-count">2 categories</span>
+          </div>
+          
+          <div class="multi-chip">
+            <span class="chip-name">Kushani Kalpage</span>
+            <span class="chip-count">2 categories</span>
+          </div>
+          
+          <div class="multi-chip">
+            <span class="chip-name">Shaarukshan Seralathan</span>
+            <span class="chip-count">2 categories</span>
+          </div>
+          
+        </div>
+      </div>
+      
+
+    </div><!-- /exec-card -->
+
+  </div><!-- /content -->
+
+  <!-- ================================================================== -->
+  <!-- Footer                                                               -->
+  <!-- ================================================================== -->
+  <div class="page-footer">
+    <span>WebLife Ventures Performance Reporting System &nbsp;·&nbsp; SLA thresholds per WebLife SLA Violation Legend v1.0</span>
+    <span>
+      Generated 2026-04-08 22:39
+      <span class="footer-dot"> &nbsp;·&nbsp; </span>
+      Internal use only — do not distribute
+    </span>
+  </div>
+
+</div><!-- /page-wrap -->
+</body>
+</html>
