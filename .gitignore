@@ -1,6 +1,11 @@
 # Raw data inputs — never commit employee data CSVs to public repo
 data/input/*.csv
 data/input/*.xlsx
+data/input/**/*.csv
+data/input/**/*.xlsx
+
+# Personnel data — confidential
+data/personnel/personnel_index.md
 
 # Python
 __pycache__/
