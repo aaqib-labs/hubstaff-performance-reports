@@ -123,6 +123,14 @@ def _fmt_pct(value: float, status: str) -> str:
     return f"{value:.1f}% {icon}".strip()
 
 
+def _fmt_pct_hours(pct: float, hrs: float, status: str) -> str:
+    """Format as 'XX.X% (Xh)' with status icon."""
+    if pd.isna(pct): return "—"
+    icon = STATUS_ICON.get(status, "")
+    hrs_str = f"{hrs:.1f}h" if not pd.isna(hrs) else "—"
+    return f"{pct:.1f}% ({hrs_str}) {icon}".strip()
+
+
 def _fmt_hours_val(value: float, status: str) -> str:
     if pd.isna(value): return "—"
     icon = STATUS_ICON.get(status, "")
@@ -297,20 +305,23 @@ def build_section(
                 cell   = _fmt_hours_val(val, status)
             elif metric == "manual":
                 val    = row.get("manual_pct", float("nan"))
+                hrs    = row.get("manual_hours", float("nan"))
                 status = _classify(val, MANUAL_RED, MANUAL_YELLOW, "high")
-                cell   = _fmt_pct(val, status)
+                cell   = _fmt_pct_hours(val, hrs, status)
             elif metric == "break":
                 val    = row.get("break_pct", float("nan"))
                 status = _classify(val, BREAK_RED, BREAK_YELLOW, "high")
                 cell   = _fmt_pct(val, status)
             elif metric == "low20":
                 val    = row.get("low20_pct", float("nan"))
+                hrs    = row.get("low20_hours", float("nan"))
                 status = _classify(val, LOW20_RED, LOW20_YELLOW, "high")
-                cell   = _fmt_pct(val, status)
+                cell   = _fmt_pct_hours(val, hrs, status)
             elif metric == "low30":
                 val    = row.get("low30_pct", float("nan"))
+                hrs    = row.get("low30_hours", float("nan"))
                 status = _classify(val, LOW30_RED, LOW30_YELLOW, "high")
-                cell   = _fmt_pct(val, status)
+                cell   = _fmt_pct_hours(val, hrs, status)
             else:
                 val, status, cell = float("nan"), "clean", "—"
 
@@ -438,8 +449,6 @@ def build_context(
         ("l20_yel",    "Low Activity ≤20% Warnings",           "low20",         "yellow", True,  False),
         ("l30_red",    "Low Activity ≤30% Violations",         "low30",         "red",    True,  True),
         ("l30_yel",    "Low Activity ≤30% Warnings",           "low30",         "yellow", True,  False),
-        ("brk_red",    "Break Time Violations",                "break",         "red",    True,  True),
-        ("brk_yel",    "Break Time Warnings",                  "break",         "yellow", True,  False),
     ]
 
     THRESHOLD_SUBTITLES = {
@@ -453,8 +462,6 @@ def build_context(
         "l20_yel":  "7.5–15% of worked hours",
         "l30_red":  "≥ 20% of worked hours",
         "l30_yel":  "10–20% of worked hours",
-        "brk_red":  "B ≥ 12%",
-        "brk_yel":  "B 10–12%",
     }
 
     sections = []
