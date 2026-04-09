@@ -4,116 +4,344 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WebLife Ventures — Performance Reports</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #f5f6f8;
-      color: #1a1a2e;
-      padding: 40px 24px;
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f7fafc;
+      color: #1a202c;
+      font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
     }
-    .container { max-width: 900px; margin: 0 auto; }
-    header {
-      border-bottom: 3px solid #2d5be3;
-      padding-bottom: 20px;
-      margin-bottom: 32px;
+
+    /* ---- Hero ---- */
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #1d4ed8 100%);
+      padding: 48px 40px 44px;
+      position: relative; overflow: hidden;
     }
-    header h1 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: #1a1a2e;
+    .hero::after {
+      content: ''; position: absolute; top: -60px; right: -60px;
+      width: 340px; height: 340px; border-radius: 50%;
+      background: rgba(255,255,255,0.04); pointer-events: none;
     }
-    header p {
-      color: #666;
-      margin-top: 6px;
-      font-size: 0.9rem;
+    .hero::before {
+      content: ''; position: absolute; bottom: -80px; right: 160px;
+      width: 220px; height: 220px; border-radius: 50%;
+      background: rgba(255,255,255,0.03); pointer-events: none;
     }
-    .empty-state {
+    .hero-inner { max-width: 1200px; margin: 0 auto; }
+    .hero-brand {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 10px;
+    }
+    .hero h1 {
+      font-size: 2.2rem; font-weight: 800; color: #fff;
+      line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 10px;
+    }
+    .hero-sub {
+      font-size: 0.9rem; color: rgba(255,255,255,0.55); font-weight: 400;
+    }
+
+    /* ---- Stats bar ---- */
+    .stats-bar {
       background: #fff;
-      border: 2px dashed #d0d5dd;
-      border-radius: 8px;
-      padding: 48px;
-      text-align: center;
-      color: #888;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
+    .stats-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; flex-wrap: wrap;
+    }
+    .stat-item {
+      padding: 18px 32px;
+      border-right: 1px solid #e2e8f0;
+      display: flex; flex-direction: column; gap: 2px;
+      min-width: 160px;
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      font-size: 1.6rem; font-weight: 800;
+      line-height: 1; letter-spacing: -0.03em; color: #1a202c;
+    }
+    .stat-lbl {
+      font-size: 0.74rem; font-weight: 600; color: #9ca3af;
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+
+    /* ---- Content ---- */
+    .content {
+      max-width: 1200px; margin: 0 auto;
+      padding: 36px 40px 60px;
+    }
+    .section-title {
+      font-size: 0.74rem; font-weight: 700; color: #9ca3af;
+      text-transform: uppercase; letter-spacing: 0.09em;
+      margin-bottom: 16px;
+    }
+
+    /* ---- Cards grid ---- */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 16px;
+    }
+
+    .report-card {
       background: #fff;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-    }
-    thead { background: #2d5be3; color: #fff; }
-    thead th {
-      padding: 12px 16px;
-      text-align: left;
-      font-size: 0.85rem;
-      font-weight: 600;
-      letter-spacing: 0.03em;
-    }
-    tbody tr { border-bottom: 1px solid #f0f0f0; }
-    tbody tr:last-child { border-bottom: none; }
-    tbody tr:hover { background: #f7f9ff; }
-    tbody td {
-      padding: 12px 16px;
-      font-size: 0.9rem;
-      vertical-align: middle;
-    }
-    .period { font-weight: 600; color: #1a1a2e; }
-    .report-type {
-      display: inline-block;
-      background: #eef2ff;
-      color: #2d5be3;
-      padding: 2px 10px;
+      border: 1px solid #e2e8f0;
       border-radius: 12px;
-      font-size: 0.8rem;
-      font-weight: 500;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      transition: box-shadow 0.15s, transform 0.15s;
+      display: flex; flex-direction: column;
+      text-decoration: none; color: inherit;
     }
-    .link-cell a {
-      color: #2d5be3;
+    .report-card:hover {
+      box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+      transform: translateY(-2px);
+    }
+    .card-accent {
+      height: 4px;
+      border-radius: 12px 12px 0 0;
+    }
+    .card-body {
+      padding: 20px 22px;
+      flex: 1; display: flex; flex-direction: column; gap: 12px;
+    }
+    .card-top {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 12px;
+    }
+    .type-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 12px; border-radius: 999px;
+      font-size: 0.76rem; font-weight: 700;
+      white-space: nowrap;
+    }
+    .card-icon {
+      font-size: 1.4rem; flex-shrink: 0; margin-top: 2px;
+    }
+    .card-period {
+      font-size: 1.15rem; font-weight: 800;
+      color: #1a202c; letter-spacing: -0.01em;
+      line-height: 1.3;
+    }
+    .card-meta {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.78rem; color: #9ca3af;
+    }
+    .card-dot { color: #d1d5db; }
+    .card-footer {
+      padding: 14px 22px;
+      background: #f8fafc;
+      border-top: 1px solid #edf2f7;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .view-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.84rem; font-weight: 700;
+      color: #1d4ed8;
       text-decoration: none;
-      font-weight: 500;
     }
-    .link-cell a:hover { text-decoration: underline; }
-    .generated { color: #888; font-size: 0.82rem; }
+    .view-btn:hover { text-decoration: underline; }
+    .view-arrow {
+      font-size: 1rem; transition: transform 0.15s;
+    }
+    .report-card:hover .view-arrow { transform: translateX(3px); }
+
+    /* ---- Empty state ---- */
+    .empty-state {
+      background: #fff; border: 2px dashed #e2e8f0;
+      border-radius: 12px; padding: 60px; text-align: center;
+      color: #9ca3af; font-size: 0.9rem;
+    }
+
+    /* ---- Footer ---- */
     footer {
-      margin-top: 32px;
-      text-align: center;
-      color: #aaa;
-      font-size: 0.8rem;
+      text-align: center; padding: 28px;
+      font-size: 0.78rem; color: #9ca3af;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    @media (max-width: 768px) {
+      .hero { padding: 32px 20px; }
+      .hero h1 { font-size: 1.6rem; }
+      .content { padding: 24px 16px 48px; }
+      .cards-grid { grid-template-columns: 1fr; }
+      .stat-item { min-width: 120px; padding: 14px 20px; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>WebLife Ventures — Performance Reports</h1>
-      <p>Bi-weekly Hubstaff compliance reports · Auto-generated · Internal use only</p>
-    </header>
 
-    <table>
-    <thead>
-      <tr>
-        <th>Cycle Period</th>
-        <th>Report Type</th>
-        <th>Generated</th>
-        <th>Link</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td class="period">Mar 01 – Mar 31, 2026</td><td><span class="report-type">Role-Based Peer Comparison</span></td><td class="generated">2026-04-09 08:54</td><td class="link-cell"><a href="2026-03-01_to_2026-03-31_peer_comparison.html">View Report &rarr;</a></td></tr>
-      <tr><td class="period">Mar 01 – Mar 24, 2026</td><td><span class="report-type">Friday Solutions</span></td><td class="generated">2026-03-26 10:35</td><td class="link-cell"><a href="2026-03-01_to_2026-03-24_fs_report.html">View Report &rarr;</a></td></tr>
-      <tr><td class="period">Mar 01 – Mar 24, 2026</td><td><span class="report-type">Bi-Weekly Top Violators</span></td><td class="generated">2026-03-26 10:20</td><td class="link-cell"><a href="2026-03-01_to_2026-03-24_biweekly_top_violators.html">View Report &rarr;</a></td></tr>
-      <tr><td class="period">Mar 01 – Mar 11, 2026</td><td><span class="report-type">Bi-Weekly Top Violators</span></td><td class="generated">2026-03-25 23:26</td><td class="link-cell"><a href="2026-03-01_to_2026-03-11_biweekly_top_violators.html">View Report &rarr;</a></td></tr>
-      <tr><td class="period">Jan 01 – Mar 31, 2026</td><td><span class="report-type">3-Month Pattern Analysis</span></td><td class="generated">2026-04-08 23:05</td><td class="link-cell"><a href="2026-01-01_to_2026-03-31_pattern_analysis.html">View Report &rarr;</a></td></tr>
-      <tr><td class="period">Jan 01 – Mar 31, 2026</td><td><span class="report-type">3-Month Pattern Analysis</span></td><td class="generated">2026-04-09 07:28</td><td class="link-cell"><a href="2026-01-01_to_2026-03-31_fs_pattern_analysis.html">View Report &rarr;</a></td></tr>
-    </tbody>
-  </table>
-
-    <footer>
-      Index last updated: 2026-04-09 08:54 &nbsp;·&nbsp; WebLife Ventures
-    </footer>
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-brand">WebLife Ventures &nbsp;·&nbsp; Internal Use Only</div>
+      <h1>Performance Reports</h1>
+      <p class="hero-sub">Hubstaff compliance reports &nbsp;·&nbsp; Auto-generated &nbsp;·&nbsp; Executive review</p>
+    </div>
   </div>
+
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div class="stat-item"><div class="stat-num">6</div><div class="stat-lbl">Total Reports</div></div>
+<div class="stat-item"><div class="stat-num">2</div><div class="stat-lbl">Bi-Weekly Top Violators</div></div>
+<div class="stat-item"><div class="stat-num">1</div><div class="stat-lbl">Peer Comparison</div></div>
+<div class="stat-item"><div class="stat-num">1</div><div class="stat-lbl">Friday Solutions</div></div>
+<div class="stat-item"><div class="stat-num">1</div><div class="stat-lbl">Q1 Pattern Analysis</div></div>
+<div class="stat-item"><div class="stat-num">1</div><div class="stat-lbl">FS Pattern Analysis</div></div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="section-title">All Reports — Newest First</div>
+    <div class="cards-grid">
+        <a class="report-card" href="2026-03-01_to_2026-03-31_peer_comparison.html">
+          <div class="card-accent" style="background:#7c3aed;"></div>
+          <div class="card-body">
+            <div class="card-top">
+              <div>
+                <span class="type-badge" style="background:#f5f3ff;color:#7c3aed;">
+                  👥 Peer Comparison
+                </span>
+              </div>
+            </div>
+            <div class="card-period">Mar 01 – Mar 31, 2026</div>
+            <div class="card-meta">
+              <span>Generated</span>
+              <span class="card-dot">·</span>
+              <span>Apr 09, 2026 · 08:54</span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="view-btn">
+              View Report <span class="view-arrow">→</span>
+            </span>
+          </div>
+        </a>
+        <a class="report-card" href="2026-03-01_to_2026-03-24_fs_report.html">
+          <div class="card-accent" style="background:#d97706;"></div>
+          <div class="card-body">
+            <div class="card-top">
+              <div>
+                <span class="type-badge" style="background:#fffbeb;color:#d97706;">
+                  ⚡ Friday Solutions
+                </span>
+              </div>
+            </div>
+            <div class="card-period">Mar 01 – Mar 24, 2026</div>
+            <div class="card-meta">
+              <span>Generated</span>
+              <span class="card-dot">·</span>
+              <span>Mar 26, 2026 · 10:35</span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="view-btn">
+              View Report <span class="view-arrow">→</span>
+            </span>
+          </div>
+        </a>
+        <a class="report-card" href="2026-03-01_to_2026-03-24_biweekly_top_violators.html">
+          <div class="card-accent" style="background:#1d4ed8;"></div>
+          <div class="card-body">
+            <div class="card-top">
+              <div>
+                <span class="type-badge" style="background:#eff6ff;color:#1d4ed8;">
+                  📊 Bi-Weekly Top Violators
+                </span>
+              </div>
+            </div>
+            <div class="card-period">Mar 01 – Mar 24, 2026</div>
+            <div class="card-meta">
+              <span>Generated</span>
+              <span class="card-dot">·</span>
+              <span>Mar 26, 2026 · 10:20</span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="view-btn">
+              View Report <span class="view-arrow">→</span>
+            </span>
+          </div>
+        </a>
+        <a class="report-card" href="2026-03-01_to_2026-03-11_biweekly_top_violators.html">
+          <div class="card-accent" style="background:#1d4ed8;"></div>
+          <div class="card-body">
+            <div class="card-top">
+              <div>
+                <span class="type-badge" style="background:#eff6ff;color:#1d4ed8;">
+                  📊 Bi-Weekly Top Violators
+                </span>
+              </div>
+            </div>
+            <div class="card-period">Mar 01 – Mar 11, 2026</div>
+            <div class="card-meta">
+              <span>Generated</span>
+              <span class="card-dot">·</span>
+              <span>Mar 25, 2026 · 23:26</span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="view-btn">
+              View Report <span class="view-arrow">→</span>
+            </span>
+          </div>
+        </a>
+        <a class="report-card" href="2026-01-01_to_2026-03-31_pattern_analysis.html">
+          <div class="card-accent" style="background:#16a34a;"></div>
+          <div class="card-body">
+            <div class="card-top">
+              <div>
+                <span class="type-badge" style="background:#f0fdf4;color:#16a34a;">
+                  📈 Q1 Pattern Analysis
+                </span>
+              </div>
+            </div>
+            <div class="card-period">Jan 01 – Mar 31, 2026</div>
+            <div class="card-meta">
+              <span>Generated</span>
+              <span class="card-dot">·</span>
+              <span>Apr 08, 2026 · 23:05</span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="view-btn">
+              View Report <span class="view-arrow">→</span>
+            </span>
+          </div>
+        </a>
+        <a class="report-card" href="2026-01-01_to_2026-03-31_fs_pattern_analysis.html">
+          <div class="card-accent" style="background:#ea580c;"></div>
+          <div class="card-body">
+            <div class="card-top">
+              <div>
+                <span class="type-badge" style="background:#fff7ed;color:#ea580c;">
+                  🔍 FS Pattern Analysis
+                </span>
+              </div>
+            </div>
+            <div class="card-period">Jan 01 – Mar 31, 2026</div>
+            <div class="card-meta">
+              <span>Generated</span>
+              <span class="card-dot">·</span>
+              <span>Apr 09, 2026 · 07:28</span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="view-btn">
+              View Report <span class="view-arrow">→</span>
+            </span>
+          </div>
+        </a></div>
+  </div>
+
+  <footer>
+    Index last updated: 2026-04-09 09:07 &nbsp;·&nbsp; WebLife Ventures
+  </footer>
+
 </body>
 </html>
