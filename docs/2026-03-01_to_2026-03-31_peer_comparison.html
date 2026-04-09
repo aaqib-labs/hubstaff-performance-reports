@@ -10,8 +10,8 @@
 
     body {
       font-family: 'DM Sans', -apple-system, sans-serif;
-      background: #1a1f2e;
-      color: #e2e8f0;
+      background: #f7fafc;
+      color: #1a202c;
       font-size: 15px;
       line-height: 1.6;
     }
@@ -61,24 +61,33 @@
     /* ------------------------------------------------------------------ */
     .stats-row {
       display:grid; grid-template-columns:repeat(4,1fr);
-      gap:1px; background:#111827; border-bottom:1px solid #2e3650;
+      gap:16px; padding:24px 28px;
+      background:#fff; border-bottom:1px solid #e2e8f0;
     }
     .stat-tile {
-      background:#212736; padding:20px 24px;
-      display:flex; flex-direction:column; gap:4px;
+      padding:18px 20px; border-radius:10px;
+      display:flex; flex-direction:column; gap:6px;
+      box-shadow:0 1px 3px rgba(0,0,0,0.07);
     }
+    .stat-tile.blue   { background:linear-gradient(135deg,#ebf8ff,#e6fffa); border:1px solid #90cdf4; }
+    .stat-tile.red    { background:linear-gradient(135deg,#fff5f5,#fff); border:1px solid #fed7d7; }
+    .stat-tile.amber  { background:linear-gradient(135deg,#fffff0,#fff); border:1px solid #fefcbf; }
+    .stat-tile.slate  { background:linear-gradient(135deg,#faf5ff,#fff); border:1px solid #e9d8fd; }
     .stat-tile .t-label {
-      font-size:0.72rem; font-weight:700; text-transform:uppercase;
-      letter-spacing:0.07em; color:#6b7a99;
+      font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.07em;
     }
+    .stat-tile.blue  .t-label { color:#2b6cb0; }
+    .stat-tile.red   .t-label { color:#c53030; }
+    .stat-tile.amber .t-label { color:#b7791f; }
+    .stat-tile.slate .t-label { color:#553c9a; }
     .stat-tile .t-value {
       font-size:2rem; font-weight:800; line-height:1; letter-spacing:-0.04em;
     }
-    .stat-tile .t-sub { font-size:0.76rem; color:#6b7a99; margin-top:2px; }
-    .t-value.blue   { color:#60a5fa; }
-    .t-value.red    { color:#f87171; }
-    .t-value.amber  { color:#fbbf24; }
-    .t-value.slate  { color:#a5b4cc; }
+    .stat-tile.blue  .t-value { color:#2b6cb0; }
+    .stat-tile.red   .t-value { color:#c53030; }
+    .stat-tile.amber .t-value { color:#b7791f; }
+    .stat-tile.slate .t-value { color:#553c9a; }
+    .stat-tile .t-sub { font-size:0.76rem; color:#718096; margin-top:2px; }
 
     /* ------------------------------------------------------------------ */
     /* Content                                                              */
@@ -89,39 +98,36 @@
     /* Group Cards                                                          */
     /* ------------------------------------------------------------------ */
     .group-card {
-      background:#212736;
-      border:1px solid #2e3650;
-      border-radius:10px;
-      margin-bottom:24px;
-      overflow:hidden;
+      background:#fff; border:1px solid #e2e8f0;
+      border-radius:10px; margin-bottom:24px; overflow:hidden;
+      box-shadow:0 2px 8px rgba(0,0,0,0.06);
     }
     .group-header {
-      padding:15px 20px;
-      border-bottom:1px solid #2e3650;
+      padding:14px 20px; background:#f8fafc;
+      border-bottom:1px solid #e2e8f0;
       display:flex; align-items:center; flex-wrap:wrap; gap:12px;
-      background:#1c2133;
     }
     .group-num {
       width:28px; height:28px; border-radius:7px;
-      background:#2563eb; color:#fff;
+      background:#1d4ed8; color:#fff;
       font-size:0.82rem; font-weight:800;
       display:flex; align-items:center; justify-content:center; flex-shrink:0;
     }
     .group-title {
-      font-size:1rem; font-weight:800; color:#f1f5f9; letter-spacing:0.01em;
+      font-size:1rem; font-weight:800; color:#1a202c; letter-spacing:0.01em;
     }
     .member-count-pill {
-      background:#1e3a8a; color:#93c5fd;
+      background:#eff6ff; color:#1d4ed8;
       font-size:0.74rem; font-weight:700;
-      padding:3px 10px; border-radius:999px; border:1px solid #2563eb;
+      padding:3px 10px; border-radius:999px; border:1px solid #bfdbfe;
     }
     .group-meta {
-      padding:9px 20px; background:#191d2b;
-      border-bottom:2px solid #2e3650;
+      padding:8px 20px; background:#f0f4ff;
+      border-bottom:2px solid #e2e8f0;
       display:flex; gap:28px; flex-wrap:wrap;
     }
-    .group-meta span { font-size:0.83rem; color:#8896b3; }
-    .group-meta strong { color:#cbd5e1; font-weight:700; }
+    .group-meta span { font-size:0.83rem; color:#4a5568; }
+    .group-meta strong { color:#1a202c; font-weight:700; }
 
     /* ------------------------------------------------------------------ */
     /* Tables                                                               */
@@ -129,110 +135,104 @@
     .table-wrapper { overflow-x:auto; }
     table { width:100%; border-collapse:collapse; font-size:14px; }
 
-    thead tr { background:#141928; }
+    thead tr { background:#1a202c; }
     thead th {
-      color:#8896b3; padding:11px 14px;
-      font-size:11px; font-weight:700;
-      letter-spacing:0.07em; text-transform:uppercase;
+      color:#a0aec0; padding:11px 14px;
+      font-size:12px; font-weight:600;
+      letter-spacing:0.06em; text-transform:uppercase;
       white-space:nowrap; text-align:left;
-      border-bottom:1px solid #2e3650;
-      border-right:1px solid #1e2433;
+      border-right:1px solid #2d3748;
     }
     thead th:last-child { border-right:none; }
     thead th.center { text-align:center; }
 
-    tbody tr { background:#212736; border-bottom:1px solid #2a3349; }
-    tbody tr:nth-child(even) { background:#1e2433; }
+    tbody tr { background:#fff; border-bottom:1px solid #edf2f7; }
+    tbody tr:nth-child(even) { background:#f8fafc; }
     tbody tr:last-child { border-bottom:none; }
-    tbody tr:hover td { background:#263050 !important; }
+    tbody tr:hover td { background:#ebf8ff !important; }
     tbody td {
-      padding:11px 14px; vertical-align:middle;
-      white-space:nowrap; color:#cbd5e1;
-      border-right:1px solid #2a3349;
+      padding:10px 14px; vertical-align:middle;
+      white-space:nowrap; color:#1a202c;
+      border-right:1px solid #f0f4f8;
     }
     tbody td:last-child { border-right:none; }
     tbody td.center { text-align:center; }
 
     /* Manager row */
-    tr.manager-row { background:#1a2d4a !important; }
-    tr.manager-row td { background:#1a2d4a; }
-    tr.manager-row td.member-col { font-weight:700; color:#93c5fd; }
+    tr.manager-row td { background:#eff6ff; }
+    tr.manager-row td.member-col { font-weight:700; color:#1e40af; }
     .manager-tag {
       display:inline-block; font-size:11px; font-weight:700;
-      color:#60a5fa; background:#1e3a8a;
+      color:#1d4ed8; background:#dbeafe;
       padding:1px 8px; border-radius:999px; margin-left:6px;
-      border:1px solid #2563eb;
+      border:1px solid #bfdbfe;
     }
 
     /* New hire tag */
     .new-hire-tag {
       display:inline-block; font-size:10px; font-weight:700;
-      color:#86efac; background:#14532d;
+      color:#166534; background:#dcfce7;
       padding:1px 7px; border-radius:999px; margin-left:5px;
-      border:1px solid #166534;
+      border:1px solid #86efac;
     }
 
-    /* Peer outlier row */
-    tr.peer-outlier-row { background:#2a2213 !important; }
-    tr.peer-outlier-row td { background:#2a2213; }
+    /* Peer outlier */
+    tr.peer-outlier-row td { background:#fffbeb; }
     tr.peer-outlier-row td:first-child { box-shadow:inset 3px 0 0 #f59e0b; }
 
-    /* Member col */
-    td.member-col { font-weight:600; color:#e2e8f0; min-width:155px; }
+    td.member-col { font-weight:600; color:#1a202c; min-width:155px; }
 
     /* ------------------------------------------------------------------ */
     /* Metric Pill Cells                                                    */
     /* ------------------------------------------------------------------ */
     td.metric-col { text-align:center; }
     .m-pill {
-      display:inline-block; padding:4px 11px; border-radius:6px;
-      font-size:13px; font-weight:700; text-align:center;
+      display:inline-block; padding:3px 11px; border-radius:6px;
+      font-size:13px; font-weight:700;
       font-family:'DM Mono', monospace;
       font-variant-numeric:tabular-nums; white-space:nowrap;
     }
-    /* Red violation */
-    .m-pill.p-red    { background:#dc2626; color:#fff; }
-    /* Orange overwork */
-    .m-pill.p-orange { background:#ea580c; color:#fff; }
-    /* Yellow warning */
-    .m-pill.p-yellow { background:#d97706; color:#fff; }
-    /* Clean — subtle, de-emphasised */
-    .m-pill.p-clean  { background:#2a3349; color:#8896b3; }
+    .m-pill.p-red    { background:#fed7d7; color:#9b2c2c; }
+    .m-pill.p-orange { background:#fbd38d; color:#7b341e; }
+    .m-pill.p-yellow { background:#fefcbf; color:#744210; }
+    .m-pill.p-clean  { background:#edf2f7; color:#4a5568; }
 
-    /* Variance */
+    /* Variance pill */
     td.variance-col { text-align:center; }
     .var-pill {
-      display:inline-block; padding:4px 10px; border-radius:6px;
+      display:inline-block; padding:3px 10px; border-radius:6px;
       font-size:13px; font-weight:700;
       font-family:'DM Mono', monospace;
     }
-    .var-pos     { background:#14532d; color:#4ade80; }
-    .var-neg     { background:#450a0a; color:#f87171; }
-    .var-neutral { background:#2a3349; color:#6b7a99; }
+    .var-pos     { background:#c6f6d5; color:#22543d; }
+    .var-neg     { background:#fed7d7; color:#9b2c2c; }
+    .var-neutral { background:#edf2f7; color:#718096; }
 
-    /* Flags */
     td.flags-col { text-align:center; font-size:13px; white-space:nowrap; }
 
     /* ------------------------------------------------------------------ */
-    /* Team Average Row — clearly distinct                                  */
+    /* Team Average Row                                                     */
     /* ------------------------------------------------------------------ */
-    tr.avg-row { border-top:2px solid #4b5680; }
+    tr.avg-row { border-top:2px solid #4a5568; }
     tr.avg-row td {
-      background:#0f1521 !important;
+      background:#2d3748 !important;
       padding:10px 14px;
-      border-right:1px solid #1e2433;
+      border-right:1px solid #4a5568;
     }
-    tr.avg-row:hover td { background:#141d30 !important; }
+    tr.avg-row:hover td { background:#374151 !important; }
     td.avg-label {
       font-size:11px; font-weight:800;
-      text-transform:uppercase; letter-spacing:0.09em; color:#6b7a99;
+      text-transform:uppercase; letter-spacing:0.09em; color:#a0aec0;
     }
-    tr.avg-row .m-pill { background:#1e2d45; color:#93c5fd; border:1px solid #2563eb; }
+    tr.avg-row .m-pill {
+      background:#4a5568; color:#e2e8f0;
+      font-weight:600;
+    }
 
     /* Absent note */
     .absent-note {
-      padding:9px 20px; background:#1c1a0a; border-top:1px solid #2e3650;
-      font-size:0.80rem; color:#a16207;
+      padding:9px 20px; background:#fffbeb; border-top:1px solid #fef3c7;
+      font-size:0.80rem; color:#92400e;
     }
 
     /* ------------------------------------------------------------------ */
@@ -243,10 +243,10 @@
       display:flex; justify-content:space-between;
       align-items:center; flex-wrap:wrap; gap:8px;
     }
-    .page-footer span { font-size:0.76rem; color:#4b5680; }
+    .page-footer span { font-size:0.76rem; color:#a0aec0; }
 
     @media (max-width:900px) {
-      .stats-row { grid-template-columns:repeat(2,1fr); }
+      .stats-row { grid-template-columns:repeat(2,1fr); padding:16px; }
       .content   { padding:16px; }
     }
   </style>
@@ -254,7 +254,6 @@
 <body>
 <div class="page-wrap">
 
-  <!-- Header -->
   <div class="page-header">
     <div class="header-top">
       <div>
@@ -282,37 +281,35 @@
       </div>
       <div class="header-meta-item">
         <div class="h-label">Generated</div>
-        <div class="h-value">2026-04-09 08:52</div>
+        <div class="h-value">2026-04-09 08:54</div>
       </div>
     </div>
   </div>
 
-  <!-- KPI Tiles -->
   <div class="stats-row">
-    <div class="stat-tile">
+    <div class="stat-tile blue">
       <div class="t-label">Peer Groups</div>
-      <div class="t-value blue">17</div>
+      <div class="t-value">17</div>
       <div class="t-sub">functional teams</div>
     </div>
-    <div class="stat-tile">
+    <div class="stat-tile slate">
       <div class="t-label">Employees Covered</div>
-      <div class="t-value slate">78</div>
+      <div class="t-value">78</div>
       <div class="t-sub">across all groups</div>
     </div>
-    <div class="stat-tile">
+    <div class="stat-tile red">
       <div class="t-label">SLA Violations</div>
-      <div class="t-value red">31</div>
+      <div class="t-value">31</div>
       <div class="t-sub">employees with flags</div>
     </div>
-    <div class="stat-tile">
+    <div class="stat-tile amber">
       <div class="t-label">Peer Outliers</div>
-      <div class="t-value amber">1</div>
+      <div class="t-value">1</div>
       <div class="t-sub">below team avg, no SLA flag</div>
     </div>
   </div>
 
   <div class="content">
-
     
     <div class="group-card" id="group-leadership">
 
@@ -350,27 +347,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-red">🔴 31.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neg">-15.0pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-red">🔴 118.7h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 5.1%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">5.2%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">5.2%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-red">🔴 50.4%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 31.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-15.0pts</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 118.7h</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 5.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">5.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">5.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 50.4%</span></td>
               <td class="flags-col">🔴 3 ⚠️ 1</td>
             </tr>
             
@@ -380,27 +363,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">45.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neutral">-1.0pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-orange">🟠 364.6h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 6.9%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">45.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-1.0pts</span></td>
+              <td class="metric-col"><span class="m-pill p-orange">🟠 364.6h</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 6.9%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
               <td class="flags-col">🟠 1 ⚠️ 1</td>
             </tr>
             
@@ -410,27 +379,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 43.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neutral">-3.0pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-orange">🟠 237.2h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.5%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">2.5%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.8%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">2.3%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 43.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-3.0pts</span></td>
+              <td class="metric-col"><span class="m-pill p-orange">🟠 237.2h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.3%</span></td>
               <td class="flags-col">🟠 1 ⚠️ 1</td>
             </tr>
             
@@ -440,27 +395,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">50.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+4.0pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-red">🔴 158.5h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">2.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">9.8%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.3%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">4.9%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">50.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+4.0pts</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 158.5h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">4.9%</span></td>
               <td class="flags-col">🔴 1</td>
             </tr>
             
@@ -470,27 +411,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">56.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+10.0pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">161.8h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.7%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">7.1%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">56.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+10.0pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">161.8h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.7%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">7.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -500,42 +427,26 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">51.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+5.0pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">187.2h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.4%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">9.6%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.2%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">51.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+5.0pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">187.2h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.2%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
-
-            <!-- Team Average Row -->
             <tr class="avg-row">
               <td class="avg-label">Team Average</td>
               <td class="metric-col center"><span class="m-pill">46.0%</span></td>
-              <td class="metric-col center">—</td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
               <td class="metric-col center"><span class="m-pill">204.7h</span></td>
               <td class="metric-col center"><span class="m-pill">2.8%</span></td>
               <td class="metric-col center"><span class="m-pill">5.7%</span></td>
               <td class="metric-col center"><span class="m-pill">1.1%</span></td>
               <td class="metric-col center"><span class="m-pill">9.6%</span></td>
-              <td class="flags-col">—</td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
             </tr>
           </tbody>
         </table>
@@ -555,9 +466,7 @@
 
       <div class="group-meta">
         <span><strong>Team:</strong> DP-PLATFORM / DP-CRM</span>
-        
         <span><strong>Manager:</strong> Adam Burdeshaw</span>
-        
       </div>
 
       <div class="table-wrapper">
@@ -583,27 +492,13 @@
                 <span class="manager-tag">Manager</span>
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">56.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+5.7pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">161.8h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.7%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">7.1%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">56.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+5.7pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">161.8h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.7%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">7.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -613,27 +508,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 42.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neg">-8.3pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-red">🔴 112.9h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-red">🔴 15.6%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">5.2%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 17.7%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 42.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-8.3pts</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 112.9h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 15.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">5.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 17.7%</span></td>
               <td class="flags-col">🔴 2 ⚠️ 2</td>
             </tr>
             
@@ -643,27 +524,13 @@
                 
                 <span class="new-hire-tag">New Hire</span>
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-red">🔴 32.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neg">-18.3pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-orange">🟠 229.7h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">5.8%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.5%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-red">🔴 38.3%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 32.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-18.3pts</span></td>
+              <td class="metric-col"><span class="m-pill p-orange">🟠 229.7h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">5.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 38.3%</span></td>
               <td class="flags-col">🔴 2 🟠 1</td>
             </tr>
             
@@ -673,27 +540,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 41.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neg">-9.3pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">181.1h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.7%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">9.1%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.2%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 13.9%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 41.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-9.3pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">181.1h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.7%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 13.9%</span></td>
               <td class="flags-col">⚠️ 2</td>
             </tr>
             
@@ -703,27 +556,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">60.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+9.7pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">162.0h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.6%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">8.1%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">60.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+9.7pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">162.0h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -733,27 +572,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">60.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+9.7pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">188.9h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">9.7%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">60.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+9.7pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">188.9h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.7%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -763,27 +588,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">56.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+5.7pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">188.1h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.9%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">9.6%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.2%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.3%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">56.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+5.7pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">188.1h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.9%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.3%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -793,27 +604,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">55.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+4.7pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">174.9h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.2%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">9.4%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.1%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">2.2%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">55.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+4.7pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">174.9h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.2%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -823,42 +620,26 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">51.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+0.7pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">197.8h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">7.9%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">2.1%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">7.3%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">51.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+0.7pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">197.8h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">7.9%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">7.3%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
-
-            <!-- Team Average Row -->
             <tr class="avg-row">
               <td class="avg-label">Team Average</td>
               <td class="metric-col center"><span class="m-pill">50.3%</span></td>
-              <td class="metric-col center">—</td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
               <td class="metric-col center"><span class="m-pill">177.5h</span></td>
               <td class="metric-col center"><span class="m-pill">0.7%</span></td>
               <td class="metric-col center"><span class="m-pill">9.1%</span></td>
               <td class="metric-col center"><span class="m-pill">1.0%</span></td>
               <td class="metric-col center"><span class="m-pill">9.0%</span></td>
-              <td class="flags-col">—</td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
             </tr>
           </tbody>
         </table>
@@ -878,9 +659,7 @@
 
       <div class="group-meta">
         <span><strong>Team:</strong> DP-SITECONTENT</span>
-        
         <span><strong>Manager:</strong> Shehara Meadows</span>
-        
       </div>
 
       <div class="table-wrapper">
@@ -906,27 +685,13 @@
                 <span class="manager-tag">Manager</span>
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 36.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neg">-15.7pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">175.2h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.9%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">9.2%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">6.4%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 19.7%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 36.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-15.7pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">175.2h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.9%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">6.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 19.7%</span></td>
               <td class="flags-col">⚠️ 2</td>
             </tr>
             
@@ -936,27 +701,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">66.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+14.3pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-orange">🟠 209.3h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.6%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">8.4%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.6%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.6%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">66.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+14.3pts</span></td>
+              <td class="metric-col"><span class="m-pill p-orange">🟠 209.3h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.6%</span></td>
               <td class="flags-col">🟠 1</td>
             </tr>
             
@@ -966,42 +717,26 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">53.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+1.3pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">179.0h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">7.6%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.6%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">3.2%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">53.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+1.3pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">179.0h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">7.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">3.2%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
-
-            <!-- Team Average Row -->
             <tr class="avg-row">
               <td class="avg-label">Team Average</td>
               <td class="metric-col center"><span class="m-pill">51.7%</span></td>
-              <td class="metric-col center">—</td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
               <td class="metric-col center"><span class="m-pill">187.8h</span></td>
               <td class="metric-col center"><span class="m-pill">0.5%</span></td>
               <td class="metric-col center"><span class="m-pill">8.4%</span></td>
               <td class="metric-col center"><span class="m-pill">2.9%</span></td>
               <td class="metric-col center"><span class="m-pill">7.8%</span></td>
-              <td class="flags-col">—</td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
             </tr>
           </tbody>
         </table>
@@ -1021,9 +756,7 @@
 
       <div class="group-meta">
         <span><strong>Team:</strong> DP-CATALOG</span>
-        
         <span><strong>Manager:</strong> Laleesha Wijeratne</span>
-        
       </div>
 
       <div class="table-wrapper">
@@ -1049,27 +782,13 @@
                 <span class="manager-tag">Manager</span>
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">50.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+1.0pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">190.3h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">7.6%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.7%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 10.1%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">50.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+1.0pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">190.3h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">7.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.7%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.1%</span></td>
               <td class="flags-col">⚠️ 1</td>
             </tr>
             
@@ -1079,42 +798,26 @@
                 
                 <span class="new-hire-tag">New Hire</span>
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">48.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neutral">-1.0pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">182.6h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 10.5%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.8%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">7.4%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">48.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-1.0pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">182.6h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">7.4%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
-
-            <!-- Team Average Row -->
             <tr class="avg-row">
               <td class="avg-label">Team Average</td>
               <td class="metric-col center"><span class="m-pill">49.0%</span></td>
-              <td class="metric-col center">—</td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
               <td class="metric-col center"><span class="m-pill">186.4h</span></td>
               <td class="metric-col center"><span class="m-pill">0.0%</span></td>
               <td class="metric-col center"><span class="m-pill">9.1%</span></td>
               <td class="metric-col center"><span class="m-pill">1.8%</span></td>
               <td class="metric-col center"><span class="m-pill">8.8%</span></td>
-              <td class="flags-col">—</td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
             </tr>
           </tbody>
         </table>
@@ -1134,9 +837,7 @@
 
       <div class="group-meta">
         <span><strong>Team:</strong> DP-BI</span>
-        
         <span><strong>Manager:</strong> Bihani Madushika</span>
-        
       </div>
 
       <div class="table-wrapper">
@@ -1162,27 +863,13 @@
                 <span class="manager-tag">Manager</span>
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">54.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neutral">-2.5pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">188.2h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.6%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">8.3%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">54.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-2.5pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">188.2h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -1192,51 +879,33 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">59.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+2.5pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">177.5h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.5%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">9.2%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.2%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">4.2%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">59.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+2.5pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">177.5h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">4.2%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
-
-            <!-- Team Average Row -->
             <tr class="avg-row">
               <td class="avg-label">Team Average</td>
               <td class="metric-col center"><span class="m-pill">56.5%</span></td>
-              <td class="metric-col center">—</td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
               <td class="metric-col center"><span class="m-pill">182.8h</span></td>
               <td class="metric-col center"><span class="m-pill">1.1%</span></td>
               <td class="metric-col center"><span class="m-pill">8.8%</span></td>
               <td class="metric-col center"><span class="m-pill">0.6%</span></td>
               <td class="metric-col center"><span class="m-pill">2.1%</span></td>
-              <td class="flags-col">—</td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
             </tr>
           </tbody>
         </table>
       </div>
 
       
-      <div class="absent-note">
-        ⚠️ Not in this month's data: Dilini Pathirana
-      </div>
+      <div class="absent-note">⚠️ Not in this month's data: Dilini Pathirana</div>
       
 
     </div>
@@ -1251,9 +920,7 @@
 
       <div class="group-meta">
         <span><strong>Team:</strong> VP-CO-CAM</span>
-        
         <span><strong>Manager:</strong> Shannon Woods</span>
-        
       </div>
 
       <div class="table-wrapper">
@@ -1279,27 +946,13 @@
                 <span class="manager-tag">Manager</span>
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">71.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+10.5pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">175.0h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.9%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">7.4%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">71.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+10.5pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">175.0h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.9%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">7.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -1309,27 +962,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">71.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+10.5pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">169.5h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.2%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 10.8%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.1%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">71.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+10.5pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">169.5h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.1%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -1339,27 +978,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">55.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neg">-5.5pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">165.4h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.5%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 10.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.7%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">55.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-5.5pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">165.4h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.7%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -1369,42 +994,26 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">45.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neg">-15.5pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">168.1h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.6%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">8.2%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">2.6%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">3.9%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">45.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-15.5pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">168.1h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">3.9%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
-
-            <!-- Team Average Row -->
             <tr class="avg-row">
               <td class="avg-label">Team Average</td>
               <td class="metric-col center"><span class="m-pill">60.5%</span></td>
-              <td class="metric-col center">—</td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
               <td class="metric-col center"><span class="m-pill">169.5h</span></td>
               <td class="metric-col center"><span class="m-pill">1.1%</span></td>
               <td class="metric-col center"><span class="m-pill">9.1%</span></td>
               <td class="metric-col center"><span class="m-pill">0.7%</span></td>
               <td class="metric-col center"><span class="m-pill">1.7%</span></td>
-              <td class="flags-col">—</td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
             </tr>
           </tbody>
         </table>
@@ -1424,9 +1033,7 @@
 
       <div class="group-meta">
         <span><strong>Team:</strong> VP-CO-CR</span>
-        
         <span><strong>Manager:</strong> Darren Karunaratne</span>
-        
       </div>
 
       <div class="table-wrapper">
@@ -1452,27 +1059,13 @@
                 <span class="manager-tag">Manager</span>
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">47.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+6.3pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">183.2h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 10.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">3.1%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">5.8%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">47.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+6.3pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">183.2h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">3.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">5.8%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -1482,27 +1075,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 35.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neg">-5.7pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">168.7h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 10.3%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">7.2%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-red">🔴 22.0%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 35.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-5.7pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">168.7h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">7.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 22.0%</span></td>
               <td class="flags-col">🔴 1 ⚠️ 1</td>
             </tr>
             
@@ -1512,42 +1091,26 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 40.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neutral">-0.7pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">177.3h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 10.2%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">2.4%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">2.4%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 40.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-0.7pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">177.3h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.4%</span></td>
               <td class="flags-col">⚠️ 1</td>
             </tr>
             
-
-            <!-- Team Average Row -->
             <tr class="avg-row">
               <td class="avg-label">Team Average</td>
               <td class="metric-col center"><span class="m-pill">40.7%</span></td>
-              <td class="metric-col center">—</td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
               <td class="metric-col center"><span class="m-pill">176.4h</span></td>
               <td class="metric-col center"><span class="m-pill">0.0%</span></td>
               <td class="metric-col center"><span class="m-pill">10.2%</span></td>
               <td class="metric-col center"><span class="m-pill">4.2%</span></td>
               <td class="metric-col center"><span class="m-pill">10.1%</span></td>
-              <td class="flags-col">—</td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
             </tr>
           </tbody>
         </table>
@@ -1567,9 +1130,7 @@
 
       <div class="group-meta">
         <span><strong>Team:</strong> VP-CO-CS</span>
-        
         <span><strong>Manager:</strong> Sara Higgason</span>
-        
       </div>
 
       <div class="table-wrapper">
@@ -1595,27 +1156,13 @@
                 <span class="manager-tag">Manager</span>
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">74.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+14.0pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">178.3h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">4.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-red">🔴 12.1%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">74.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+14.0pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">178.3h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">4.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 12.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
               <td class="flags-col">🔴 1</td>
             </tr>
             
@@ -1625,27 +1172,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">61.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+1.0pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-orange">🟠 201.4h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 10.1%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.5%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.0%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">61.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+1.0pts</span></td>
+              <td class="metric-col"><span class="m-pill p-orange">🟠 201.4h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.0%</span></td>
               <td class="flags-col">🟠 1</td>
             </tr>
             
@@ -1655,27 +1188,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">51.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neg">-9.0pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-red">🔴 145.4h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.3%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 11.8%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.2%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">51.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-9.0pts</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 145.4h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 11.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.2%</span></td>
               <td class="flags-col">🔴 1</td>
             </tr>
             
@@ -1685,27 +1204,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">64.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+4.0pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">174.4h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 10.3%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.3%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">2.1%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">64.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+4.0pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">174.4h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.1%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -1715,27 +1220,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">64.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+4.0pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">172.2h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 10.6%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">64.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+4.0pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">172.2h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -1745,27 +1236,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">54.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neg">-6.0pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">172.0h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">2.6%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 10.4%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.6%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">54.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-6.0pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">172.0h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.6%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -1775,42 +1252,26 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">52.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neg">-8.0pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">186.8h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 10.2%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">2.1%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">52.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-8.0pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">186.8h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.1%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
-
-            <!-- Team Average Row -->
             <tr class="avg-row">
               <td class="avg-label">Team Average</td>
               <td class="metric-col center"><span class="m-pill">60.0%</span></td>
-              <td class="metric-col center">—</td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
               <td class="metric-col center"><span class="m-pill">175.8h</span></td>
               <td class="metric-col center"><span class="m-pill">1.0%</span></td>
               <td class="metric-col center"><span class="m-pill">10.8%</span></td>
               <td class="metric-col center"><span class="m-pill">0.1%</span></td>
               <td class="metric-col center"><span class="m-pill">1.1%</span></td>
-              <td class="flags-col">—</td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
             </tr>
           </tbody>
         </table>
@@ -1830,9 +1291,7 @@
 
       <div class="group-meta">
         <span><strong>Team:</strong> VP-CO-OP</span>
-        
         <span><strong>Manager:</strong> Rebecca Corona</span>
-        
       </div>
 
       <div class="table-wrapper">
@@ -1858,27 +1317,13 @@
                 <span class="manager-tag">Manager</span>
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">50.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neutral">-2.2pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">172.8h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 10.5%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.2%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.2%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">50.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-2.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">172.8h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.2%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -1888,27 +1333,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">51.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neutral">-1.2pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-red">🔴 158.4h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.6%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">4.5%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">8.0%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">51.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-1.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 158.4h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">4.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.0%</span></td>
               <td class="flags-col">🔴 1</td>
             </tr>
             
@@ -1918,27 +1349,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 43.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neg">-9.2pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">181.9h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.3%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">9.1%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 43.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-9.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">181.9h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
               <td class="flags-col">⚠️ 1</td>
             </tr>
             
@@ -1948,27 +1365,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">67.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+14.8pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">182.1h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 10.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.6%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.6%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">67.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+14.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">182.1h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.6%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -1978,42 +1381,26 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">50.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neutral">-2.2pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">181.4h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 10.1%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">50.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-2.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">181.4h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
-
-            <!-- Team Average Row -->
             <tr class="avg-row">
               <td class="avg-label">Team Average</td>
               <td class="metric-col center"><span class="m-pill">52.2%</span></td>
-              <td class="metric-col center">—</td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
               <td class="metric-col center"><span class="m-pill">175.3h</span></td>
               <td class="metric-col center"><span class="m-pill">0.1%</span></td>
               <td class="metric-col center"><span class="m-pill">8.1%</span></td>
               <td class="metric-col center"><span class="m-pill">1.3%</span></td>
               <td class="metric-col center"><span class="m-pill">2.0%</span></td>
-              <td class="flags-col">—</td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
             </tr>
           </tbody>
         </table>
@@ -2033,9 +1420,7 @@
 
       <div class="group-meta">
         <span><strong>Team:</strong> VP-CO-SDR</span>
-        
         <span><strong>Manager:</strong> Denise Marsha Elisa Moscare</span>
-        
       </div>
 
       <div class="table-wrapper">
@@ -2061,27 +1446,13 @@
                 <span class="manager-tag">Manager</span>
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">57.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+1.8pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">189.4h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.3%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">8.6%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.8%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">2.7%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">57.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+1.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">189.4h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.7%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -2091,27 +1462,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">61.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+5.8pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">168.0h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">8.1%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.6%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">61.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+5.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">168.0h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.6%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -2121,27 +1478,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">58.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+2.8pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">176.0h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">9.1%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">2.6%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">3.8%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">58.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+2.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">176.0h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">3.8%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -2151,27 +1494,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">53.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neutral">-2.2pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">176.0h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">4.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.9%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.1%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">53.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-2.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">176.0h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">4.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.9%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.1%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -2181,42 +1510,26 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">47.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neg">-8.2pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">167.2h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 11.1%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.2%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.0%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">47.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-8.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">167.2h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 11.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.0%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
-
-            <!-- Team Average Row -->
             <tr class="avg-row">
               <td class="avg-label">Team Average</td>
               <td class="metric-col center"><span class="m-pill">55.2%</span></td>
-              <td class="metric-col center">—</td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
               <td class="metric-col center"><span class="m-pill">175.3h</span></td>
               <td class="metric-col center"><span class="m-pill">0.3%</span></td>
               <td class="metric-col center"><span class="m-pill">8.2%</span></td>
               <td class="metric-col center"><span class="m-pill">1.1%</span></td>
               <td class="metric-col center"><span class="m-pill">1.8%</span></td>
-              <td class="flags-col">—</td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
             </tr>
           </tbody>
         </table>
@@ -2236,9 +1549,7 @@
 
       <div class="group-meta">
         <span><strong>Team:</strong> TA-OPS / TA-PO / TA-TS</span>
-        
         <span><strong>Manager:</strong> Sean Dehoedt</span>
-        
       </div>
 
       <div class="table-wrapper">
@@ -2264,27 +1575,13 @@
                 <span class="manager-tag">Manager</span>
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">54.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+2.4pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-orange">🟠 202.7h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">6.5%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.8%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">2.5%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">54.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+2.4pts</span></td>
+              <td class="metric-col"><span class="m-pill p-orange">🟠 202.7h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">6.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.5%</span></td>
               <td class="flags-col">🟠 1</td>
             </tr>
             
@@ -2294,27 +1591,13 @@
                 
                 <span class="new-hire-tag">New Hire</span>
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 43.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neg">-8.6pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-red">🔴 128.4h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.4%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">9.5%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">5.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-red">🔴 24.6%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 43.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-8.6pts</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 128.4h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">5.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 24.6%</span></td>
               <td class="flags-col">🔴 2 ⚠️ 1</td>
             </tr>
             
@@ -2324,27 +1607,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">59.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+7.4pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">163.3h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 9.8%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">8.9%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.9%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">3.8%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">59.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+7.4pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">163.3h</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 9.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.9%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.9%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">3.8%</span></td>
               <td class="flags-col">⚠️ 1</td>
             </tr>
             
@@ -2354,27 +1623,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">55.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+3.4pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-red">🔴 150.2h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.3%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">9.3%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.1%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">55.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+3.4pts</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 150.2h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.1%</span></td>
               <td class="flags-col">🔴 1</td>
             </tr>
             
@@ -2384,27 +1639,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 43.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neg">-8.6pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">186.0h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">9.7%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">2.8%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">3.3%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 43.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-8.6pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">186.0h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.7%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">3.3%</span></td>
               <td class="flags-col">⚠️ 1</td>
             </tr>
             
@@ -2414,27 +1655,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">55.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+3.4pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">199.0h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.4%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">9.6%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">3.9%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">5.6%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">55.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+3.4pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">199.0h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">3.9%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">5.6%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -2444,42 +1671,26 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">52.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+0.4pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">174.0h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 10.2%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.5%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">52.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+0.4pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">174.0h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.5%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
-
-            <!-- Team Average Row -->
             <tr class="avg-row">
               <td class="avg-label">Team Average</td>
               <td class="metric-col center"><span class="m-pill">51.6%</span></td>
-              <td class="metric-col center">—</td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
               <td class="metric-col center"><span class="m-pill">171.9h</span></td>
               <td class="metric-col center"><span class="m-pill">1.8%</span></td>
               <td class="metric-col center"><span class="m-pill">9.1%</span></td>
               <td class="metric-col center"><span class="m-pill">1.9%</span></td>
               <td class="metric-col center"><span class="m-pill">5.8%</span></td>
-              <td class="flags-col">—</td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
             </tr>
           </tbody>
         </table>
@@ -2499,9 +1710,7 @@
 
       <div class="group-meta">
         <span><strong>Team:</strong> MKT-MEDIA</span>
-        
         <span><strong>Manager:</strong> Rannie Belen</span>
-        
       </div>
 
       <div class="table-wrapper">
@@ -2527,27 +1736,13 @@
                 <span class="manager-tag">Manager</span>
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">60.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+6.0pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">186.0h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.9%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.1%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.1%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">60.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+6.0pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">186.0h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.9%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.1%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -2557,27 +1752,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">51.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neutral">-3.0pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">182.0h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">9.8%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">6.5%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">51.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-3.0pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">182.0h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">6.5%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -2587,42 +1768,26 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">51.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neutral">-3.0pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">198.9h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">9.3%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.7%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">51.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-3.0pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">198.9h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.7%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
-
-            <!-- Team Average Row -->
             <tr class="avg-row">
               <td class="avg-label">Team Average</td>
               <td class="metric-col center"><span class="m-pill">54.0%</span></td>
-              <td class="metric-col center">—</td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
               <td class="metric-col center"><span class="m-pill">189.0h</span></td>
               <td class="metric-col center"><span class="m-pill">0.0%</span></td>
               <td class="metric-col center"><span class="m-pill">6.7%</span></td>
               <td class="metric-col center"><span class="m-pill">0.7%</span></td>
               <td class="metric-col center"><span class="m-pill">2.8%</span></td>
-              <td class="flags-col">—</td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
             </tr>
           </tbody>
         </table>
@@ -2642,9 +1807,7 @@
 
       <div class="group-meta">
         <span><strong>Team:</strong> MKT-MEDIA (Creative)</span>
-        
         <span><strong>Manager:</strong> Rannie Belen</span>
-        
       </div>
 
       <div class="table-wrapper">
@@ -2670,27 +1833,13 @@
                 
                 <span class="new-hire-tag">New Hire</span>
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">62.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+5.0pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">189.1h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 10.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">62.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+5.0pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">189.1h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -2700,27 +1849,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">59.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+2.0pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">199.1h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">9.2%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.8%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">3.0%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">59.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+2.0pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">199.1h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">3.0%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -2730,27 +1865,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">57.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neutral">0.0pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">175.5h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">8.5%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.5%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">57.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">0.0pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">175.5h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.5%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -2760,42 +1881,26 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">50.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neg">-7.0pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">197.2h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.5%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">8.1%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.0%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">50.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-7.0pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">197.2h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.0%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
-
-            <!-- Team Average Row -->
             <tr class="avg-row">
               <td class="avg-label">Team Average</td>
               <td class="metric-col center"><span class="m-pill">57.0%</span></td>
-              <td class="metric-col center">—</td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
               <td class="metric-col center"><span class="m-pill">190.2h</span></td>
               <td class="metric-col center"><span class="m-pill">0.1%</span></td>
               <td class="metric-col center"><span class="m-pill">8.9%</span></td>
               <td class="metric-col center"><span class="m-pill">0.2%</span></td>
               <td class="metric-col center"><span class="m-pill">1.1%</span></td>
-              <td class="flags-col">—</td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
             </tr>
           </tbody>
         </table>
@@ -2815,9 +1920,7 @@
 
       <div class="group-meta">
         <span><strong>Team:</strong> MKT-AMAZON / MKT-PERFMKT / MKT-RGC</span>
-        
         <span><strong>Manager:</strong> Saduka Sachintha</span>
-        
       </div>
 
       <div class="table-wrapper">
@@ -2843,27 +1946,13 @@
                 <span class="manager-tag">Manager</span>
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">51.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+1.2pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">187.2h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.4%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">9.6%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.2%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">51.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+1.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">187.2h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.2%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -2873,27 +1962,13 @@
                 
                 <span class="new-hire-tag">New Hire</span>
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-red">🔴 33.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neg">-16.8pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">169.1h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">9.2%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 11.6%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-red">🔴 39.3%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 33.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-16.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">169.1h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 11.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 39.3%</span></td>
               <td class="flags-col">🔴 2 ⚠️ 1</td>
             </tr>
             
@@ -2903,27 +1978,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">84.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+34.2pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-red">🔴 42.2h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-red">🔴 21.8%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">3.3%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">84.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+34.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 42.2h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 21.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">3.3%</span></td>
               <td class="flags-col">🔴 2</td>
             </tr>
             
@@ -2933,27 +1994,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 41.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neg">-8.8pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">176.3h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.6%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">9.6%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.2%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">8.2%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 41.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-8.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">176.3h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.2%</span></td>
               <td class="flags-col">⚠️ 1</td>
             </tr>
             
@@ -2963,27 +2010,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">45.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neutral">-4.8pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">186.1h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">8.8%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.6%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">3.0%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">45.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-4.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">186.1h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">3.0%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -2993,42 +2026,26 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">45.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neutral">-4.8pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">180.5h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.2%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 10.2%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">5.8%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">7.9%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">45.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-4.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">180.5h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">5.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">7.9%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
-
-            <!-- Team Average Row -->
             <tr class="avg-row">
               <td class="avg-label">Team Average</td>
               <td class="metric-col center"><span class="m-pill">49.8%</span></td>
-              <td class="metric-col center">—</td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
               <td class="metric-col center"><span class="m-pill">156.9h</span></td>
               <td class="metric-col center"><span class="m-pill">0.2%</span></td>
               <td class="metric-col center"><span class="m-pill">11.5%</span></td>
               <td class="metric-col center"><span class="m-pill">3.0%</span></td>
               <td class="metric-col center"><span class="m-pill">10.3%</span></td>
-              <td class="flags-col">—</td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
             </tr>
           </tbody>
         </table>
@@ -3048,9 +2065,7 @@
 
       <div class="group-meta">
         <span><strong>Team:</strong> FIN-ACC</span>
-        
         <span><strong>Manager:</strong> Laci Burton</span>
-        
       </div>
 
       <div class="table-wrapper">
@@ -3076,27 +2091,13 @@
                 <span class="manager-tag">Manager</span>
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">60.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+13.8pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">176.2h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.4%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">8.3%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">60.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+13.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">176.2h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -3106,27 +2107,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 38.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neg">-8.2pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">186.1h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.4%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">9.5%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 8.1%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-red">🔴 24.7%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 38.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-8.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">186.1h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 8.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 24.7%</span></td>
               <td class="flags-col">🔴 1 ⚠️ 2</td>
             </tr>
             
@@ -3136,27 +2123,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 44.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neutral">-2.2pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">172.2h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.2%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 10.2%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.1%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">2.0%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 44.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-2.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">172.2h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.0%</span></td>
               <td class="flags-col">⚠️ 1</td>
             </tr>
             
@@ -3166,42 +2139,26 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 43.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neutral">-3.2pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">173.6h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 10.5%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">5.5%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 43.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-3.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">173.6h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">5.5%</span></td>
               <td class="flags-col">⚠️ 1</td>
             </tr>
             
-
-            <!-- Team Average Row -->
             <tr class="avg-row">
               <td class="avg-label">Team Average</td>
               <td class="metric-col center"><span class="m-pill">46.2%</span></td>
-              <td class="metric-col center">—</td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
               <td class="metric-col center"><span class="m-pill">177.0h</span></td>
               <td class="metric-col center"><span class="m-pill">0.5%</span></td>
               <td class="metric-col center"><span class="m-pill">9.6%</span></td>
               <td class="metric-col center"><span class="m-pill">2.0%</span></td>
               <td class="metric-col center"><span class="m-pill">8.1%</span></td>
-              <td class="flags-col">—</td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
             </tr>
           </tbody>
         </table>
@@ -3221,9 +2178,7 @@
 
       <div class="group-meta">
         <span><strong>Team:</strong> AiT-CLIENT / AiT-CANDIDATE</span>
-        
         <span><strong>Manager:</strong> Kushani Kalpage</span>
-        
       </div>
 
       <div class="table-wrapper">
@@ -3249,27 +2204,13 @@
                 <span class="manager-tag">Manager</span>
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 44.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neg">-9.2pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">183.9h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.4%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">9.9%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">7.3%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-red">🔴 20.7%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 44.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-9.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">183.9h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.9%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">7.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 20.7%</span></td>
               <td class="flags-col">🔴 1 ⚠️ 1</td>
             </tr>
             
@@ -3279,27 +2220,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">62.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+8.8pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">195.6h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">8.7%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">3.4%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">6.9%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">62.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+8.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">195.6h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.7%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">3.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">6.9%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -3309,27 +2236,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">61.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+7.8pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">192.7h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">9.4%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">1.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">8.7%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">61.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+7.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">192.7h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.7%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -3339,42 +2252,26 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">46.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neg">-7.2pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">186.6h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">9.9%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.1%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">2.3%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">46.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-7.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">186.6h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.9%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.3%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
-
-            <!-- Team Average Row -->
             <tr class="avg-row">
               <td class="avg-label">Team Average</td>
               <td class="metric-col center"><span class="m-pill">53.2%</span></td>
-              <td class="metric-col center">—</td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
               <td class="metric-col center"><span class="m-pill">189.7h</span></td>
               <td class="metric-col center"><span class="m-pill">0.3%</span></td>
               <td class="metric-col center"><span class="m-pill">9.5%</span></td>
               <td class="metric-col center"><span class="m-pill">3.0%</span></td>
               <td class="metric-col center"><span class="m-pill">9.7%</span></td>
-              <td class="flags-col">—</td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
             </tr>
           </tbody>
         </table>
@@ -3394,9 +2291,7 @@
 
       <div class="group-meta">
         <span><strong>Team:</strong> FF-L&amp;D</span>
-        
         <span><strong>Manager:</strong> Jebby Rochelle</span>
-        
       </div>
 
       <div class="table-wrapper">
@@ -3422,27 +2317,13 @@
                 <span class="manager-tag">Manager</span>
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 40.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neg">-13.2pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-orange">🟠 200.2h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">9.2%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.4%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">8.5%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 40.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-13.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-orange">🟠 200.2h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.5%</span></td>
               <td class="flags-col">🟠 1 ⚠️ 1</td>
             </tr>
             
@@ -3452,27 +2333,13 @@
                 
                 
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-yellow">⚠️ 43.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neg">-10.2pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-orange">🟠 237.2h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.5%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">2.5%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.8%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">2.3%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 43.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-10.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-orange">🟠 237.2h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.3%</span></td>
               <td class="flags-col">🟠 1 ⚠️ 1</td>
             </tr>
             
@@ -3482,27 +2349,13 @@
                 
                 <span class="new-hire-tag">New Hire</span>
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">81.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-pos">+27.8pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">187.3h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">9.8%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.6%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.9%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">81.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+27.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">187.3h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.9%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
@@ -3512,42 +2365,26 @@
                 
                 <span class="new-hire-tag">New Hire</span>
               </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">49.0%</span>
-              </td>
-              <td class="variance-col">
-                <span class="var-pill var-neutral">-4.2pts</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">183.2h</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">9.6%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">0.0%</span>
-              </td>
-              <td class="metric-col">
-                <span class="m-pill p-clean">7.9%</span>
-              </td>
+              <td class="metric-col"><span class="m-pill p-clean">49.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-4.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">183.2h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">7.9%</span></td>
               <td class="flags-col">—</td>
             </tr>
             
-
-            <!-- Team Average Row -->
             <tr class="avg-row">
               <td class="avg-label">Team Average</td>
               <td class="metric-col center"><span class="m-pill">53.2%</span></td>
-              <td class="metric-col center">—</td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
               <td class="metric-col center"><span class="m-pill">202.0h</span></td>
               <td class="metric-col center"><span class="m-pill">0.1%</span></td>
               <td class="metric-col center"><span class="m-pill">7.8%</span></td>
               <td class="metric-col center"><span class="m-pill">0.5%</span></td>
               <td class="metric-col center"><span class="m-pill">4.9%</span></td>
-              <td class="flags-col">—</td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
             </tr>
           </tbody>
         </table>
@@ -3557,12 +2394,11 @@
 
     </div>
     
-
   </div>
 
   <div class="page-footer">
     <span>WebLife Ventures Performance Reporting System &nbsp;·&nbsp; SLA thresholds per WebLife SLA Violation Legend v1.0</span>
-    <span>Generated 2026-04-09 08:52 &nbsp;·&nbsp; Internal use only — do not distribute</span>
+    <span>Generated 2026-04-09 08:54 &nbsp;·&nbsp; Internal use only — do not distribute</span>
   </div>
 
 </div>
