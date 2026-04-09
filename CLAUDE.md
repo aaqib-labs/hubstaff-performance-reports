@@ -176,7 +176,10 @@ Score = sum of (base × multiplier) across all flags
 ## Git Conventions
 
 - Always commit and push after generating reports
-- Commit message format: `Report: Bi-Weekly YYYY-MM-DD to YYYY-MM-DD`
+- Commit message formats:
+  - Bi-weekly: `Report: Bi-Weekly YYYY-MM-DD to YYYY-MM-DD`
+  - Pattern Analysis: `Report: Q1 Pattern Analysis YYYY-MM-DD to YYYY-MM-DD`
+  - Friday Solutions: `Report: Friday Solutions YYYY-MM-DD to YYYY-MM-DD`
 - Never leave uncommitted changes after a session
 - Never force-push
 
@@ -186,11 +189,11 @@ Score = sum of (base × multiplier) across all flags
 
 | Script | Purpose |
 |--------|---------|
-| `scripts/utils.py` | Shared helpers — working-days, proration, threshold header. Import from here, never duplicate. |
+| `scripts/utils.py` | Shared helpers — working-days, proration, SLA thresholds, flag evaluation, exclusion lists. Import from here, never duplicate. |
 | `scripts/generate_biweekly_report.py` | Hubstaff bi-weekly report generation |
 | `scripts/generate_fs_report.py` | Friday Solutions (TMetric) report generation |
+| `scripts/generate_pattern_analysis.py` | Quarterly repeated pattern analysis — fully implemented |
 | `scripts/update_index.py` | Regenerate `docs/index.html` from all reports in `/docs/` |
-| `scripts/generate_pattern_analysis.py` | 3-month repeated pattern analysis (stub — not yet implemented) |
 | `scripts/generate_peer_comparison.py` | Role-based peer comparison (stub — not yet implemented) |
 
 ---
@@ -204,6 +207,40 @@ Ranked by severity score. Columns: Rank, Member, Team, Activity %, Hours, Break 
 
 **Section 2 — Hours Violators**
 All employees below the prorated hours threshold. Sorted ascending (worst first). Columns: Member, Team, Hours Worked, Expected Hours, Shortfall, Other Flags.
+
+---
+
+## Repeated Pattern Analysis Workflow
+
+When asked to "generate the Q1 / quarterly pattern analysis report":
+
+1. Confirm 3 full monthly CSVs are in `data/input/monthly/`
+2. Run:
+```
+python scripts/generate_pattern_analysis.py \
+  --months data/input/monthly/HS-YYYY-MM-master.csv \
+           data/input/monthly/HS-YYYY-MM-master.csv \
+           data/input/monthly/HS-YYYY-MM-master.csv \
+  --labels "Month1 YYYY" "Month2 YYYY" "Month3 YYYY" \
+  --start YYYY-MM-DD --end YYYY-MM-DD
+```
+3. Script writes HTML to `docs/[start]_to_[end]_pattern_analysis.html` and updates `docs/index.html`
+4. Commit with message: `Report: Q1 Pattern Analysis YYYY-MM-DD to YYYY-MM-DD`
+5. Push to GitHub
+
+**How to prompt for this report:**
+> "Generate the Q1 pattern analysis report for January, February and March 2026"
+> "Create the repeated pattern analysis for [Month1], [Month2], [Month3] [Year]"
+
+**Pattern Analysis — Key Rules:**
+- Only includes employees present in **all 3 months** — partial quarter employees excluded
+- 10 sections: Activity Red, Activity Yellow, Overwork, Low Hours, Manual Red, Manual Yellow, Low Act ≤20% Red, Low Act ≤20% Yellow, Low Act ≤30% Red, Low Act ≤30% Yellow
+- An employee appears in a section only if they have **2+ months** of violations of that specific severity for that metric
+- Friday Solutions members excluded (FS_EXCLUSIONS list in utils.py)
+- Contractors excluded (PERMANENT_EXCLUSIONS list in utils.py)
+- Hours thresholds for full months: red < 160h, orange ≥ 200h (no proration needed)
+- Manual, Low Act ≤20%, Low Act ≤30% cells display as `XX.X% (Xh)` format
+- Use `--sample` flag first to preview structure with 10 employees before running full report
 
 ---
 
