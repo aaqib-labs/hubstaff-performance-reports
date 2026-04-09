@@ -8,340 +8,318 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #f7fafc;
+      font-family: 'DM Sans', -apple-system, sans-serif;
+      background: #f0f4f8;
       color: #1a202c;
-      font-size: 15px;
-      line-height: 1.6;
       min-height: 100vh;
     }
 
-    /* ---- Hero ---- */
+    /* ── Top nav ─────────────────────────────── */
+    .nav {
+      background: #0f172a;
+      padding: 0 40px;
+      height: 52px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-brand {
+      font-size: 0.82rem; font-weight: 700;
+      color: rgba(255,255,255,0.75); letter-spacing: 0.02em;
+    }
+    .nav-badge {
+      font-size: 0.7rem; font-weight: 700;
+      color: rgba(255,255,255,0.4);
+      background: rgba(255,255,255,0.07);
+      padding: 3px 10px; border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.1);
+      letter-spacing: 0.06em; text-transform: uppercase;
+    }
+
+    /* ── Hero ────────────────────────────────── */
     .hero {
-      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #1d4ed8 100%);
-      padding: 48px 40px 44px;
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #1d4ed8 100%);
+      padding: 56px 40px 60px;
       position: relative; overflow: hidden;
     }
-    .hero::after {
-      content: ''; position: absolute; top: -60px; right: -60px;
-      width: 340px; height: 340px; border-radius: 50%;
-      background: rgba(255,255,255,0.04); pointer-events: none;
-    }
     .hero::before {
-      content: ''; position: absolute; bottom: -80px; right: 160px;
-      width: 220px; height: 220px; border-radius: 50%;
-      background: rgba(255,255,255,0.03); pointer-events: none;
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 80% 50%, rgba(99,102,241,0.18) 0%, transparent 65%);
     }
-    .hero-inner { max-width: 1200px; margin: 0 auto; }
-    .hero-brand {
-      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
-      text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 10px;
+    .hero::after {
+      content: '';
+      position: absolute; top: -80px; right: -80px;
+      width: 400px; height: 400px; border-radius: 50%;
+      background: rgba(255,255,255,0.03);
     }
-    .hero h1 {
-      font-size: 2.2rem; font-weight: 800; color: #fff;
-      line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 10px;
+    .hero-inner { max-width: 1200px; margin: 0 auto; position: relative; }
+    .hero-eyebrow {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.16em;
+      text-transform: uppercase; color: rgba(255,255,255,0.4);
+      margin-bottom: 14px;
+    }
+    .hero-title {
+      font-size: 2.6rem; font-weight: 800; color: #fff;
+      line-height: 1.1; letter-spacing: -0.04em;
+      margin-bottom: 10px;
     }
     .hero-sub {
-      font-size: 0.9rem; color: rgba(255,255,255,0.55); font-weight: 400;
+      font-size: 0.94rem; color: rgba(255,255,255,0.5);
+      margin-bottom: 44px; font-weight: 400;
+    }
+    .stat-chips {
+      display: flex; flex-wrap: wrap; gap: 12px;
+    }
+    .stat-chip {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      backdrop-filter: blur(8px);
+      border-radius: 12px; padding: 14px 22px;
+      display: flex; flex-direction: column; gap: 3px;
+      min-width: 120px;
+    }
+    .sc-num {
+      font-size: 1.7rem; font-weight: 800;
+      color: #fff; line-height: 1; letter-spacing: -0.03em;
+    }
+    .sc-lbl {
+      font-size: 0.72rem; font-weight: 600;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase; letter-spacing: 0.07em;
     }
 
-    /* ---- Stats bar ---- */
-    .stats-bar {
-      background: #fff;
-      border-bottom: 1px solid #e2e8f0;
-      padding: 0;
-    }
-    .stats-inner {
-      max-width: 1200px; margin: 0 auto;
-      display: flex; flex-wrap: wrap;
-    }
-    .stat-item {
-      padding: 18px 32px;
-      border-right: 1px solid #e2e8f0;
-      display: flex; flex-direction: column; gap: 2px;
-      min-width: 160px;
-    }
-    .stat-item:last-child { border-right: none; }
-    .stat-num {
-      font-size: 1.6rem; font-weight: 800;
-      line-height: 1; letter-spacing: -0.03em; color: #1a202c;
-    }
-    .stat-lbl {
-      font-size: 0.74rem; font-weight: 600; color: #9ca3af;
-      text-transform: uppercase; letter-spacing: 0.06em;
-    }
-
-    /* ---- Content ---- */
+    /* ── Content ─────────────────────────────── */
     .content {
       max-width: 1200px; margin: 0 auto;
-      padding: 36px 40px 60px;
+      padding: 40px 40px 72px;
     }
-    .section-title {
-      font-size: 0.74rem; font-weight: 700; color: #9ca3af;
-      text-transform: uppercase; letter-spacing: 0.09em;
-      margin-bottom: 16px;
+    .content-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .content-title {
+      font-size: 1rem; font-weight: 700; color: #1a202c;
+    }
+    .content-updated {
+      font-size: 0.78rem; color: #9ca3af;
     }
 
-    /* ---- Cards grid ---- */
-    .cards-grid {
+    /* ── Cards grid ──────────────────────────── */
+    .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
     }
 
-    .report-card {
+    .card {
       background: #fff;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
+      border-radius: 14px;
+      border: 1px solid #e5e7eb;
       overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      transition: box-shadow 0.15s, transform 0.15s;
-      display: flex; flex-direction: column;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.04);
       text-decoration: none; color: inherit;
+      display: flex; flex-direction: column;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
     }
-    .report-card:hover {
-      box-shadow: 0 8px 24px rgba(0,0,0,0.10);
-      transform: translateY(-2px);
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 12px 36px rgba(0,0,0,0.08);
     }
-    .card-accent {
-      height: 4px;
-      border-radius: 12px 12px 0 0;
+    .card-stripe {
+      height: 5px; flex-shrink: 0;
     }
-    .card-body {
-      padding: 20px 22px;
-      flex: 1; display: flex; flex-direction: column; gap: 12px;
+    .card-inner {
+      padding: 22px 22px 18px;
+      display: flex; flex-direction: column; gap: 14px; flex: 1;
     }
-    .card-top {
-      display: flex; align-items: flex-start;
-      justify-content: space-between; gap: 12px;
+    .card-head {
+      display: flex; align-items: center; justify-content: space-between;
     }
-    .type-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 4px 12px; border-radius: 999px;
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 12px; border-radius: 999px;
       font-size: 0.76rem; font-weight: 700;
       white-space: nowrap;
     }
-    .card-icon {
-      font-size: 1.4rem; flex-shrink: 0; margin-top: 2px;
+    .card-arrow {
+      font-size: 1.1rem; color: #d1d5db;
+      transition: transform 0.18s, color 0.18s;
+    }
+    .card:hover .card-arrow {
+      transform: translateX(4px); color: #6b7280;
     }
     .card-period {
-      font-size: 1.15rem; font-weight: 800;
-      color: #1a202c; letter-spacing: -0.01em;
-      line-height: 1.3;
+      font-size: 1.25rem; font-weight: 800;
+      color: #111827; line-height: 1.2; letter-spacing: -0.02em;
     }
-    .card-meta {
-      display: flex; align-items: center; gap: 8px;
-      font-size: 0.78rem; color: #9ca3af;
+    .card-desc {
+      font-size: 0.8rem; color: #9ca3af;
+      line-height: 1.5;
     }
-    .card-dot { color: #d1d5db; }
     .card-footer {
-      padding: 14px 22px;
-      background: #f8fafc;
-      border-top: 1px solid #edf2f7;
       display: flex; align-items: center; justify-content: space-between;
+      padding-top: 14px; margin-top: auto;
+      border-top: 1px solid #f3f4f6;
     }
-    .view-btn {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: 0.84rem; font-weight: 700;
-      color: #1d4ed8;
-      text-decoration: none;
-    }
-    .view-btn:hover { text-decoration: underline; }
-    .view-arrow {
-      font-size: 1rem; transition: transform 0.15s;
-    }
-    .report-card:hover .view-arrow { transform: translateX(3px); }
-
-    /* ---- Empty state ---- */
-    .empty-state {
-      background: #fff; border: 2px dashed #e2e8f0;
-      border-radius: 12px; padding: 60px; text-align: center;
-      color: #9ca3af; font-size: 0.9rem;
+    .card-date { font-size: 0.76rem; color: #9ca3af; }
+    .card-cta {
+      font-size: 0.82rem; font-weight: 700;
     }
 
-    /* ---- Footer ---- */
+    /* ── Empty ───────────────────────────────── */
+    .empty {
+      background: #fff; border: 2px dashed #e5e7eb;
+      border-radius: 14px; padding: 64px;
+      text-align: center; color: #9ca3af; font-size: 0.9rem;
+    }
+
+    /* ── Footer ──────────────────────────────── */
     footer {
-      text-align: center; padding: 28px;
-      font-size: 0.78rem; color: #9ca3af;
-      border-top: 1px solid #e2e8f0;
+      text-align: center; padding: 24px;
+      font-size: 0.76rem; color: #9ca3af;
+      border-top: 1px solid #e5e7eb;
+      background: #fff;
     }
 
     @media (max-width: 768px) {
-      .hero { padding: 32px 20px; }
-      .hero h1 { font-size: 1.6rem; }
-      .content { padding: 24px 16px 48px; }
-      .cards-grid { grid-template-columns: 1fr; }
-      .stat-item { min-width: 120px; padding: 14px 20px; }
+      .nav { padding: 0 20px; }
+      .hero { padding: 40px 20px 48px; }
+      .hero-title { font-size: 1.8rem; }
+      .content { padding: 28px 20px 48px; }
+      .grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
+  <nav class="nav">
+    <span class="nav-brand">WebLife Ventures &nbsp;·&nbsp; Performance Reports</span>
+    <span class="nav-badge">Internal Use Only</span>
+  </nav>
+
   <div class="hero">
     <div class="hero-inner">
-      <div class="hero-brand">WebLife Ventures &nbsp;·&nbsp; Internal Use Only</div>
-      <h1>Performance Reports</h1>
-      <p class="hero-sub">Hubstaff compliance reports &nbsp;·&nbsp; Auto-generated &nbsp;·&nbsp; Executive review</p>
-    </div>
-  </div>
-
-  <div class="stats-bar">
-    <div class="stats-inner">
-      <div class="stat-item"><div class="stat-num">6</div><div class="stat-lbl">Total Reports</div></div>
-<div class="stat-item"><div class="stat-num">2</div><div class="stat-lbl">Bi-Weekly Top Violators</div></div>
-<div class="stat-item"><div class="stat-num">1</div><div class="stat-lbl">Peer Comparison</div></div>
-<div class="stat-item"><div class="stat-num">1</div><div class="stat-lbl">Friday Solutions</div></div>
-<div class="stat-item"><div class="stat-num">1</div><div class="stat-lbl">Q1 Pattern Analysis</div></div>
-<div class="stat-item"><div class="stat-num">1</div><div class="stat-lbl">FS Pattern Analysis</div></div>
+      <div class="hero-eyebrow">WebLife Ventures &nbsp;·&nbsp; Workforce Intelligence</div>
+      <h1 class="hero-title">Performance<br>Reports</h1>
+      <p class="hero-sub">Hubstaff compliance · Auto-generated · Executive review</p>
+      <div class="stat-chips">
+        <div class="stat-chip"><span class="sc-num">6</span><span class="sc-lbl">Total Reports</span></div><div class="stat-chip"><span class="sc-num">2</span><span class="sc-lbl">Bi-Weekly</span></div><div class="stat-chip"><span class="sc-num">1</span><span class="sc-lbl">Peer Comparison</span></div><div class="stat-chip"><span class="sc-num">1</span><span class="sc-lbl">Friday Solutions</span></div><div class="stat-chip"><span class="sc-num">1</span><span class="sc-lbl">Pattern Analysis</span></div><div class="stat-chip"><span class="sc-num">1</span><span class="sc-lbl">FS Pattern</span></div>
+      </div>
     </div>
   </div>
 
   <div class="content">
-    <div class="section-title">All Reports — Newest First</div>
-    <div class="cards-grid">
-        <a class="report-card" href="2026-03-01_to_2026-03-31_peer_comparison.html">
-          <div class="card-accent" style="background:#7c3aed;"></div>
-          <div class="card-body">
-            <div class="card-top">
-              <div>
-                <span class="type-badge" style="background:#f5f3ff;color:#7c3aed;">
-                  👥 Peer Comparison
-                </span>
+    <div class="content-header">
+      <span class="content-title">All Reports — Newest First</span>
+      <span class="content-updated">Updated 2026-04-09 09:09</span>
+    </div>
+    <div class="grid">
+            <a class="card" href="2026-03-01_to_2026-03-31_peer_comparison.html">
+              <div class="card-stripe" style="background:#7c3aed;"></div>
+              <div class="card-inner">
+                <div class="card-head">
+                  <span class="badge" style="background:#ede9fe;color:#4c1d95;">
+                    👥&nbsp; Peer Comparison
+                  </span>
+                  <span class="card-arrow">→</span>
+                </div>
+                <div class="card-period">Mar 01 – Mar 31, 2026</div>
+                <div class="card-desc">Role-based benchmarking · Team averages & outliers</div>
+                <div class="card-footer">
+                  <span class="card-date">🕐 Apr 09, 2026 at 08:54</span>
+                  <span class="card-cta" style="color:#7c3aed;">View Report</span>
+                </div>
               </div>
-            </div>
-            <div class="card-period">Mar 01 – Mar 31, 2026</div>
-            <div class="card-meta">
-              <span>Generated</span>
-              <span class="card-dot">·</span>
-              <span>Apr 09, 2026 · 08:54</span>
-            </div>
-          </div>
-          <div class="card-footer">
-            <span class="view-btn">
-              View Report <span class="view-arrow">→</span>
-            </span>
-          </div>
-        </a>
-        <a class="report-card" href="2026-03-01_to_2026-03-24_fs_report.html">
-          <div class="card-accent" style="background:#d97706;"></div>
-          <div class="card-body">
-            <div class="card-top">
-              <div>
-                <span class="type-badge" style="background:#fffbeb;color:#d97706;">
-                  ⚡ Friday Solutions
-                </span>
+            </a>
+            <a class="card" href="2026-03-01_to_2026-03-24_fs_report.html">
+              <div class="card-stripe" style="background:#d97706;"></div>
+              <div class="card-inner">
+                <div class="card-head">
+                  <span class="badge" style="background:#fef3c7;color:#92400e;">
+                    ⚡&nbsp; Friday Solutions
+                  </span>
+                  <span class="card-arrow">→</span>
+                </div>
+                <div class="card-period">Mar 01 – Mar 24, 2026</div>
+                <div class="card-desc">TMetric data · Activity, hours, manual time</div>
+                <div class="card-footer">
+                  <span class="card-date">🕐 Mar 26, 2026 at 10:35</span>
+                  <span class="card-cta" style="color:#d97706;">View Report</span>
+                </div>
               </div>
-            </div>
-            <div class="card-period">Mar 01 – Mar 24, 2026</div>
-            <div class="card-meta">
-              <span>Generated</span>
-              <span class="card-dot">·</span>
-              <span>Mar 26, 2026 · 10:35</span>
-            </div>
-          </div>
-          <div class="card-footer">
-            <span class="view-btn">
-              View Report <span class="view-arrow">→</span>
-            </span>
-          </div>
-        </a>
-        <a class="report-card" href="2026-03-01_to_2026-03-24_biweekly_top_violators.html">
-          <div class="card-accent" style="background:#1d4ed8;"></div>
-          <div class="card-body">
-            <div class="card-top">
-              <div>
-                <span class="type-badge" style="background:#eff6ff;color:#1d4ed8;">
-                  📊 Bi-Weekly Top Violators
-                </span>
+            </a>
+            <a class="card" href="2026-03-01_to_2026-03-24_biweekly_top_violators.html">
+              <div class="card-stripe" style="background:#2563eb;"></div>
+              <div class="card-inner">
+                <div class="card-head">
+                  <span class="badge" style="background:#dbeafe;color:#1e40af;">
+                    📊&nbsp; Bi-Weekly Top Violators
+                  </span>
+                  <span class="card-arrow">→</span>
+                </div>
+                <div class="card-period">Mar 01 – Mar 24, 2026</div>
+                <div class="card-desc">SLA compliance · Top violators ranked by severity</div>
+                <div class="card-footer">
+                  <span class="card-date">🕐 Mar 26, 2026 at 10:20</span>
+                  <span class="card-cta" style="color:#2563eb;">View Report</span>
+                </div>
               </div>
-            </div>
-            <div class="card-period">Mar 01 – Mar 24, 2026</div>
-            <div class="card-meta">
-              <span>Generated</span>
-              <span class="card-dot">·</span>
-              <span>Mar 26, 2026 · 10:20</span>
-            </div>
-          </div>
-          <div class="card-footer">
-            <span class="view-btn">
-              View Report <span class="view-arrow">→</span>
-            </span>
-          </div>
-        </a>
-        <a class="report-card" href="2026-03-01_to_2026-03-11_biweekly_top_violators.html">
-          <div class="card-accent" style="background:#1d4ed8;"></div>
-          <div class="card-body">
-            <div class="card-top">
-              <div>
-                <span class="type-badge" style="background:#eff6ff;color:#1d4ed8;">
-                  📊 Bi-Weekly Top Violators
-                </span>
+            </a>
+            <a class="card" href="2026-03-01_to_2026-03-11_biweekly_top_violators.html">
+              <div class="card-stripe" style="background:#2563eb;"></div>
+              <div class="card-inner">
+                <div class="card-head">
+                  <span class="badge" style="background:#dbeafe;color:#1e40af;">
+                    📊&nbsp; Bi-Weekly Top Violators
+                  </span>
+                  <span class="card-arrow">→</span>
+                </div>
+                <div class="card-period">Mar 01 – Mar 11, 2026</div>
+                <div class="card-desc">SLA compliance · Top violators ranked by severity</div>
+                <div class="card-footer">
+                  <span class="card-date">🕐 Mar 25, 2026 at 23:26</span>
+                  <span class="card-cta" style="color:#2563eb;">View Report</span>
+                </div>
               </div>
-            </div>
-            <div class="card-period">Mar 01 – Mar 11, 2026</div>
-            <div class="card-meta">
-              <span>Generated</span>
-              <span class="card-dot">·</span>
-              <span>Mar 25, 2026 · 23:26</span>
-            </div>
-          </div>
-          <div class="card-footer">
-            <span class="view-btn">
-              View Report <span class="view-arrow">→</span>
-            </span>
-          </div>
-        </a>
-        <a class="report-card" href="2026-01-01_to_2026-03-31_pattern_analysis.html">
-          <div class="card-accent" style="background:#16a34a;"></div>
-          <div class="card-body">
-            <div class="card-top">
-              <div>
-                <span class="type-badge" style="background:#f0fdf4;color:#16a34a;">
-                  📈 Q1 Pattern Analysis
-                </span>
+            </a>
+            <a class="card" href="2026-01-01_to_2026-03-31_pattern_analysis.html">
+              <div class="card-stripe" style="background:#059669;"></div>
+              <div class="card-inner">
+                <div class="card-head">
+                  <span class="badge" style="background:#d1fae5;color:#065f46;">
+                    📈&nbsp; Q1 Pattern Analysis
+                  </span>
+                  <span class="card-arrow">→</span>
+                </div>
+                <div class="card-period">Jan 01 – Mar 31, 2026</div>
+                <div class="card-desc">3-month trends · Persistent & recurring violations</div>
+                <div class="card-footer">
+                  <span class="card-date">🕐 Apr 08, 2026 at 23:05</span>
+                  <span class="card-cta" style="color:#059669;">View Report</span>
+                </div>
               </div>
-            </div>
-            <div class="card-period">Jan 01 – Mar 31, 2026</div>
-            <div class="card-meta">
-              <span>Generated</span>
-              <span class="card-dot">·</span>
-              <span>Apr 08, 2026 · 23:05</span>
-            </div>
-          </div>
-          <div class="card-footer">
-            <span class="view-btn">
-              View Report <span class="view-arrow">→</span>
-            </span>
-          </div>
-        </a>
-        <a class="report-card" href="2026-01-01_to_2026-03-31_fs_pattern_analysis.html">
-          <div class="card-accent" style="background:#ea580c;"></div>
-          <div class="card-body">
-            <div class="card-top">
-              <div>
-                <span class="type-badge" style="background:#fff7ed;color:#ea580c;">
-                  🔍 FS Pattern Analysis
-                </span>
+            </a>
+            <a class="card" href="2026-01-01_to_2026-03-31_fs_pattern_analysis.html">
+              <div class="card-stripe" style="background:#ea580c;"></div>
+              <div class="card-inner">
+                <div class="card-head">
+                  <span class="badge" style="background:#ffedd5;color:#9a3412;">
+                    🔍&nbsp; FS Pattern Analysis
+                  </span>
+                  <span class="card-arrow">→</span>
+                </div>
+                <div class="card-period">Jan 01 – Mar 31, 2026</div>
+                <div class="card-desc">Friday Solutions · Repeated violation patterns</div>
+                <div class="card-footer">
+                  <span class="card-date">🕐 Apr 09, 2026 at 07:28</span>
+                  <span class="card-cta" style="color:#ea580c;">View Report</span>
+                </div>
               </div>
-            </div>
-            <div class="card-period">Jan 01 – Mar 31, 2026</div>
-            <div class="card-meta">
-              <span>Generated</span>
-              <span class="card-dot">·</span>
-              <span>Apr 09, 2026 · 07:28</span>
-            </div>
-          </div>
-          <div class="card-footer">
-            <span class="view-btn">
-              View Report <span class="view-arrow">→</span>
-            </span>
-          </div>
-        </a></div>
+            </a></div>
   </div>
 
-  <footer>
-    Index last updated: 2026-04-09 09:07 &nbsp;·&nbsp; WebLife Ventures
-  </footer>
+  <footer>WebLife Ventures Performance Reporting System &nbsp;·&nbsp; 2026-04-09 09:09</footer>
 
 </body>
 </html>
