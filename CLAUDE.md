@@ -52,7 +52,9 @@ CLAUDE.md            This file
 |------|--------|---------|
 | Hubstaff bi-weekly | `YYYY-MM-DD_to_YYYY-MM-DD_biweekly_top_violators.html` | `2026-03-01_to_2026-03-24_biweekly_top_violators.html` |
 | Friday Solutions | `YYYY-MM-DD_to_YYYY-MM-DD_fs_report.html` | `2026-03-01_to_2026-03-24_fs_report.html` |
-| Pattern Analysis | `YYYY-MM-DD_to_YYYY-MM-DD_pattern_analysis.html` | `2026-01-01_to_2026-03-31_pattern_analysis.html` |
+| Pattern Analysis (HS) | `YYYY-MM-DD_to_YYYY-MM-DD_pattern_analysis.html` | `2026-01-01_to_2026-03-31_pattern_analysis.html` |
+| Pattern Analysis (FS) | `YYYY-MM-DD_to_YYYY-MM-DD_fs_pattern_analysis.html` | `2026-01-01_to_2026-03-31_fs_pattern_analysis.html` |
+| Peer Comparison | `YYYY-MM-DD_to_YYYY-MM-DD_peer_comparison.html` | `2026-03-01_to_2026-03-31_peer_comparison.html` |
 
 Note: HTML outputs use date-range prefix + report-type suffix. No `HS-`/`FS-` prefix on outputs — the suffix identifies the source/type. This is by design so `update_index.py` can parse them consistently.
 
@@ -190,7 +192,9 @@ Score = sum of (base × multiplier) across all flags
 - Commit message formats:
   - Bi-weekly: `Report: Bi-Weekly YYYY-MM-DD to YYYY-MM-DD`
   - Pattern Analysis: `Report: Q1 Pattern Analysis YYYY-MM-DD to YYYY-MM-DD`
+  - FS Pattern Analysis: `Report: FS Q1 Pattern Analysis YYYY-MM-DD to YYYY-MM-DD`
   - Friday Solutions: `Report: Friday Solutions YYYY-MM-DD to YYYY-MM-DD`
+  - Peer Comparison: `Report: Peer Comparison YYYY-MM`
 - Never leave uncommitted changes after a session
 - Never force-push
 
@@ -205,7 +209,8 @@ Score = sum of (base × multiplier) across all flags
 | `scripts/generate_fs_report.py` | Friday Solutions (TMetric) report generation |
 | `scripts/generate_pattern_analysis.py` | Quarterly repeated pattern analysis — fully implemented |
 | `scripts/update_index.py` | Regenerate `docs/index.html` from all reports in `/docs/` |
-| `scripts/generate_peer_comparison.py` | Role-based peer comparison (stub — not yet implemented) |
+| `scripts/generate_peer_comparison.py` | Role-based peer comparison — fully implemented |
+| `scripts/generate_fs_pattern_analysis.py` | Friday Solutions Q1 pattern analysis (TMetric data) |
 
 ---
 
@@ -218,6 +223,41 @@ Ranked by severity score. Columns: Rank, Member, Team, Activity %, Hours, Break 
 
 **Section 2 — Hours Violators**
 All employees below the prorated hours threshold. Sorted ascending (worst first). Columns: Member, Team, Hours Worked, Expected Hours, Shortfall, Other Flags.
+
+---
+
+## Peer Comparison Workflow
+
+When asked to "generate the peer comparison report for [month]":
+
+1. Confirm the monthly CSV is in `data/input/monthly/`
+2. Run:
+```
+python scripts/generate_peer_comparison.py \
+  --input data/input/monthly/HS-YYYY-MM-master.csv \
+  --start YYYY-MM-01 --end YYYY-MM-DD
+```
+3. Script writes HTML to `docs/[start]_to_[end]_peer_comparison.html` and updates `docs/index.html`
+4. Commit with message: `Report: Peer Comparison YYYY-MM`
+5. Push to GitHub
+
+**How to prompt for this report:**
+> "Generate the peer comparison report for March 2026"
+
+**Peer Comparison — Key Rules:**
+- 17 hardcoded peer groups defined in `scripts/generate_peer_comparison.py` → `PEER_GROUPS`
+- Groups are defined by role/function, NOT Hubstaff team labels
+- Manager listed first in each group table with blue `Manager` badge
+- Variance column = employee Activity % minus team average Activity %
+- Peer Outlier = employee is >10pp below team average BUT has no SLA flag (amber row highlight)
+- New hires flagged with green `New Hire` badge (list in `NEW_HIRES` set in script)
+- Team Average row at bottom of each table — dark charcoal background for visibility
+- Pill-styled metric cells: red/orange/yellow filled for violations, gray for clean
+- FS members excluded (they have separate FS reports)
+- Contractors excluded (PERMANENT_EXCLUSIONS in utils.py)
+- **To update peer groups** (new hires, team changes, resignations): edit `PEER_GROUPS` list in `generate_peer_comparison.py`
+
+**HTML output naming:** `YYYY-MM-DD_to_YYYY-MM-DD_peer_comparison.html`
 
 ---
 
