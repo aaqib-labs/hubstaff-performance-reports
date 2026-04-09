@@ -1,0 +1,2660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Role-Based Peer Comparison Report — March 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', -apple-system, sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .page-wrap { max-width: 1380px; margin: 0 auto; padding: 0 0 72px; }
+
+    /* ------------------------------------------------------------------ */
+    /* Header                                                               */
+    /* ------------------------------------------------------------------ */
+    .page-header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #1d4ed8 100%);
+      padding: 40px 44px 36px;
+      position: relative; overflow: hidden;
+    }
+    .page-header::after {
+      content: ''; position: absolute; top: -50px; right: -50px;
+      width: 300px; height: 300px; border-radius: 50%;
+      background: rgba(255,255,255,0.04); pointer-events: none;
+    }
+    .header-top {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; flex-wrap: wrap;
+      gap: 16px; margin-bottom: 28px;
+    }
+    .brand {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 8px;
+    }
+    .page-header h1 {
+      font-size: 2rem; font-weight: 800; color: #fff;
+      line-height: 1.15; letter-spacing: -0.03em;
+    }
+    .period-badge {
+      background: rgba(255,255,255,0.13); border: 1px solid rgba(255,255,255,0.22);
+      color: rgba(255,255,255,0.92); padding: 7px 18px; border-radius: 999px;
+      font-size: 0.84rem; font-weight: 600; white-space: nowrap; align-self: flex-start;
+    }
+    .header-meta { display: flex; flex-wrap: wrap; gap: 32px; }
+    .header-meta-item .h-label {
+      font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.09em; color: rgba(255,255,255,0.38); margin-bottom: 3px;
+    }
+    .header-meta-item .h-value {
+      font-size: 0.88rem; font-weight: 600; color: rgba(255,255,255,0.9);
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* KPI Tiles                                                            */
+    /* ------------------------------------------------------------------ */
+    .stats-row {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 1px; background: #1e2128; border-bottom: 1px solid #2d3748;
+    }
+    .stat-tile {
+      background: #1a1d23; padding: 20px 24px;
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .stat-tile .t-label {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.07em; color: #6b7280;
+    }
+    .stat-tile .t-value {
+      font-size: 2rem; font-weight: 800; line-height: 1; letter-spacing: -0.04em;
+    }
+    .stat-tile .t-sub { font-size: 0.75rem; color: #6b7280; margin-top: 2px; }
+    .t-value.blue   { color: #60a5fa; }
+    .t-value.red    { color: #f87171; }
+    .t-value.amber  { color: #fbbf24; }
+    .t-value.slate  { color: #94a3b8; }
+
+    /* ------------------------------------------------------------------ */
+    /* Content                                                              */
+    /* ------------------------------------------------------------------ */
+    .content { padding: 28px; }
+
+    /* ------------------------------------------------------------------ */
+    /* Group Cards                                                          */
+    /* ------------------------------------------------------------------ */
+    .group-card {
+      background: #1a1d23;
+      border: 1px solid #2d3748;
+      border-radius: 10px;
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+    .group-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid #2d3748;
+      display: flex; align-items: center; flex-wrap: wrap; gap: 12px;
+    }
+    .group-num {
+      width: 28px; height: 28px; border-radius: 7px;
+      background: #2563eb; color: #fff;
+      font-size: 0.82rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .group-title {
+      font-size: 1.05rem; font-weight: 700; color: #f1f5f9;
+      letter-spacing: -0.01em;
+    }
+    .member-count-pill {
+      background: #1e3a8a; color: #93c5fd;
+      font-size: 0.74rem; font-weight: 700;
+      padding: 3px 10px; border-radius: 999px;
+      border: 1px solid #2563eb;
+    }
+    .group-meta {
+      padding: 9px 20px;
+      background: #141720;
+      border-bottom: 1px solid #2d3748;
+      display: flex; gap: 24px; flex-wrap: wrap;
+    }
+    .group-meta span {
+      font-size: 0.82rem; color: #6b7280;
+    }
+    .group-meta strong { color: #94a3b8; font-weight: 600; }
+
+    /* ------------------------------------------------------------------ */
+    /* Tables                                                               */
+    /* ------------------------------------------------------------------ */
+    .table-wrapper { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+
+    thead tr { background: #141720; }
+    thead th {
+      color: #6b7280; padding: 10px 14px;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      white-space: nowrap; text-align: left;
+      border-bottom: 1px solid #2d3748;
+      border-right: 1px solid #1e2128;
+    }
+    thead th:last-child { border-right: none; }
+    thead th.center { text-align: center; }
+
+    tbody tr { border-bottom: 1px solid #1e2128; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover td { background: #1e2530 !important; }
+    tbody td {
+      padding: 11px 14px; vertical-align: middle;
+      white-space: nowrap; color: #e2e8f0;
+      border-right: 1px solid #1e2128;
+    }
+    tbody td:last-child { border-right: none; }
+    tbody td.center { text-align: center; }
+
+    /* Manager row */
+    tr.manager-row td { background: #141c2e; }
+    tr.manager-row td.member-col { font-weight: 700; }
+    .manager-tag {
+      display: inline-block; font-size: 11px; font-weight: 600;
+      color: #60a5fa; background: #1e3a8a;
+      padding: 1px 8px; border-radius: 999px; margin-left: 6px;
+      border: 1px solid #2563eb;
+    }
+
+    /* New hire tag */
+    .new-hire-tag {
+      display: inline-block; font-size: 10px; font-weight: 600;
+      color: #a3e635; background: #1a2e05;
+      padding: 1px 7px; border-radius: 999px; margin-left: 5px;
+      border: 1px solid #4d7c0f;
+    }
+
+    /* Peer outlier row */
+    tr.peer-outlier-row td { background: #1f1a0e; }
+
+    /* Member name col */
+    td.member-col { font-weight: 600; color: #f1f5f9; min-width: 150px; }
+
+    /* Variance */
+    td.variance-col { text-align: center; font-family: 'DM Mono', monospace; font-size: 13px; }
+    .var-pos     { color: #4ade80; font-weight: 700; }
+    .var-neg     { color: #f87171; font-weight: 700; }
+    .var-neutral { color: #6b7280; }
+
+    /* Metric cells */
+    td.metric-col { text-align: center; font-family: 'DM Mono', monospace; font-size: 13px; color: #94a3b8; }
+
+    /* Flags */
+    td.flags-col { text-align: center; font-size: 13px; white-space: nowrap; }
+
+    /* Team average row */
+    tr.avg-row td { background: #0f1117; color: #6b7280; font-size: 13px; border-top: 1px solid #2d3748; }
+    tr.avg-row td.avg-label { color: #4b5563; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+    tr.avg-row td.metric-col { color: #4b5563; font-family: 'DM Mono', monospace; }
+
+    /* Absent note */
+    .absent-note {
+      padding: 8px 20px;
+      background: #0f1117;
+      border-top: 1px solid #1e2128;
+      font-size: 0.78rem; color: #4b5563;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Footer                                                               */
+    /* ------------------------------------------------------------------ */
+    .page-footer {
+      margin-top: 16px; padding: 0 28px;
+      display: flex; justify-content: space-between;
+      align-items: center; flex-wrap: wrap; gap: 8px;
+    }
+    .page-footer span { font-size: 0.76rem; color: #4b5563; }
+
+    /* ------------------------------------------------------------------ */
+    /* Responsive                                                           */
+    /* ------------------------------------------------------------------ */
+    @media (max-width: 900px) {
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+      .content   { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-top">
+      <div>
+        <div class="brand">WebLife Ventures &nbsp;·&nbsp; Internal Use Only</div>
+        <h1>Role-Based Peer Comparison Report</h1>
+      </div>
+      <div class="period-badge">March 2026</div>
+    </div>
+    <div class="header-meta">
+      <div class="header-meta-item">
+        <div class="h-label">Report Period</div>
+        <div class="h-value">March 01, 2026 — March 31, 2026</div>
+      </div>
+      <div class="header-meta-item">
+        <div class="h-label">Peer Groups</div>
+        <div class="h-value">17</div>
+      </div>
+      <div class="header-meta-item">
+        <div class="h-label">Employees Covered</div>
+        <div class="h-value">78</div>
+      </div>
+      <div class="header-meta-item">
+        <div class="h-label">Hours Threshold</div>
+        <div class="h-value">🔴 &lt; 160h &nbsp;·&nbsp; 🟠 ≥ 200h</div>
+      </div>
+      <div class="header-meta-item">
+        <div class="h-label">Generated</div>
+        <div class="h-value">2026-04-09 08:20</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI Tiles -->
+  <div class="stats-row">
+    <div class="stat-tile">
+      <div class="t-label">Peer Groups</div>
+      <div class="t-value blue">17</div>
+      <div class="t-sub">functional teams</div>
+    </div>
+    <div class="stat-tile">
+      <div class="t-label">Employees Covered</div>
+      <div class="t-value slate">78</div>
+      <div class="t-sub">across all groups</div>
+    </div>
+    <div class="stat-tile">
+      <div class="t-label">SLA Violations</div>
+      <div class="t-value red">31</div>
+      <div class="t-sub">employees with flags</div>
+    </div>
+    <div class="stat-tile">
+      <div class="t-label">Peer Outliers</div>
+      <div class="t-value amber">1</div>
+      <div class="t-sub">below team avg, no SLA flag</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    
+    <div class="group-card" id="group-leadership">
+
+      <!-- Group Header -->
+      <div class="group-header">
+        <div class="group-num">1</div>
+        <span class="group-title">LEADERSHIP / SENIOR LEVEL</span>
+        <span class="member-count-pill">6 members</span>
+      </div>
+
+      <!-- Group Meta -->
+      <div class="group-meta">
+        <span><strong>Team:</strong> Executive &amp; Senior Management</span>
+        
+      </div>
+
+      <!-- Member Table -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="">
+              <td class="member-col">
+                jorn wossner
+                
+                
+              </td>
+              <td class="metric-col center">🔴 31.0%</td>
+              <td class="variance-col center">
+                <span class="var-neg">-15.0pts</span>
+              </td>
+              <td class="metric-col center">🔴 118.7h</td>
+              <td class="metric-col center">⚠️ 5.1%</td>
+              <td class="metric-col center">5.2%</td>
+              <td class="metric-col center">5.2%</td>
+              <td class="metric-col center">🔴 50.4%</td>
+              <td class="flags-col">🔴 3 ⚠️ 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Lucas Robinson
+                
+                
+              </td>
+              <td class="metric-col center">45.0%</td>
+              <td class="variance-col center">
+                <span class="var-neutral">-1.0pts</span>
+              </td>
+              <td class="metric-col center">🟠 364.6h</td>
+              <td class="metric-col center">⚠️ 6.9%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="flags-col">🟠 1 ⚠️ 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Fred Butson
+                
+                
+              </td>
+              <td class="metric-col center">⚠️ 43.0%</td>
+              <td class="variance-col center">
+                <span class="var-neutral">-3.0pts</span>
+              </td>
+              <td class="metric-col center">🟠 237.2h</td>
+              <td class="metric-col center">0.5%</td>
+              <td class="metric-col center">2.5%</td>
+              <td class="metric-col center">0.8%</td>
+              <td class="metric-col center">2.3%</td>
+              <td class="flags-col">🟠 1 ⚠️ 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Eden Schweyer
+                
+                
+              </td>
+              <td class="metric-col center">50.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+4.0pts</span>
+              </td>
+              <td class="metric-col center">🔴 158.5h</td>
+              <td class="metric-col center">2.0%</td>
+              <td class="metric-col center">9.8%</td>
+              <td class="metric-col center">0.3%</td>
+              <td class="metric-col center">4.9%</td>
+              <td class="flags-col">🔴 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Adam Burdeshaw
+                
+                
+              </td>
+              <td class="metric-col center">56.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+10.0pts</span>
+              </td>
+              <td class="metric-col center">161.8h</td>
+              <td class="metric-col center">1.7%</td>
+              <td class="metric-col center">7.1%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Saduka Sachintha
+                
+                
+              </td>
+              <td class="metric-col center">51.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+5.0pts</span>
+              </td>
+              <td class="metric-col center">187.2h</td>
+              <td class="metric-col center">0.4%</td>
+              <td class="metric-col center">9.6%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">0.2%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+
+            <!-- Team Average Row -->
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center">46.0%</td>
+              <td class="metric-col center">—</td>
+              <td class="metric-col center">204.7h</td>
+              <td class="metric-col center">2.8%</td>
+              <td class="metric-col center">5.7%</td>
+              <td class="metric-col center">1.1%</td>
+              <td class="metric-col center">9.6%</td>
+              <td class="flags-col">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-dp_engineering">
+
+      <!-- Group Header -->
+      <div class="group-header">
+        <div class="group-num">2</div>
+        <span class="group-title">DIGITAL PRODUCT — ENGINEERING</span>
+        <span class="member-count-pill">9 members</span>
+      </div>
+
+      <!-- Group Meta -->
+      <div class="group-meta">
+        <span><strong>Team:</strong> DP-PLATFORM / DP-CRM</span>
+        
+        <span><strong>Manager:</strong> Adam Burdeshaw</span>
+        
+      </div>
+
+      <!-- Member Table -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Adam Burdeshaw
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col center">56.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+5.7pts</span>
+              </td>
+              <td class="metric-col center">161.8h</td>
+              <td class="metric-col center">1.7%</td>
+              <td class="metric-col center">7.1%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Kianna Xue
+                
+                
+              </td>
+              <td class="metric-col center">⚠️ 42.0%</td>
+              <td class="variance-col center">
+                <span class="var-neg">-8.3pts</span>
+              </td>
+              <td class="metric-col center">🔴 112.9h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">🔴 15.6%</td>
+              <td class="metric-col center">5.2%</td>
+              <td class="metric-col center">⚠️ 17.7%</td>
+              <td class="flags-col">🔴 2 ⚠️ 2</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Nishantha Hettiarachchi
+                
+                <span class="new-hire-tag">New Hire</span>
+              </td>
+              <td class="metric-col center">🔴 32.0%</td>
+              <td class="variance-col center">
+                <span class="var-neg">-18.3pts</span>
+              </td>
+              <td class="metric-col center">🟠 229.7h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">5.8%</td>
+              <td class="metric-col center">0.5%</td>
+              <td class="metric-col center">🔴 38.3%</td>
+              <td class="flags-col">🔴 2 🟠 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Dr. Yashoda Velananda
+                
+                
+              </td>
+              <td class="metric-col center">⚠️ 41.0%</td>
+              <td class="variance-col center">
+                <span class="var-neg">-9.3pts</span>
+              </td>
+              <td class="metric-col center">181.1h</td>
+              <td class="metric-col center">1.7%</td>
+              <td class="metric-col center">9.1%</td>
+              <td class="metric-col center">0.2%</td>
+              <td class="metric-col center">⚠️ 13.9%</td>
+              <td class="flags-col">⚠️ 2</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Muhammad Usman
+                
+                
+              </td>
+              <td class="metric-col center">60.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+9.7pts</span>
+              </td>
+              <td class="metric-col center">162.0h</td>
+              <td class="metric-col center">0.6%</td>
+              <td class="metric-col center">8.1%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Upeksha Liyanage
+                
+                
+              </td>
+              <td class="metric-col center">60.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+9.7pts</span>
+              </td>
+              <td class="metric-col center">188.9h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">9.7%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Hasala Jayasuriya
+                
+                
+              </td>
+              <td class="metric-col center">56.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+5.7pts</span>
+              </td>
+              <td class="metric-col center">188.1h</td>
+              <td class="metric-col center">1.9%</td>
+              <td class="metric-col center">9.6%</td>
+              <td class="metric-col center">0.2%</td>
+              <td class="metric-col center">1.3%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Chathuranga Weerakoon
+                
+                
+              </td>
+              <td class="metric-col center">55.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+4.7pts</span>
+              </td>
+              <td class="metric-col center">174.9h</td>
+              <td class="metric-col center">0.2%</td>
+              <td class="metric-col center">9.4%</td>
+              <td class="metric-col center">1.1%</td>
+              <td class="metric-col center">2.2%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Thushan Fernando
+                
+                
+              </td>
+              <td class="metric-col center">51.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+0.7pts</span>
+              </td>
+              <td class="metric-col center">197.8h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">7.9%</td>
+              <td class="metric-col center">2.1%</td>
+              <td class="metric-col center">7.3%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+
+            <!-- Team Average Row -->
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center">50.3%</td>
+              <td class="metric-col center">—</td>
+              <td class="metric-col center">177.5h</td>
+              <td class="metric-col center">0.7%</td>
+              <td class="metric-col center">9.1%</td>
+              <td class="metric-col center">1.0%</td>
+              <td class="metric-col center">9.0%</td>
+              <td class="flags-col">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-dp_site_content">
+
+      <!-- Group Header -->
+      <div class="group-header">
+        <div class="group-num">3</div>
+        <span class="group-title">DIGITAL PRODUCT — SITE CONTENT</span>
+        <span class="member-count-pill">3 members</span>
+      </div>
+
+      <!-- Group Meta -->
+      <div class="group-meta">
+        <span><strong>Team:</strong> DP-SITECONTENT</span>
+        
+        <span><strong>Manager:</strong> Shehara Meadows</span>
+        
+      </div>
+
+      <!-- Member Table -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Shehara Meadows
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col center">⚠️ 36.0%</td>
+              <td class="variance-col center">
+                <span class="var-neg">-15.7pts</span>
+              </td>
+              <td class="metric-col center">175.2h</td>
+              <td class="metric-col center">0.9%</td>
+              <td class="metric-col center">9.2%</td>
+              <td class="metric-col center">6.4%</td>
+              <td class="metric-col center">⚠️ 19.7%</td>
+              <td class="flags-col">⚠️ 2</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Kunchana Prabashwara
+                
+                
+              </td>
+              <td class="metric-col center">66.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+14.3pts</span>
+              </td>
+              <td class="metric-col center">🟠 209.3h</td>
+              <td class="metric-col center">0.6%</td>
+              <td class="metric-col center">8.4%</td>
+              <td class="metric-col center">0.6%</td>
+              <td class="metric-col center">0.6%</td>
+              <td class="flags-col">🟠 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Ramez Sedra
+                
+                
+              </td>
+              <td class="metric-col center">53.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+1.3pts</span>
+              </td>
+              <td class="metric-col center">179.0h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">7.6%</td>
+              <td class="metric-col center">1.6%</td>
+              <td class="metric-col center">3.2%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+
+            <!-- Team Average Row -->
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center">51.7%</td>
+              <td class="metric-col center">—</td>
+              <td class="metric-col center">187.8h</td>
+              <td class="metric-col center">0.5%</td>
+              <td class="metric-col center">8.4%</td>
+              <td class="metric-col center">2.9%</td>
+              <td class="metric-col center">7.8%</td>
+              <td class="flags-col">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-dp_catalog">
+
+      <!-- Group Header -->
+      <div class="group-header">
+        <div class="group-num">4</div>
+        <span class="group-title">DIGITAL PRODUCT — CATALOG</span>
+        <span class="member-count-pill">2 members</span>
+      </div>
+
+      <!-- Group Meta -->
+      <div class="group-meta">
+        <span><strong>Team:</strong> DP-CATALOG</span>
+        
+        <span><strong>Manager:</strong> Laleesha Wijeratne</span>
+        
+      </div>
+
+      <!-- Member Table -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Laleesha Wijeratne
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col center">50.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+1.0pts</span>
+              </td>
+              <td class="metric-col center">190.3h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">7.6%</td>
+              <td class="metric-col center">1.7%</td>
+              <td class="metric-col center">⚠️ 10.1%</td>
+              <td class="flags-col">⚠️ 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Jomal Mathew
+                
+                <span class="new-hire-tag">New Hire</span>
+              </td>
+              <td class="metric-col center">48.0%</td>
+              <td class="variance-col center">
+                <span class="var-neutral">-1.0pts</span>
+              </td>
+              <td class="metric-col center">182.6h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">⚠️ 10.5%</td>
+              <td class="metric-col center">1.8%</td>
+              <td class="metric-col center">7.4%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+
+            <!-- Team Average Row -->
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center">49.0%</td>
+              <td class="metric-col center">—</td>
+              <td class="metric-col center">186.4h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">9.1%</td>
+              <td class="metric-col center">1.8%</td>
+              <td class="metric-col center">8.8%</td>
+              <td class="flags-col">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-dp_bi_data">
+
+      <!-- Group Header -->
+      <div class="group-header">
+        <div class="group-num">5</div>
+        <span class="group-title">DIGITAL PRODUCT — BI &amp; DATA</span>
+        <span class="member-count-pill">2 members</span>
+      </div>
+
+      <!-- Group Meta -->
+      <div class="group-meta">
+        <span><strong>Team:</strong> DP-BI</span>
+        
+        <span><strong>Manager:</strong> Bihani Madushika</span>
+        
+      </div>
+
+      <!-- Member Table -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Bihani Madushika
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col center">54.0%</td>
+              <td class="variance-col center">
+                <span class="var-neutral">-2.5pts</span>
+              </td>
+              <td class="metric-col center">188.2h</td>
+              <td class="metric-col center">0.6%</td>
+              <td class="metric-col center">8.3%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Modhuka Paranagama
+                
+                
+              </td>
+              <td class="metric-col center">59.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+2.5pts</span>
+              </td>
+              <td class="metric-col center">177.5h</td>
+              <td class="metric-col center">1.5%</td>
+              <td class="metric-col center">9.2%</td>
+              <td class="metric-col center">1.2%</td>
+              <td class="metric-col center">4.2%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+
+            <!-- Team Average Row -->
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center">56.5%</td>
+              <td class="metric-col center">—</td>
+              <td class="metric-col center">182.8h</td>
+              <td class="metric-col center">1.1%</td>
+              <td class="metric-col center">8.8%</td>
+              <td class="metric-col center">0.6%</td>
+              <td class="metric-col center">2.1%</td>
+              <td class="flags-col">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+      <div class="absent-note">
+        ⚠️ Not in this month's data: Dilini Pathirana
+      </div>
+      
+
+    </div>
+    
+    <div class="group-card" id="group-venia_cam">
+
+      <!-- Group Header -->
+      <div class="group-header">
+        <div class="group-num">6</div>
+        <span class="group-title">VENIA — COMMERCIAL ACCOUNTS</span>
+        <span class="member-count-pill">4 members</span>
+      </div>
+
+      <!-- Group Meta -->
+      <div class="group-meta">
+        <span><strong>Team:</strong> VP-CO-CAM</span>
+        
+        <span><strong>Manager:</strong> Shannon Woods</span>
+        
+      </div>
+
+      <!-- Member Table -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Shannon Woods
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col center">71.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+10.5pts</span>
+              </td>
+              <td class="metric-col center">175.0h</td>
+              <td class="metric-col center">1.9%</td>
+              <td class="metric-col center">7.4%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Monica Lopez
+                
+                
+              </td>
+              <td class="metric-col center">71.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+10.5pts</span>
+              </td>
+              <td class="metric-col center">169.5h</td>
+              <td class="metric-col center">0.2%</td>
+              <td class="metric-col center">⚠️ 10.8%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">1.1%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Jesus Corral
+                
+                
+              </td>
+              <td class="metric-col center">55.0%</td>
+              <td class="variance-col center">
+                <span class="var-neg">-5.5pts</span>
+              </td>
+              <td class="metric-col center">165.4h</td>
+              <td class="metric-col center">0.5%</td>
+              <td class="metric-col center">⚠️ 10.0%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">1.7%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="peer-outlier-row">
+              <td class="member-col">
+                Meredith Goostree
+                
+                
+              </td>
+              <td class="metric-col center">45.0%</td>
+              <td class="variance-col center">
+                <span class="var-neg">-15.5pts</span>
+              </td>
+              <td class="metric-col center">168.1h</td>
+              <td class="metric-col center">1.6%</td>
+              <td class="metric-col center">8.2%</td>
+              <td class="metric-col center">2.6%</td>
+              <td class="metric-col center">3.9%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+
+            <!-- Team Average Row -->
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center">60.5%</td>
+              <td class="metric-col center">—</td>
+              <td class="metric-col center">169.5h</td>
+              <td class="metric-col center">1.1%</td>
+              <td class="metric-col center">9.1%</td>
+              <td class="metric-col center">0.7%</td>
+              <td class="metric-col center">1.7%</td>
+              <td class="flags-col">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-venia_cr">
+
+      <!-- Group Header -->
+      <div class="group-header">
+        <div class="group-num">7</div>
+        <span class="group-title">VENIA — CUSTOMER RELATIONS</span>
+        <span class="member-count-pill">3 members</span>
+      </div>
+
+      <!-- Group Meta -->
+      <div class="group-meta">
+        <span><strong>Team:</strong> VP-CO-CR</span>
+        
+        <span><strong>Manager:</strong> Darren Karunaratne</span>
+        
+      </div>
+
+      <!-- Member Table -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Darren Karunaratne
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col center">47.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+6.3pts</span>
+              </td>
+              <td class="metric-col center">183.2h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">⚠️ 10.0%</td>
+              <td class="metric-col center">3.1%</td>
+              <td class="metric-col center">5.8%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                leora megan
+                
+                
+              </td>
+              <td class="metric-col center">⚠️ 35.0%</td>
+              <td class="variance-col center">
+                <span class="var-neg">-5.7pts</span>
+              </td>
+              <td class="metric-col center">168.7h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">⚠️ 10.3%</td>
+              <td class="metric-col center">7.2%</td>
+              <td class="metric-col center">🔴 22.0%</td>
+              <td class="flags-col">🔴 1 ⚠️ 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Ounvin Ranaweera
+                
+                
+              </td>
+              <td class="metric-col center">⚠️ 40.0%</td>
+              <td class="variance-col center">
+                <span class="var-neutral">-0.7pts</span>
+              </td>
+              <td class="metric-col center">177.3h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">⚠️ 10.2%</td>
+              <td class="metric-col center">2.4%</td>
+              <td class="metric-col center">2.4%</td>
+              <td class="flags-col">⚠️ 1</td>
+            </tr>
+            
+
+            <!-- Team Average Row -->
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center">40.7%</td>
+              <td class="metric-col center">—</td>
+              <td class="metric-col center">176.4h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">10.2%</td>
+              <td class="metric-col center">4.2%</td>
+              <td class="metric-col center">10.1%</td>
+              <td class="flags-col">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-venia_cs">
+
+      <!-- Group Header -->
+      <div class="group-header">
+        <div class="group-num">8</div>
+        <span class="group-title">VENIA — CUSTOMER SUPPORT</span>
+        <span class="member-count-pill">7 members</span>
+      </div>
+
+      <!-- Group Meta -->
+      <div class="group-meta">
+        <span><strong>Team:</strong> VP-CO-CS</span>
+        
+        <span><strong>Manager:</strong> Sara Higgason</span>
+        
+      </div>
+
+      <!-- Member Table -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Sara Higgason
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col center">74.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+14.0pts</span>
+              </td>
+              <td class="metric-col center">178.3h</td>
+              <td class="metric-col center">4.0%</td>
+              <td class="metric-col center">🔴 12.1%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="flags-col">🔴 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Joan Lopez
+                
+                
+              </td>
+              <td class="metric-col center">61.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+1.0pts</span>
+              </td>
+              <td class="metric-col center">🟠 201.4h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">⚠️ 10.1%</td>
+              <td class="metric-col center">0.5%</td>
+              <td class="metric-col center">1.0%</td>
+              <td class="flags-col">🟠 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Christine Mayol
+                
+                
+              </td>
+              <td class="metric-col center">51.0%</td>
+              <td class="variance-col center">
+                <span class="var-neg">-9.0pts</span>
+              </td>
+              <td class="metric-col center">🔴 145.4h</td>
+              <td class="metric-col center">0.3%</td>
+              <td class="metric-col center">⚠️ 11.8%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">1.2%</td>
+              <td class="flags-col">🔴 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Mary Anne Soriano
+                
+                
+              </td>
+              <td class="metric-col center">64.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+4.0pts</span>
+              </td>
+              <td class="metric-col center">174.4h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">⚠️ 10.3%</td>
+              <td class="metric-col center">0.3%</td>
+              <td class="metric-col center">2.1%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Vincent Deximo
+                
+                
+              </td>
+              <td class="metric-col center">64.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+4.0pts</span>
+              </td>
+              <td class="metric-col center">172.2h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">⚠️ 10.6%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Ma Aubrey Sustento
+                
+                
+              </td>
+              <td class="metric-col center">54.0%</td>
+              <td class="variance-col center">
+                <span class="var-neg">-6.0pts</span>
+              </td>
+              <td class="metric-col center">172.0h</td>
+              <td class="metric-col center">2.6%</td>
+              <td class="metric-col center">⚠️ 10.4%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">1.6%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Andrés Victoriano
+                
+                
+              </td>
+              <td class="metric-col center">52.0%</td>
+              <td class="variance-col center">
+                <span class="var-neg">-8.0pts</span>
+              </td>
+              <td class="metric-col center">186.8h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">⚠️ 10.2%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">2.1%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+
+            <!-- Team Average Row -->
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center">60.0%</td>
+              <td class="metric-col center">—</td>
+              <td class="metric-col center">175.8h</td>
+              <td class="metric-col center">1.0%</td>
+              <td class="metric-col center">10.8%</td>
+              <td class="metric-col center">0.1%</td>
+              <td class="metric-col center">1.1%</td>
+              <td class="flags-col">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-venia_op">
+
+      <!-- Group Header -->
+      <div class="group-header">
+        <div class="group-num">9</div>
+        <span class="group-title">VENIA — ORDER PROCESSING</span>
+        <span class="member-count-pill">5 members</span>
+      </div>
+
+      <!-- Group Meta -->
+      <div class="group-meta">
+        <span><strong>Team:</strong> VP-CO-OP</span>
+        
+        <span><strong>Manager:</strong> Rebecca Corona</span>
+        
+      </div>
+
+      <!-- Member Table -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Rebecca Corona
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col center">50.0%</td>
+              <td class="variance-col center">
+                <span class="var-neutral">-2.2pts</span>
+              </td>
+              <td class="metric-col center">172.8h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">⚠️ 10.5%</td>
+              <td class="metric-col center">0.2%</td>
+              <td class="metric-col center">0.2%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Carmen Santos
+                
+                
+              </td>
+              <td class="metric-col center">51.0%</td>
+              <td class="variance-col center">
+                <span class="var-neutral">-1.2pts</span>
+              </td>
+              <td class="metric-col center">🔴 158.4h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">0.6%</td>
+              <td class="metric-col center">4.5%</td>
+              <td class="metric-col center">8.0%</td>
+              <td class="flags-col">🔴 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Erandi Bandaranayake
+                
+                
+              </td>
+              <td class="metric-col center">⚠️ 43.0%</td>
+              <td class="variance-col center">
+                <span class="var-neg">-9.2pts</span>
+              </td>
+              <td class="metric-col center">181.9h</td>
+              <td class="metric-col center">0.3%</td>
+              <td class="metric-col center">9.1%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="flags-col">⚠️ 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Shenallie Jayathillake
+                
+                
+              </td>
+              <td class="metric-col center">67.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+14.8pts</span>
+              </td>
+              <td class="metric-col center">182.1h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">⚠️ 10.0%</td>
+              <td class="metric-col center">1.6%</td>
+              <td class="metric-col center">1.6%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Subashi Silva
+                
+                
+              </td>
+              <td class="metric-col center">50.0%</td>
+              <td class="variance-col center">
+                <span class="var-neutral">-2.2pts</span>
+              </td>
+              <td class="metric-col center">181.4h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">⚠️ 10.1%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+
+            <!-- Team Average Row -->
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center">52.2%</td>
+              <td class="metric-col center">—</td>
+              <td class="metric-col center">175.3h</td>
+              <td class="metric-col center">0.1%</td>
+              <td class="metric-col center">8.1%</td>
+              <td class="metric-col center">1.3%</td>
+              <td class="metric-col center">2.0%</td>
+              <td class="flags-col">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-venia_sdr">
+
+      <!-- Group Header -->
+      <div class="group-header">
+        <div class="group-num">10</div>
+        <span class="group-title">VENIA — SALES DEVELOPMENT</span>
+        <span class="member-count-pill">5 members</span>
+      </div>
+
+      <!-- Group Meta -->
+      <div class="group-meta">
+        <span><strong>Team:</strong> VP-CO-SDR</span>
+        
+        <span><strong>Manager:</strong> Denise Marsha Elisa Moscare</span>
+        
+      </div>
+
+      <!-- Member Table -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Denise Marsha Elisa Moscare
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col center">57.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+1.8pts</span>
+              </td>
+              <td class="metric-col center">189.4h</td>
+              <td class="metric-col center">1.3%</td>
+              <td class="metric-col center">8.6%</td>
+              <td class="metric-col center">1.8%</td>
+              <td class="metric-col center">2.7%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Sarah Madoro
+                
+                
+              </td>
+              <td class="metric-col center">61.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+5.8pts</span>
+              </td>
+              <td class="metric-col center">168.0h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">8.1%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">0.6%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Caryl Agamao
+                
+                
+              </td>
+              <td class="metric-col center">58.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+2.8pts</span>
+              </td>
+              <td class="metric-col center">176.0h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">9.1%</td>
+              <td class="metric-col center">2.6%</td>
+              <td class="metric-col center">3.8%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Kristine Anne Dela Cruz
+                
+                
+              </td>
+              <td class="metric-col center">53.0%</td>
+              <td class="variance-col center">
+                <span class="var-neutral">-2.2pts</span>
+              </td>
+              <td class="metric-col center">176.0h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">4.0%</td>
+              <td class="metric-col center">0.9%</td>
+              <td class="metric-col center">1.1%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Farhanah Junainah Umpar
+                
+                
+              </td>
+              <td class="metric-col center">47.0%</td>
+              <td class="variance-col center">
+                <span class="var-neg">-8.2pts</span>
+              </td>
+              <td class="metric-col center">167.2h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">⚠️ 11.1%</td>
+              <td class="metric-col center">0.2%</td>
+              <td class="metric-col center">1.0%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+
+            <!-- Team Average Row -->
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center">55.2%</td>
+              <td class="metric-col center">—</td>
+              <td class="metric-col center">175.3h</td>
+              <td class="metric-col center">0.3%</td>
+              <td class="metric-col center">8.2%</td>
+              <td class="metric-col center">1.1%</td>
+              <td class="metric-col center">1.8%</td>
+              <td class="flags-col">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-task_agency">
+
+      <!-- Group Header -->
+      <div class="group-header">
+        <div class="group-num">11</div>
+        <span class="group-title">TASK AGENCY</span>
+        <span class="member-count-pill">7 members</span>
+      </div>
+
+      <!-- Group Meta -->
+      <div class="group-meta">
+        <span><strong>Team:</strong> TA-OPS / TA-PO / TA-TS</span>
+        
+        <span><strong>Manager:</strong> Sean Dehoedt</span>
+        
+      </div>
+
+      <!-- Member Table -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Sean Dehoedt
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col center">54.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+2.4pts</span>
+              </td>
+              <td class="metric-col center">🟠 202.7h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">6.5%</td>
+              <td class="metric-col center">0.8%</td>
+              <td class="metric-col center">2.5%</td>
+              <td class="flags-col">🟠 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Shen Perera
+                
+                <span class="new-hire-tag">New Hire</span>
+              </td>
+              <td class="metric-col center">⚠️ 43.0%</td>
+              <td class="variance-col center">
+                <span class="var-neg">-8.6pts</span>
+              </td>
+              <td class="metric-col center">🔴 128.4h</td>
+              <td class="metric-col center">1.4%</td>
+              <td class="metric-col center">9.5%</td>
+              <td class="metric-col center">5.0%</td>
+              <td class="metric-col center">🔴 24.6%</td>
+              <td class="flags-col">🔴 2 ⚠️ 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Aaqib Hafeel
+                
+                
+              </td>
+              <td class="metric-col center">59.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+7.4pts</span>
+              </td>
+              <td class="metric-col center">163.3h</td>
+              <td class="metric-col center">⚠️ 9.8%</td>
+              <td class="metric-col center">8.9%</td>
+              <td class="metric-col center">0.9%</td>
+              <td class="metric-col center">3.8%</td>
+              <td class="flags-col">⚠️ 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Jason Diaz
+                
+                
+              </td>
+              <td class="metric-col center">55.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+3.4pts</span>
+              </td>
+              <td class="metric-col center">🔴 150.2h</td>
+              <td class="metric-col center">1.3%</td>
+              <td class="metric-col center">9.3%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">0.1%</td>
+              <td class="flags-col">🔴 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Tashia Bernardus
+                
+                
+              </td>
+              <td class="metric-col center">⚠️ 43.0%</td>
+              <td class="variance-col center">
+                <span class="var-neg">-8.6pts</span>
+              </td>
+              <td class="metric-col center">186.0h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">9.7%</td>
+              <td class="metric-col center">2.8%</td>
+              <td class="metric-col center">3.3%</td>
+              <td class="flags-col">⚠️ 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Staffey Murugadas
+                
+                
+              </td>
+              <td class="metric-col center">55.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+3.4pts</span>
+              </td>
+              <td class="metric-col center">199.0h</td>
+              <td class="metric-col center">0.4%</td>
+              <td class="metric-col center">9.6%</td>
+              <td class="metric-col center">3.9%</td>
+              <td class="metric-col center">5.6%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Nawodya De Silva
+                
+                
+              </td>
+              <td class="metric-col center">52.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+0.4pts</span>
+              </td>
+              <td class="metric-col center">174.0h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">⚠️ 10.2%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">0.5%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+
+            <!-- Team Average Row -->
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center">51.6%</td>
+              <td class="metric-col center">—</td>
+              <td class="metric-col center">171.9h</td>
+              <td class="metric-col center">1.8%</td>
+              <td class="metric-col center">9.1%</td>
+              <td class="metric-col center">1.9%</td>
+              <td class="metric-col center">5.8%</td>
+              <td class="flags-col">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-mkt_media">
+
+      <!-- Group Header -->
+      <div class="group-header">
+        <div class="group-num">12</div>
+        <span class="group-title">MARKETING — MEDIA &amp; SOCIAL</span>
+        <span class="member-count-pill">3 members</span>
+      </div>
+
+      <!-- Group Meta -->
+      <div class="group-meta">
+        <span><strong>Team:</strong> MKT-MEDIA</span>
+        
+        <span><strong>Manager:</strong> Rannie Belen</span>
+        
+      </div>
+
+      <!-- Member Table -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Rannie Belen
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col center">60.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+6.0pts</span>
+              </td>
+              <td class="metric-col center">186.0h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">0.9%</td>
+              <td class="metric-col center">1.1%</td>
+              <td class="metric-col center">1.1%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Anna May Rubia
+                
+                
+              </td>
+              <td class="metric-col center">51.0%</td>
+              <td class="variance-col center">
+                <span class="var-neutral">-3.0pts</span>
+              </td>
+              <td class="metric-col center">182.0h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">9.8%</td>
+              <td class="metric-col center">1.0%</td>
+              <td class="metric-col center">6.5%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Ransika Kalutharage
+                
+                
+              </td>
+              <td class="metric-col center">51.0%</td>
+              <td class="variance-col center">
+                <span class="var-neutral">-3.0pts</span>
+              </td>
+              <td class="metric-col center">198.9h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">9.3%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">0.7%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+
+            <!-- Team Average Row -->
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center">54.0%</td>
+              <td class="metric-col center">—</td>
+              <td class="metric-col center">189.0h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">6.7%</td>
+              <td class="metric-col center">0.7%</td>
+              <td class="metric-col center">2.8%</td>
+              <td class="flags-col">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-mkt_design_video">
+
+      <!-- Group Header -->
+      <div class="group-header">
+        <div class="group-num">13</div>
+        <span class="group-title">MARKETING — DESIGNERS &amp; VIDEO</span>
+        <span class="member-count-pill">4 members</span>
+      </div>
+
+      <!-- Group Meta -->
+      <div class="group-meta">
+        <span><strong>Team:</strong> MKT-MEDIA (Creative)</span>
+        
+        <span><strong>Manager:</strong> Rannie Belen</span>
+        
+      </div>
+
+      <!-- Member Table -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="">
+              <td class="member-col">
+                Farshad Ramsee
+                
+                <span class="new-hire-tag">New Hire</span>
+              </td>
+              <td class="metric-col center">62.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+5.0pts</span>
+              </td>
+              <td class="metric-col center">189.1h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">⚠️ 10.0%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Kawya Samarasinghe
+                
+                
+              </td>
+              <td class="metric-col center">59.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+2.0pts</span>
+              </td>
+              <td class="metric-col center">199.1h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">9.2%</td>
+              <td class="metric-col center">0.8%</td>
+              <td class="metric-col center">3.0%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Rishonath Siva
+                
+                
+              </td>
+              <td class="metric-col center">57.0%</td>
+              <td class="variance-col center">
+                <span class="var-neutral">0.0pts</span>
+              </td>
+              <td class="metric-col center">175.5h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">8.5%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">0.5%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                sanjula paulis
+                
+                
+              </td>
+              <td class="metric-col center">50.0%</td>
+              <td class="variance-col center">
+                <span class="var-neg">-7.0pts</span>
+              </td>
+              <td class="metric-col center">197.2h</td>
+              <td class="metric-col center">0.5%</td>
+              <td class="metric-col center">8.1%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">1.0%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+
+            <!-- Team Average Row -->
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center">57.0%</td>
+              <td class="metric-col center">—</td>
+              <td class="metric-col center">190.2h</td>
+              <td class="metric-col center">0.1%</td>
+              <td class="metric-col center">8.9%</td>
+              <td class="metric-col center">0.2%</td>
+              <td class="metric-col center">1.1%</td>
+              <td class="flags-col">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-mkt_performance">
+
+      <!-- Group Header -->
+      <div class="group-header">
+        <div class="group-num">14</div>
+        <span class="group-title">MARKETING — PERFORMANCE &amp; AMAZON</span>
+        <span class="member-count-pill">6 members</span>
+      </div>
+
+      <!-- Group Meta -->
+      <div class="group-meta">
+        <span><strong>Team:</strong> MKT-AMAZON / MKT-PERFMKT / MKT-RGC</span>
+        
+        <span><strong>Manager:</strong> Saduka Sachintha</span>
+        
+      </div>
+
+      <!-- Member Table -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Saduka Sachintha
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col center">51.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+1.2pts</span>
+              </td>
+              <td class="metric-col center">187.2h</td>
+              <td class="metric-col center">0.4%</td>
+              <td class="metric-col center">9.6%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">0.2%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Prajwal Kumar
+                
+                <span class="new-hire-tag">New Hire</span>
+              </td>
+              <td class="metric-col center">🔴 33.0%</td>
+              <td class="variance-col center">
+                <span class="var-neg">-16.8pts</span>
+              </td>
+              <td class="metric-col center">169.1h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">9.2%</td>
+              <td class="metric-col center">⚠️ 11.6%</td>
+              <td class="metric-col center">🔴 39.3%</td>
+              <td class="flags-col">🔴 2 ⚠️ 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Unaiza Imran
+                
+                
+              </td>
+              <td class="metric-col center">84.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+34.2pts</span>
+              </td>
+              <td class="metric-col center">🔴 42.2h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">🔴 21.8%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">3.3%</td>
+              <td class="flags-col">🔴 2</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                shenali edirisinghe
+                
+                
+              </td>
+              <td class="metric-col center">⚠️ 41.0%</td>
+              <td class="variance-col center">
+                <span class="var-neg">-8.8pts</span>
+              </td>
+              <td class="metric-col center">176.3h</td>
+              <td class="metric-col center">0.6%</td>
+              <td class="metric-col center">9.6%</td>
+              <td class="metric-col center">0.2%</td>
+              <td class="metric-col center">8.2%</td>
+              <td class="flags-col">⚠️ 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Hafiz Mudasir
+                
+                
+              </td>
+              <td class="metric-col center">45.0%</td>
+              <td class="variance-col center">
+                <span class="var-neutral">-4.8pts</span>
+              </td>
+              <td class="metric-col center">186.1h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">8.8%</td>
+              <td class="metric-col center">0.6%</td>
+              <td class="metric-col center">3.0%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Sasindee Wijeratne
+                
+                
+              </td>
+              <td class="metric-col center">45.0%</td>
+              <td class="variance-col center">
+                <span class="var-neutral">-4.8pts</span>
+              </td>
+              <td class="metric-col center">180.5h</td>
+              <td class="metric-col center">0.2%</td>
+              <td class="metric-col center">⚠️ 10.2%</td>
+              <td class="metric-col center">5.8%</td>
+              <td class="metric-col center">7.9%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+
+            <!-- Team Average Row -->
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center">49.8%</td>
+              <td class="metric-col center">—</td>
+              <td class="metric-col center">156.9h</td>
+              <td class="metric-col center">0.2%</td>
+              <td class="metric-col center">11.5%</td>
+              <td class="metric-col center">3.0%</td>
+              <td class="metric-col center">10.3%</td>
+              <td class="flags-col">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-finance">
+
+      <!-- Group Header -->
+      <div class="group-header">
+        <div class="group-num">15</div>
+        <span class="group-title">ACCOUNTING &amp; FINANCE</span>
+        <span class="member-count-pill">4 members</span>
+      </div>
+
+      <!-- Group Meta -->
+      <div class="group-meta">
+        <span><strong>Team:</strong> FIN-ACC</span>
+        
+        <span><strong>Manager:</strong> Laci Burton</span>
+        
+      </div>
+
+      <!-- Member Table -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Laci Burton
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col center">60.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+13.8pts</span>
+              </td>
+              <td class="metric-col center">176.2h</td>
+              <td class="metric-col center">0.4%</td>
+              <td class="metric-col center">8.3%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Dharshika Perera
+                
+                
+              </td>
+              <td class="metric-col center">⚠️ 38.0%</td>
+              <td class="variance-col center">
+                <span class="var-neg">-8.2pts</span>
+              </td>
+              <td class="metric-col center">186.1h</td>
+              <td class="metric-col center">0.4%</td>
+              <td class="metric-col center">9.5%</td>
+              <td class="metric-col center">⚠️ 8.1%</td>
+              <td class="metric-col center">🔴 24.7%</td>
+              <td class="flags-col">🔴 1 ⚠️ 2</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Melanie Joy Pecaña
+                
+                
+              </td>
+              <td class="metric-col center">⚠️ 44.0%</td>
+              <td class="variance-col center">
+                <span class="var-neutral">-2.2pts</span>
+              </td>
+              <td class="metric-col center">172.2h</td>
+              <td class="metric-col center">1.2%</td>
+              <td class="metric-col center">⚠️ 10.2%</td>
+              <td class="metric-col center">0.1%</td>
+              <td class="metric-col center">2.0%</td>
+              <td class="flags-col">⚠️ 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Irene Padilla
+                
+                
+              </td>
+              <td class="metric-col center">⚠️ 43.0%</td>
+              <td class="variance-col center">
+                <span class="var-neutral">-3.2pts</span>
+              </td>
+              <td class="metric-col center">173.6h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">⚠️ 10.5%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">5.5%</td>
+              <td class="flags-col">⚠️ 1</td>
+            </tr>
+            
+
+            <!-- Team Average Row -->
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center">46.2%</td>
+              <td class="metric-col center">—</td>
+              <td class="metric-col center">177.0h</td>
+              <td class="metric-col center">0.5%</td>
+              <td class="metric-col center">9.6%</td>
+              <td class="metric-col center">2.0%</td>
+              <td class="metric-col center">8.1%</td>
+              <td class="flags-col">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-allintalent">
+
+      <!-- Group Header -->
+      <div class="group-header">
+        <div class="group-num">16</div>
+        <span class="group-title">RECRUITMENT — ALLINTALENT</span>
+        <span class="member-count-pill">4 members</span>
+      </div>
+
+      <!-- Group Meta -->
+      <div class="group-meta">
+        <span><strong>Team:</strong> AiT-CLIENT / AiT-CANDIDATE</span>
+        
+        <span><strong>Manager:</strong> Kushani Kalpage</span>
+        
+      </div>
+
+      <!-- Member Table -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Kushani Kalpage
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col center">⚠️ 44.0%</td>
+              <td class="variance-col center">
+                <span class="var-neg">-9.2pts</span>
+              </td>
+              <td class="metric-col center">183.9h</td>
+              <td class="metric-col center">1.4%</td>
+              <td class="metric-col center">9.9%</td>
+              <td class="metric-col center">7.3%</td>
+              <td class="metric-col center">🔴 20.7%</td>
+              <td class="flags-col">🔴 1 ⚠️ 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Nireshwaran Aravinth
+                
+                
+              </td>
+              <td class="metric-col center">62.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+8.8pts</span>
+              </td>
+              <td class="metric-col center">195.6h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">8.7%</td>
+              <td class="metric-col center">3.4%</td>
+              <td class="metric-col center">6.9%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Krishanthiny Krishnaraj
+                
+                
+              </td>
+              <td class="metric-col center">61.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+7.8pts</span>
+              </td>
+              <td class="metric-col center">192.7h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">9.4%</td>
+              <td class="metric-col center">1.0%</td>
+              <td class="metric-col center">8.7%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Menara Kahatapitiya
+                
+                
+              </td>
+              <td class="metric-col center">46.0%</td>
+              <td class="variance-col center">
+                <span class="var-neg">-7.2pts</span>
+              </td>
+              <td class="metric-col center">186.6h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">9.9%</td>
+              <td class="metric-col center">0.1%</td>
+              <td class="metric-col center">2.3%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+
+            <!-- Team Average Row -->
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center">53.2%</td>
+              <td class="metric-col center">—</td>
+              <td class="metric-col center">189.7h</td>
+              <td class="metric-col center">0.3%</td>
+              <td class="metric-col center">9.5%</td>
+              <td class="metric-col center">3.0%</td>
+              <td class="metric-col center">9.7%</td>
+              <td class="flags-col">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-framework_friday">
+
+      <!-- Group Header -->
+      <div class="group-header">
+        <div class="group-num">17</div>
+        <span class="group-title">FRAMEWORK FRIDAY — L&amp;D</span>
+        <span class="member-count-pill">4 members</span>
+      </div>
+
+      <!-- Group Meta -->
+      <div class="group-meta">
+        <span><strong>Team:</strong> FF-L&amp;D</span>
+        
+        <span><strong>Manager:</strong> Jebby Rochelle</span>
+        
+      </div>
+
+      <!-- Member Table -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Jebby Rochelle
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col center">⚠️ 40.0%</td>
+              <td class="variance-col center">
+                <span class="var-neg">-13.2pts</span>
+              </td>
+              <td class="metric-col center">🟠 200.2h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">9.2%</td>
+              <td class="metric-col center">0.4%</td>
+              <td class="metric-col center">8.5%</td>
+              <td class="flags-col">🟠 1 ⚠️ 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Fred Butson
+                
+                
+              </td>
+              <td class="metric-col center">⚠️ 43.0%</td>
+              <td class="variance-col center">
+                <span class="var-neg">-10.2pts</span>
+              </td>
+              <td class="metric-col center">🟠 237.2h</td>
+              <td class="metric-col center">0.5%</td>
+              <td class="metric-col center">2.5%</td>
+              <td class="metric-col center">0.8%</td>
+              <td class="metric-col center">2.3%</td>
+              <td class="flags-col">🟠 1 ⚠️ 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Sarena Nicole Arokiasamy
+                
+                <span class="new-hire-tag">New Hire</span>
+              </td>
+              <td class="metric-col center">81.0%</td>
+              <td class="variance-col center">
+                <span class="var-pos">+27.8pts</span>
+              </td>
+              <td class="metric-col center">187.3h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">9.8%</td>
+              <td class="metric-col center">0.6%</td>
+              <td class="metric-col center">0.9%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Reynalyn Gramatica
+                
+                <span class="new-hire-tag">New Hire</span>
+              </td>
+              <td class="metric-col center">49.0%</td>
+              <td class="variance-col center">
+                <span class="var-neutral">-4.2pts</span>
+              </td>
+              <td class="metric-col center">183.2h</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">9.6%</td>
+              <td class="metric-col center">0.0%</td>
+              <td class="metric-col center">7.9%</td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+
+            <!-- Team Average Row -->
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center">53.2%</td>
+              <td class="metric-col center">—</td>
+              <td class="metric-col center">202.0h</td>
+              <td class="metric-col center">0.1%</td>
+              <td class="metric-col center">7.8%</td>
+              <td class="metric-col center">0.5%</td>
+              <td class="metric-col center">4.9%</td>
+              <td class="flags-col">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+
+  </div><!-- /content -->
+
+  <div class="page-footer">
+    <span>WebLife Ventures Performance Reporting System &nbsp;·&nbsp; SLA thresholds per WebLife SLA Violation Legend v1.0</span>
+    <span>Generated 2026-04-09 08:20 &nbsp;·&nbsp; Internal use only</span>
+  </div>
+
+</div>
+</body>
+</html>
