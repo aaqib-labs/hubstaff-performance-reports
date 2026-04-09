@@ -39,11 +39,22 @@ CLAUDE.md            This file
 ```
 
 **File naming conventions (strictly enforced):**
-| Type | Prefix | Format | Example |
-|------|--------|--------|---------|
-| Hubstaff full month | `HS-` | `HS-YYYY-MM-master.csv` | `HS-2026-03-master.csv` |
-| Hubstaff bi-weekly | `HS-` | `HS-YYYY-MM-DD_to_YYYY-MM-DD.csv` | `HS-2026-03-01_to_2026-03-24.csv` |
-| Friday Solutions | `FS-` | `FS-YYYY-MM-DD_to_YYYY-MM-DD.csv` | `FS-2026-03-01_to_2026-03-24.csv` |
+
+*CSV inputs (`data/input/`):*
+| Type | Format | Example |
+|------|--------|---------|
+| Hubstaff full month | `HS-YYYY-MM-master.csv` | `HS-2026-03-master.csv` |
+| Hubstaff bi-weekly | `HS-YYYY-MM-DD_to_YYYY-MM-DD.csv` | `HS-2026-03-01_to_2026-03-24.csv` |
+| Friday Solutions | `FS-YYYY-MM-DD_to_YYYY-MM-DD.csv` | `FS-2026-03-01_to_2026-03-24.csv` |
+
+*HTML outputs (`docs/`):*
+| Type | Format | Example |
+|------|--------|---------|
+| Hubstaff bi-weekly | `YYYY-MM-DD_to_YYYY-MM-DD_biweekly_top_violators.html` | `2026-03-01_to_2026-03-24_biweekly_top_violators.html` |
+| Friday Solutions | `YYYY-MM-DD_to_YYYY-MM-DD_fs_report.html` | `2026-03-01_to_2026-03-24_fs_report.html` |
+| Pattern Analysis | `YYYY-MM-DD_to_YYYY-MM-DD_pattern_analysis.html` | `2026-01-01_to_2026-03-31_pattern_analysis.html` |
+
+Note: HTML outputs use date-range prefix + report-type suffix. No `HS-`/`FS-` prefix on outputs — the suffix identifies the source/type. This is by design so `update_index.py` can parse them consistently.
 
 **GitHub Pages serves from `/docs`.** All generated reports are written directly to `/docs/` — there is no separate `/reports/` archive folder. Never rename or remove the `/docs` folder.
 
