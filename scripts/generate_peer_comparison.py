@@ -418,25 +418,33 @@ def build_group(
             and variance < -10              # >10pp below team avg
         )
 
+        def _status_class(s): return s if s else "clean"
+
         member_data = {
-            "display":       display,
-            "is_manager":    norm_name == manager_norm,
-            "is_new_hire":   norm_name in NEW_HIRES,
-            "is_peer_outlier": peer_outlier,
-            "activity":      _fmt_metric(activity, flags["A"]),
-            "activity_raw":  activity,
-            "variance":      variance,
-            "variance_fmt":  f"+{variance:.1f}pts" if variance > 0 else f"{variance:.1f}pts" if not pd.isna(variance) else "—",
-            "variance_class": "var-pos" if variance > 0 else ("var-neg" if variance < -5 else "var-neutral") if not pd.isna(variance) else "var-neutral",
-            "hours":         _fmt_hours(row.get("total_hours"), flags["H"]),
-            "manual":        _fmt_metric(row.get("manual_pct"), flags["M"]),
-            "break_pct":     _fmt_metric(row.get("break_pct"), flags["B"]),
-            "low20":         _fmt_metric(row.get("low20_pct"), flags["20"]),
-            "low30":         _fmt_metric(row.get("low30_pct"), flags["30"]),
-            "flags_badge":   _flags_badge(flags),
-            "red_count":     red_c,
-            "yel_count":     yel_c,
-            "total_flags":   red_c + yel_c,
+            "display":          display,
+            "is_manager":       norm_name == manager_norm,
+            "is_new_hire":      norm_name in NEW_HIRES,
+            "is_peer_outlier":  peer_outlier,
+            "activity":         _fmt_metric(activity, flags["A"]),
+            "activity_status":  _status_class(flags["A"]),
+            "activity_raw":     activity,
+            "variance":         variance,
+            "variance_fmt":     f"+{variance:.1f}pts" if variance > 0 else f"{variance:.1f}pts" if not pd.isna(variance) else "—",
+            "variance_class":   "var-pos" if variance > 0 else ("var-neg" if variance < -5 else "var-neutral") if not pd.isna(variance) else "var-neutral",
+            "hours":            _fmt_hours(row.get("total_hours"), flags["H"]),
+            "hours_status":     _status_class(flags["H"]),
+            "manual":           _fmt_metric(row.get("manual_pct"), flags["M"]),
+            "manual_status":    _status_class(flags["M"]),
+            "break_pct":        _fmt_metric(row.get("break_pct"), flags["B"]),
+            "break_status":     _status_class(flags["B"]),
+            "low20":            _fmt_metric(row.get("low20_pct"), flags["20"]),
+            "low20_status":     _status_class(flags["20"]),
+            "low30":            _fmt_metric(row.get("low30_pct"), flags["30"]),
+            "low30_status":     _status_class(flags["30"]),
+            "flags_badge":      _flags_badge(flags),
+            "red_count":        red_c,
+            "yel_count":        yel_c,
+            "total_flags":      red_c + yel_c,
         }
 
         if norm_name == manager_norm:

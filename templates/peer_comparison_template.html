@@ -10,8 +10,8 @@
 
     body {
       font-family: 'DM Sans', -apple-system, sans-serif;
-      background: #f7fafc;
-      color: #1a202c;
+      background: #1a1f2e;
+      color: #e2e8f0;
       font-size: 15px;
       line-height: 1.6;
     }
@@ -23,246 +23,231 @@
     /* ------------------------------------------------------------------ */
     .page-header {
       background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #1d4ed8 100%);
-      padding: 40px 44px 36px;
-      position: relative; overflow: hidden;
+      padding: 40px 44px 36px; position: relative; overflow: hidden;
     }
     .page-header::after {
-      content: ''; position: absolute; top: -50px; right: -50px;
-      width: 300px; height: 300px; border-radius: 50%;
-      background: rgba(255,255,255,0.04); pointer-events: none;
+      content:''; position:absolute; top:-50px; right:-50px;
+      width:300px; height:300px; border-radius:50%;
+      background:rgba(255,255,255,0.04); pointer-events:none;
     }
     .header-top {
-      display: flex; align-items: flex-start;
-      justify-content: space-between; flex-wrap: wrap;
-      gap: 16px; margin-bottom: 28px;
+      display:flex; align-items:flex-start; justify-content:space-between;
+      flex-wrap:wrap; gap:16px; margin-bottom:28px;
     }
     .brand {
-      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
-      text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 8px;
+      font-size:0.72rem; font-weight:700; letter-spacing:0.14em;
+      text-transform:uppercase; color:rgba(255,255,255,0.45); margin-bottom:8px;
     }
     .page-header h1 {
-      font-size: 2rem; font-weight: 800; color: #fff;
-      line-height: 1.15; letter-spacing: -0.03em;
+      font-size:2rem; font-weight:800; color:#fff;
+      line-height:1.15; letter-spacing:-0.03em;
     }
     .period-badge {
-      background: rgba(255,255,255,0.13); border: 1px solid rgba(255,255,255,0.22);
-      color: rgba(255,255,255,0.92); padding: 7px 18px; border-radius: 999px;
-      font-size: 0.84rem; font-weight: 600; white-space: nowrap; align-self: flex-start;
+      background:rgba(255,255,255,0.13); border:1px solid rgba(255,255,255,0.22);
+      color:rgba(255,255,255,0.92); padding:7px 18px; border-radius:999px;
+      font-size:0.84rem; font-weight:600; white-space:nowrap; align-self:flex-start;
     }
-    .header-meta { display: flex; flex-wrap: wrap; gap: 32px; }
+    .header-meta { display:flex; flex-wrap:wrap; gap:32px; }
     .header-meta-item .h-label {
-      font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.09em; color: rgba(255,255,255,0.38); margin-bottom: 3px;
+      font-size:0.68rem; font-weight:700; text-transform:uppercase;
+      letter-spacing:0.09em; color:rgba(255,255,255,0.38); margin-bottom:3px;
     }
     .header-meta-item .h-value {
-      font-size: 0.88rem; font-weight: 600; color: rgba(255,255,255,0.9);
+      font-size:0.88rem; font-weight:600; color:rgba(255,255,255,0.9);
     }
 
     /* ------------------------------------------------------------------ */
     /* KPI Tiles                                                            */
     /* ------------------------------------------------------------------ */
     .stats-row {
-      display: grid; grid-template-columns: repeat(4, 1fr);
-      gap: 16px; padding: 24px 28px;
-      background: #fff; border-bottom: 1px solid #e2e8f0;
+      display:grid; grid-template-columns:repeat(4,1fr);
+      gap:1px; background:#111827; border-bottom:1px solid #2e3650;
     }
     .stat-tile {
-      padding: 18px 20px; border-radius: 10px;
-      display: flex; flex-direction: column; gap: 6px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+      background:#212736; padding:20px 24px;
+      display:flex; flex-direction:column; gap:4px;
     }
-    .stat-tile.blue   { background: linear-gradient(135deg,#ebf8ff,#e6fffa); border: 1px solid #90cdf4; }
-    .stat-tile.red    { background: linear-gradient(135deg,#fff5f5,#fff); border: 1px solid #fed7d7; }
-    .stat-tile.amber  { background: linear-gradient(135deg,#fffff0,#fff); border: 1px solid #fefcbf; }
-    .stat-tile.slate  { background: linear-gradient(135deg,#faf5ff,#fff); border: 1px solid #e9d8fd; }
     .stat-tile .t-label {
-      font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em;
+      font-size:0.72rem; font-weight:700; text-transform:uppercase;
+      letter-spacing:0.07em; color:#6b7a99;
     }
-    .stat-tile.blue  .t-label { color: #2b6cb0; }
-    .stat-tile.red   .t-label { color: #c53030; }
-    .stat-tile.amber .t-label { color: #b7791f; }
-    .stat-tile.slate .t-label { color: #553c9a; }
     .stat-tile .t-value {
-      font-size: 2rem; font-weight: 800; line-height: 1; letter-spacing: -0.04em;
+      font-size:2rem; font-weight:800; line-height:1; letter-spacing:-0.04em;
     }
-    .stat-tile.blue  .t-value { color: #2b6cb0; }
-    .stat-tile.red   .t-value { color: #c53030; }
-    .stat-tile.amber .t-value { color: #b7791f; }
-    .stat-tile.slate .t-value { color: #553c9a; }
-    .stat-tile .t-sub { font-size: 0.78rem; color: #718096; }
+    .stat-tile .t-sub { font-size:0.76rem; color:#6b7a99; margin-top:2px; }
+    .t-value.blue   { color:#60a5fa; }
+    .t-value.red    { color:#f87171; }
+    .t-value.amber  { color:#fbbf24; }
+    .t-value.slate  { color:#a5b4cc; }
 
     /* ------------------------------------------------------------------ */
     /* Content                                                              */
     /* ------------------------------------------------------------------ */
-    .content { padding: 28px; }
+    .content { padding:28px; }
 
     /* ------------------------------------------------------------------ */
     /* Group Cards                                                          */
     /* ------------------------------------------------------------------ */
     .group-card {
-      background: #fff;
-      border: 1px solid #e2e8f0;
-      border-radius: 10px;
-      margin-bottom: 24px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      background:#212736;
+      border:1px solid #2e3650;
+      border-radius:10px;
+      margin-bottom:24px;
+      overflow:hidden;
     }
     .group-header {
-      padding: 15px 20px;
-      border-bottom: 1px solid #edf2f7;
-      display: flex; align-items: center; flex-wrap: wrap; gap: 12px;
-      background: #f8fafc;
+      padding:15px 20px;
+      border-bottom:1px solid #2e3650;
+      display:flex; align-items:center; flex-wrap:wrap; gap:12px;
+      background:#1c2133;
     }
     .group-num {
-      width: 28px; height: 28px; border-radius: 7px;
-      background: #1d4ed8; color: #fff;
-      font-size: 0.82rem; font-weight: 800;
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      width:28px; height:28px; border-radius:7px;
+      background:#2563eb; color:#fff;
+      font-size:0.82rem; font-weight:800;
+      display:flex; align-items:center; justify-content:center; flex-shrink:0;
     }
     .group-title {
-      font-size: 1rem; font-weight: 800; color: #1a202c;
-      letter-spacing: 0.01em;
+      font-size:1rem; font-weight:800; color:#f1f5f9; letter-spacing:0.01em;
     }
     .member-count-pill {
-      background: #eff6ff; color: #1d4ed8;
-      font-size: 0.74rem; font-weight: 700;
-      padding: 3px 10px; border-radius: 999px;
-      border: 1px solid #bfdbfe;
+      background:#1e3a8a; color:#93c5fd;
+      font-size:0.74rem; font-weight:700;
+      padding:3px 10px; border-radius:999px; border:1px solid #2563eb;
     }
     .group-meta {
-      padding: 9px 20px;
-      background: #f0f4ff;
-      border-bottom: 2px solid #e2e8f0;
-      display: flex; gap: 28px; flex-wrap: wrap;
+      padding:9px 20px; background:#191d2b;
+      border-bottom:2px solid #2e3650;
+      display:flex; gap:28px; flex-wrap:wrap;
     }
-    .group-meta span { font-size: 0.83rem; color: #4a5568; }
-    .group-meta strong { color: #1a202c; font-weight: 700; }
+    .group-meta span { font-size:0.83rem; color:#8896b3; }
+    .group-meta strong { color:#cbd5e1; font-weight:700; }
 
     /* ------------------------------------------------------------------ */
     /* Tables                                                               */
     /* ------------------------------------------------------------------ */
-    .table-wrapper { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .table-wrapper { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; font-size:14px; }
 
-    thead tr { background: #1a202c; }
+    thead tr { background:#141928; }
     thead th {
-      color: #a0aec0; padding: 11px 14px;
-      font-size: 12px; font-weight: 600;
-      letter-spacing: 0.06em; text-transform: uppercase;
-      white-space: nowrap; text-align: left;
-      border-right: 1px solid #2d3748;
+      color:#8896b3; padding:11px 14px;
+      font-size:11px; font-weight:700;
+      letter-spacing:0.07em; text-transform:uppercase;
+      white-space:nowrap; text-align:left;
+      border-bottom:1px solid #2e3650;
+      border-right:1px solid #1e2433;
     }
-    thead th:last-child { border-right: none; }
-    thead th.center { text-align: center; }
+    thead th:last-child { border-right:none; }
+    thead th.center { text-align:center; }
 
-    tbody tr { background: #fff; border-bottom: 1px solid #edf2f7; }
-    tbody tr:nth-child(even) { background: #f8fafc; }
-    tbody tr:last-child { border-bottom: none; }
-    tbody tr:hover td { background: #ebf8ff !important; }
+    tbody tr { background:#212736; border-bottom:1px solid #2a3349; }
+    tbody tr:nth-child(even) { background:#1e2433; }
+    tbody tr:last-child { border-bottom:none; }
+    tbody tr:hover td { background:#263050 !important; }
     tbody td {
-      padding: 11px 14px; vertical-align: middle;
-      white-space: nowrap; color: #1a202c;
-      border-right: 1px solid #f0f4f8;
+      padding:11px 14px; vertical-align:middle;
+      white-space:nowrap; color:#cbd5e1;
+      border-right:1px solid #2a3349;
     }
-    tbody td:last-child { border-right: none; }
-    tbody td.center { text-align: center; }
-
-    /* Severity accent on first cell */
-    tr.sev-red    td:first-child { box-shadow: inset 3px 0 0 #e53e3e; }
-    tr.sev-orange td:first-child { box-shadow: inset 3px 0 0 #dd6b20; }
-    tr.sev-yellow td:first-child { box-shadow: inset 3px 0 0 #d69e2e; }
+    tbody td:last-child { border-right:none; }
+    tbody td.center { text-align:center; }
 
     /* Manager row */
-    tr.manager-row { background: #eff6ff !important; }
-    tr.manager-row td { background: #eff6ff; }
-    tr.manager-row td.member-col { font-weight: 700; color: #1e40af; }
+    tr.manager-row { background:#1a2d4a !important; }
+    tr.manager-row td { background:#1a2d4a; }
+    tr.manager-row td.member-col { font-weight:700; color:#93c5fd; }
     .manager-tag {
-      display: inline-block; font-size: 11px; font-weight: 700;
-      color: #1d4ed8; background: #dbeafe;
-      padding: 1px 8px; border-radius: 999px; margin-left: 6px;
-      border: 1px solid #bfdbfe;
+      display:inline-block; font-size:11px; font-weight:700;
+      color:#60a5fa; background:#1e3a8a;
+      padding:1px 8px; border-radius:999px; margin-left:6px;
+      border:1px solid #2563eb;
     }
 
     /* New hire tag */
     .new-hire-tag {
-      display: inline-block; font-size: 10px; font-weight: 700;
-      color: #166534; background: #dcfce7;
-      padding: 1px 7px; border-radius: 999px; margin-left: 5px;
-      border: 1px solid #86efac;
+      display:inline-block; font-size:10px; font-weight:700;
+      color:#86efac; background:#14532d;
+      padding:1px 7px; border-radius:999px; margin-left:5px;
+      border:1px solid #166534;
     }
 
-    /* Peer outlier row — subtle amber tint */
-    tr.peer-outlier-row td { background: #fffbeb !important; }
-    tr.peer-outlier-row td:first-child { box-shadow: inset 3px 0 0 #f59e0b; }
+    /* Peer outlier row */
+    tr.peer-outlier-row { background:#2a2213 !important; }
+    tr.peer-outlier-row td { background:#2a2213; }
+    tr.peer-outlier-row td:first-child { box-shadow:inset 3px 0 0 #f59e0b; }
 
-    /* Member name col */
-    td.member-col { font-weight: 600; color: #1a202c; min-width: 155px; }
+    /* Member col */
+    td.member-col { font-weight:600; color:#e2e8f0; min-width:155px; }
+
+    /* ------------------------------------------------------------------ */
+    /* Metric Pill Cells                                                    */
+    /* ------------------------------------------------------------------ */
+    td.metric-col { text-align:center; }
+    .m-pill {
+      display:inline-block; padding:4px 11px; border-radius:6px;
+      font-size:13px; font-weight:700; text-align:center;
+      font-family:'DM Mono', monospace;
+      font-variant-numeric:tabular-nums; white-space:nowrap;
+    }
+    /* Red violation */
+    .m-pill.p-red    { background:#dc2626; color:#fff; }
+    /* Orange overwork */
+    .m-pill.p-orange { background:#ea580c; color:#fff; }
+    /* Yellow warning */
+    .m-pill.p-yellow { background:#d97706; color:#fff; }
+    /* Clean — subtle, de-emphasised */
+    .m-pill.p-clean  { background:#2a3349; color:#8896b3; }
 
     /* Variance */
-    td.variance-col {
-      text-align: center;
-      font-family: 'DM Mono', monospace;
-      font-size: 13px; font-weight: 700;
+    td.variance-col { text-align:center; }
+    .var-pill {
+      display:inline-block; padding:4px 10px; border-radius:6px;
+      font-size:13px; font-weight:700;
+      font-family:'DM Mono', monospace;
     }
-    .var-pos     { color: #16a34a; }
-    .var-neg     { color: #dc2626; }
-    .var-neutral { color: #9ca3af; }
-
-    /* Metric cells */
-    td.metric-col {
-      text-align: center;
-      font-family: 'DM Mono', monospace;
-      font-size: 13px; color: #374151;
-    }
+    .var-pos     { background:#14532d; color:#4ade80; }
+    .var-neg     { background:#450a0a; color:#f87171; }
+    .var-neutral { background:#2a3349; color:#6b7a99; }
 
     /* Flags */
-    td.flags-col { text-align: center; font-size: 13px; white-space: nowrap; }
+    td.flags-col { text-align:center; font-size:13px; white-space:nowrap; }
 
     /* ------------------------------------------------------------------ */
     /* Team Average Row — clearly distinct                                  */
     /* ------------------------------------------------------------------ */
+    tr.avg-row { border-top:2px solid #4b5680; }
     tr.avg-row td {
-      background: #1a202c !important;
-      color: #e2e8f0;
-      border-top: 2px solid #4a5568;
-      border-bottom: none;
-      padding: 10px 14px;
+      background:#0f1521 !important;
+      padding:10px 14px;
+      border-right:1px solid #1e2433;
     }
-    tr.avg-row:hover td { background: #2d3748 !important; }
+    tr.avg-row:hover td { background:#141d30 !important; }
     td.avg-label {
-      font-size: 11px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.08em;
-      color: #94a3b8;
+      font-size:11px; font-weight:800;
+      text-transform:uppercase; letter-spacing:0.09em; color:#6b7a99;
     }
-    tr.avg-row td.metric-col {
-      color: #e2e8f0;
-      font-family: 'DM Mono', monospace;
-      font-size: 13px; font-weight: 600;
-    }
+    tr.avg-row .m-pill { background:#1e2d45; color:#93c5fd; border:1px solid #2563eb; }
 
     /* Absent note */
     .absent-note {
-      padding: 9px 20px;
-      background: #fffbeb; border-top: 1px solid #fef3c7;
-      font-size: 0.80rem; color: #92400e;
+      padding:9px 20px; background:#1c1a0a; border-top:1px solid #2e3650;
+      font-size:0.80rem; color:#a16207;
     }
 
     /* ------------------------------------------------------------------ */
     /* Footer                                                               */
     /* ------------------------------------------------------------------ */
     .page-footer {
-      margin-top: 16px; padding: 0 28px;
-      display: flex; justify-content: space-between;
-      align-items: center; flex-wrap: wrap; gap: 8px;
+      margin-top:16px; padding:0 28px;
+      display:flex; justify-content:space-between;
+      align-items:center; flex-wrap:wrap; gap:8px;
     }
-    .page-footer span { font-size: 0.76rem; color: #a0aec0; }
+    .page-footer span { font-size:0.76rem; color:#4b5680; }
 
-    /* ------------------------------------------------------------------ */
-    /* Responsive                                                           */
-    /* ------------------------------------------------------------------ */
-    @media (max-width: 900px) {
-      .stats-row { grid-template-columns: repeat(2, 1fr); padding: 16px; }
-      .content   { padding: 16px; }
+    @media (max-width:900px) {
+      .stats-row { grid-template-columns:repeat(2,1fr); }
+      .content   { padding:16px; }
     }
   </style>
 </head>
@@ -304,24 +289,24 @@
 
   <!-- KPI Tiles -->
   <div class="stats-row">
-    <div class="stat-tile blue">
+    <div class="stat-tile">
       <div class="t-label">Peer Groups</div>
-      <div class="t-value">{{ total_groups }}</div>
+      <div class="t-value blue">{{ total_groups }}</div>
       <div class="t-sub">functional teams</div>
     </div>
-    <div class="stat-tile slate">
+    <div class="stat-tile">
       <div class="t-label">Employees Covered</div>
-      <div class="t-value">{{ total_members }}</div>
+      <div class="t-value slate">{{ total_members }}</div>
       <div class="t-sub">across all groups</div>
     </div>
-    <div class="stat-tile red">
+    <div class="stat-tile">
       <div class="t-label">SLA Violations</div>
-      <div class="t-value">{{ total_flagged }}</div>
+      <div class="t-value red">{{ total_flagged }}</div>
       <div class="t-sub">employees with flags</div>
     </div>
-    <div class="stat-tile amber">
+    <div class="stat-tile">
       <div class="t-label">Peer Outliers</div>
-      <div class="t-value">{{ total_peer_outliers }}</div>
+      <div class="t-value amber">{{ total_peer_outliers }}</div>
       <div class="t-sub">below team avg, no SLA flag</div>
     </div>
   </div>
@@ -361,22 +346,33 @@
           </thead>
           <tbody>
             {% for row in group.rows %}
-            {% set sev = 'red' if row.red_count > 0 else ('orange' if '🟠' in row.flags_badge else ('yellow' if row.yel_count > 0 else '')) %}
-            <tr class="{% if row.is_manager %}manager-row{% elif row.is_peer_outlier %}peer-outlier-row{% else %}sev-{{ sev }}{% endif %}">
+            <tr class="{% if row.is_manager %}manager-row{% elif row.is_peer_outlier %}peer-outlier-row{% endif %}">
               <td class="member-col">
                 {{ row.display }}
                 {% if row.is_manager %}<span class="manager-tag">Manager</span>{% endif %}
                 {% if row.is_new_hire %}<span class="new-hire-tag">New Hire</span>{% endif %}
               </td>
-              <td class="metric-col center">{{ row.activity }}</td>
-              <td class="variance-col center">
-                <span class="{{ row.variance_class }}">{{ row.variance_fmt }}</span>
+              <td class="metric-col">
+                <span class="m-pill p-{{ row.activity_status if row.activity_status else 'clean' }}">{{ row.activity }}</span>
               </td>
-              <td class="metric-col center">{{ row.hours }}</td>
-              <td class="metric-col center">{{ row.manual }}</td>
-              <td class="metric-col center">{{ row.break_pct }}</td>
-              <td class="metric-col center">{{ row.low20 }}</td>
-              <td class="metric-col center">{{ row.low30 }}</td>
+              <td class="variance-col">
+                <span class="var-pill {{ row.variance_class }}">{{ row.variance_fmt }}</span>
+              </td>
+              <td class="metric-col">
+                <span class="m-pill p-{{ row.hours_status if row.hours_status else 'clean' }}">{{ row.hours }}</span>
+              </td>
+              <td class="metric-col">
+                <span class="m-pill p-{{ row.manual_status if row.manual_status else 'clean' }}">{{ row.manual }}</span>
+              </td>
+              <td class="metric-col">
+                <span class="m-pill p-{{ row.break_status if row.break_status else 'clean' }}">{{ row.break_pct }}</span>
+              </td>
+              <td class="metric-col">
+                <span class="m-pill p-{{ row.low20_status if row.low20_status else 'clean' }}">{{ row.low20 }}</span>
+              </td>
+              <td class="metric-col">
+                <span class="m-pill p-{{ row.low30_status if row.low30_status else 'clean' }}">{{ row.low30 }}</span>
+              </td>
               <td class="flags-col">{{ row.flags_badge }}</td>
             </tr>
             {% endfor %}
@@ -384,13 +380,13 @@
             <!-- Team Average Row -->
             <tr class="avg-row">
               <td class="avg-label">Team Average</td>
-              <td class="metric-col center">{{ group.avg_row.activity }}</td>
+              <td class="metric-col center"><span class="m-pill">{{ group.avg_row.activity }}</span></td>
               <td class="metric-col center">—</td>
-              <td class="metric-col center">{{ group.avg_row.hours }}</td>
-              <td class="metric-col center">{{ group.avg_row.manual }}</td>
-              <td class="metric-col center">{{ group.avg_row.break_pct }}</td>
-              <td class="metric-col center">{{ group.avg_row.low20 }}</td>
-              <td class="metric-col center">{{ group.avg_row.low30 }}</td>
+              <td class="metric-col center"><span class="m-pill">{{ group.avg_row.hours }}</span></td>
+              <td class="metric-col center"><span class="m-pill">{{ group.avg_row.manual }}</span></td>
+              <td class="metric-col center"><span class="m-pill">{{ group.avg_row.break_pct }}</span></td>
+              <td class="metric-col center"><span class="m-pill">{{ group.avg_row.low20 }}</span></td>
+              <td class="metric-col center"><span class="m-pill">{{ group.avg_row.low30 }}</span></td>
               <td class="flags-col">—</td>
             </tr>
           </tbody>
