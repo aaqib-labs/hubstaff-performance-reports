@@ -10,8 +10,8 @@
 
     body {
       font-family: 'DM Sans', -apple-system, sans-serif;
-      background: #0f1117;
-      color: #e2e8f0;
+      background: #f7fafc;
+      color: #1a202c;
       font-size: 15px;
       line-height: 1.6;
     }
@@ -63,24 +63,33 @@
     /* ------------------------------------------------------------------ */
     .stats-row {
       display: grid; grid-template-columns: repeat(4, 1fr);
-      gap: 1px; background: #1e2128; border-bottom: 1px solid #2d3748;
+      gap: 16px; padding: 24px 28px;
+      background: #fff; border-bottom: 1px solid #e2e8f0;
     }
     .stat-tile {
-      background: #1a1d23; padding: 20px 24px;
-      display: flex; flex-direction: column; gap: 4px;
+      padding: 18px 20px; border-radius: 10px;
+      display: flex; flex-direction: column; gap: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.07);
     }
+    .stat-tile.blue   { background: linear-gradient(135deg,#ebf8ff,#e6fffa); border: 1px solid #90cdf4; }
+    .stat-tile.red    { background: linear-gradient(135deg,#fff5f5,#fff); border: 1px solid #fed7d7; }
+    .stat-tile.amber  { background: linear-gradient(135deg,#fffff0,#fff); border: 1px solid #fefcbf; }
+    .stat-tile.slate  { background: linear-gradient(135deg,#faf5ff,#fff); border: 1px solid #e9d8fd; }
     .stat-tile .t-label {
-      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.07em; color: #6b7280;
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em;
     }
+    .stat-tile.blue  .t-label { color: #2b6cb0; }
+    .stat-tile.red   .t-label { color: #c53030; }
+    .stat-tile.amber .t-label { color: #b7791f; }
+    .stat-tile.slate .t-label { color: #553c9a; }
     .stat-tile .t-value {
       font-size: 2rem; font-weight: 800; line-height: 1; letter-spacing: -0.04em;
     }
-    .stat-tile .t-sub { font-size: 0.75rem; color: #6b7280; margin-top: 2px; }
-    .t-value.blue   { color: #60a5fa; }
-    .t-value.red    { color: #f87171; }
-    .t-value.amber  { color: #fbbf24; }
-    .t-value.slate  { color: #94a3b8; }
+    .stat-tile.blue  .t-value { color: #2b6cb0; }
+    .stat-tile.red   .t-value { color: #c53030; }
+    .stat-tile.amber .t-value { color: #b7791f; }
+    .stat-tile.slate .t-value { color: #553c9a; }
+    .stat-tile .t-sub { font-size: 0.78rem; color: #718096; }
 
     /* ------------------------------------------------------------------ */
     /* Content                                                              */
@@ -91,43 +100,43 @@
     /* Group Cards                                                          */
     /* ------------------------------------------------------------------ */
     .group-card {
-      background: #1a1d23;
-      border: 1px solid #2d3748;
+      background: #fff;
+      border: 1px solid #e2e8f0;
       border-radius: 10px;
       margin-bottom: 24px;
       overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
     .group-header {
-      padding: 16px 20px;
-      border-bottom: 1px solid #2d3748;
+      padding: 15px 20px;
+      border-bottom: 1px solid #edf2f7;
       display: flex; align-items: center; flex-wrap: wrap; gap: 12px;
+      background: #f8fafc;
     }
     .group-num {
       width: 28px; height: 28px; border-radius: 7px;
-      background: #2563eb; color: #fff;
+      background: #1d4ed8; color: #fff;
       font-size: 0.82rem; font-weight: 800;
       display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
     .group-title {
-      font-size: 1.05rem; font-weight: 700; color: #f1f5f9;
-      letter-spacing: -0.01em;
+      font-size: 1rem; font-weight: 800; color: #1a202c;
+      letter-spacing: 0.01em;
     }
     .member-count-pill {
-      background: #1e3a8a; color: #93c5fd;
+      background: #eff6ff; color: #1d4ed8;
       font-size: 0.74rem; font-weight: 700;
       padding: 3px 10px; border-radius: 999px;
-      border: 1px solid #2563eb;
+      border: 1px solid #bfdbfe;
     }
     .group-meta {
       padding: 9px 20px;
-      background: #141720;
-      border-bottom: 1px solid #2d3748;
-      display: flex; gap: 24px; flex-wrap: wrap;
+      background: #f0f4ff;
+      border-bottom: 2px solid #e2e8f0;
+      display: flex; gap: 28px; flex-wrap: wrap;
     }
-    .group-meta span {
-      font-size: 0.82rem; color: #6b7280;
-    }
-    .group-meta strong { color: #94a3b8; font-weight: 600; }
+    .group-meta span { font-size: 0.83rem; color: #4a5568; }
+    .group-meta strong { color: #1a202c; font-weight: 700; }
 
     /* ------------------------------------------------------------------ */
     /* Tables                                                               */
@@ -135,76 +144,107 @@
     .table-wrapper { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; font-size: 14px; }
 
-    thead tr { background: #141720; }
+    thead tr { background: #1a202c; }
     thead th {
-      color: #6b7280; padding: 10px 14px;
-      font-size: 11px; font-weight: 600;
+      color: #a0aec0; padding: 11px 14px;
+      font-size: 12px; font-weight: 600;
       letter-spacing: 0.06em; text-transform: uppercase;
       white-space: nowrap; text-align: left;
-      border-bottom: 1px solid #2d3748;
-      border-right: 1px solid #1e2128;
+      border-right: 1px solid #2d3748;
     }
     thead th:last-child { border-right: none; }
     thead th.center { text-align: center; }
 
-    tbody tr { border-bottom: 1px solid #1e2128; }
+    tbody tr { background: #fff; border-bottom: 1px solid #edf2f7; }
+    tbody tr:nth-child(even) { background: #f8fafc; }
     tbody tr:last-child { border-bottom: none; }
-    tbody tr:hover td { background: #1e2530 !important; }
+    tbody tr:hover td { background: #ebf8ff !important; }
     tbody td {
       padding: 11px 14px; vertical-align: middle;
-      white-space: nowrap; color: #e2e8f0;
-      border-right: 1px solid #1e2128;
+      white-space: nowrap; color: #1a202c;
+      border-right: 1px solid #f0f4f8;
     }
     tbody td:last-child { border-right: none; }
     tbody td.center { text-align: center; }
 
+    /* Severity accent on first cell */
+    tr.sev-red    td:first-child { box-shadow: inset 3px 0 0 #e53e3e; }
+    tr.sev-orange td:first-child { box-shadow: inset 3px 0 0 #dd6b20; }
+    tr.sev-yellow td:first-child { box-shadow: inset 3px 0 0 #d69e2e; }
+
     /* Manager row */
-    tr.manager-row td { background: #141c2e; }
-    tr.manager-row td.member-col { font-weight: 700; }
+    tr.manager-row { background: #eff6ff !important; }
+    tr.manager-row td { background: #eff6ff; }
+    tr.manager-row td.member-col { font-weight: 700; color: #1e40af; }
     .manager-tag {
-      display: inline-block; font-size: 11px; font-weight: 600;
-      color: #60a5fa; background: #1e3a8a;
+      display: inline-block; font-size: 11px; font-weight: 700;
+      color: #1d4ed8; background: #dbeafe;
       padding: 1px 8px; border-radius: 999px; margin-left: 6px;
-      border: 1px solid #2563eb;
+      border: 1px solid #bfdbfe;
     }
 
     /* New hire tag */
     .new-hire-tag {
-      display: inline-block; font-size: 10px; font-weight: 600;
-      color: #a3e635; background: #1a2e05;
+      display: inline-block; font-size: 10px; font-weight: 700;
+      color: #166534; background: #dcfce7;
       padding: 1px 7px; border-radius: 999px; margin-left: 5px;
-      border: 1px solid #4d7c0f;
+      border: 1px solid #86efac;
     }
 
-    /* Peer outlier row */
-    tr.peer-outlier-row td { background: #1f1a0e; }
+    /* Peer outlier row — subtle amber tint */
+    tr.peer-outlier-row td { background: #fffbeb !important; }
+    tr.peer-outlier-row td:first-child { box-shadow: inset 3px 0 0 #f59e0b; }
 
     /* Member name col */
-    td.member-col { font-weight: 600; color: #f1f5f9; min-width: 150px; }
+    td.member-col { font-weight: 600; color: #1a202c; min-width: 155px; }
 
     /* Variance */
-    td.variance-col { text-align: center; font-family: 'DM Mono', monospace; font-size: 13px; }
-    .var-pos     { color: #4ade80; font-weight: 700; }
-    .var-neg     { color: #f87171; font-weight: 700; }
-    .var-neutral { color: #6b7280; }
+    td.variance-col {
+      text-align: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 13px; font-weight: 700;
+    }
+    .var-pos     { color: #16a34a; }
+    .var-neg     { color: #dc2626; }
+    .var-neutral { color: #9ca3af; }
 
     /* Metric cells */
-    td.metric-col { text-align: center; font-family: 'DM Mono', monospace; font-size: 13px; color: #94a3b8; }
+    td.metric-col {
+      text-align: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 13px; color: #374151;
+    }
 
     /* Flags */
     td.flags-col { text-align: center; font-size: 13px; white-space: nowrap; }
 
-    /* Team average row */
-    tr.avg-row td { background: #0f1117; color: #6b7280; font-size: 13px; border-top: 1px solid #2d3748; }
-    tr.avg-row td.avg-label { color: #4b5563; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
-    tr.avg-row td.metric-col { color: #4b5563; font-family: 'DM Mono', monospace; }
+    /* ------------------------------------------------------------------ */
+    /* Team Average Row — clearly distinct                                  */
+    /* ------------------------------------------------------------------ */
+    tr.avg-row td {
+      background: #1a202c !important;
+      color: #e2e8f0;
+      border-top: 2px solid #4a5568;
+      border-bottom: none;
+      padding: 10px 14px;
+    }
+    tr.avg-row:hover td { background: #2d3748 !important; }
+    td.avg-label {
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: #94a3b8;
+    }
+    tr.avg-row td.metric-col {
+      color: #e2e8f0;
+      font-family: 'DM Mono', monospace;
+      font-size: 13px; font-weight: 600;
+    }
 
     /* Absent note */
     .absent-note {
-      padding: 8px 20px;
-      background: #0f1117;
-      border-top: 1px solid #1e2128;
-      font-size: 0.78rem; color: #4b5563;
+      padding: 9px 20px;
+      background: #fffbeb; border-top: 1px solid #fef3c7;
+      font-size: 0.80rem; color: #92400e;
     }
 
     /* ------------------------------------------------------------------ */
@@ -215,13 +255,13 @@
       display: flex; justify-content: space-between;
       align-items: center; flex-wrap: wrap; gap: 8px;
     }
-    .page-footer span { font-size: 0.76rem; color: #4b5563; }
+    .page-footer span { font-size: 0.76rem; color: #a0aec0; }
 
     /* ------------------------------------------------------------------ */
     /* Responsive                                                           */
     /* ------------------------------------------------------------------ */
     @media (max-width: 900px) {
-      .stats-row { grid-template-columns: repeat(2, 1fr); }
+      .stats-row { grid-template-columns: repeat(2, 1fr); padding: 16px; }
       .content   { padding: 16px; }
     }
   </style>
@@ -264,24 +304,24 @@
 
   <!-- KPI Tiles -->
   <div class="stats-row">
-    <div class="stat-tile">
+    <div class="stat-tile blue">
       <div class="t-label">Peer Groups</div>
-      <div class="t-value blue">{{ total_groups }}</div>
+      <div class="t-value">{{ total_groups }}</div>
       <div class="t-sub">functional teams</div>
     </div>
-    <div class="stat-tile">
+    <div class="stat-tile slate">
       <div class="t-label">Employees Covered</div>
-      <div class="t-value slate">{{ total_members }}</div>
+      <div class="t-value">{{ total_members }}</div>
       <div class="t-sub">across all groups</div>
     </div>
-    <div class="stat-tile">
+    <div class="stat-tile red">
       <div class="t-label">SLA Violations</div>
-      <div class="t-value red">{{ total_flagged }}</div>
+      <div class="t-value">{{ total_flagged }}</div>
       <div class="t-sub">employees with flags</div>
     </div>
-    <div class="stat-tile">
+    <div class="stat-tile amber">
       <div class="t-label">Peer Outliers</div>
-      <div class="t-value amber">{{ total_peer_outliers }}</div>
+      <div class="t-value">{{ total_peer_outliers }}</div>
       <div class="t-sub">below team avg, no SLA flag</div>
     </div>
   </div>
@@ -291,14 +331,12 @@
     {% for group in groups %}
     <div class="group-card" id="group-{{ group.id }}">
 
-      <!-- Group Header -->
       <div class="group-header">
         <div class="group-num">{{ group.num }}</div>
         <span class="group-title">{{ group.name | upper }}</span>
         <span class="member-count-pill">{{ group.member_count }} member{{ 's' if group.member_count != 1 }}</span>
       </div>
 
-      <!-- Group Meta -->
       <div class="group-meta">
         <span><strong>Team:</strong> {{ group.team_code }}</span>
         {% if group.manager_name %}
@@ -306,7 +344,6 @@
         {% endif %}
       </div>
 
-      <!-- Member Table -->
       <div class="table-wrapper">
         <table>
           <thead>
@@ -324,7 +361,8 @@
           </thead>
           <tbody>
             {% for row in group.rows %}
-            <tr class="{% if row.is_manager %}manager-row{% elif row.is_peer_outlier %}peer-outlier-row{% endif %}">
+            {% set sev = 'red' if row.red_count > 0 else ('orange' if '🟠' in row.flags_badge else ('yellow' if row.yel_count > 0 else '')) %}
+            <tr class="{% if row.is_manager %}manager-row{% elif row.is_peer_outlier %}peer-outlier-row{% else %}sev-{{ sev }}{% endif %}">
               <td class="member-col">
                 {{ row.display }}
                 {% if row.is_manager %}<span class="manager-tag">Manager</span>{% endif %}
@@ -368,11 +406,11 @@
     </div>
     {% endfor %}
 
-  </div><!-- /content -->
+  </div>
 
   <div class="page-footer">
     <span>WebLife Ventures Performance Reporting System &nbsp;·&nbsp; SLA thresholds per WebLife SLA Violation Legend v1.0</span>
-    <span>Generated {{ generated_at }} &nbsp;·&nbsp; Internal use only</span>
+    <span>Generated {{ generated_at }} &nbsp;·&nbsp; Internal use only — do not distribute</span>
   </div>
 
 </div>
