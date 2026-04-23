@@ -1,0 +1,2392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Role-Based Peer Comparison Report — April 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', -apple-system, sans-serif;
+      background: #f7fafc;
+      color: #1a202c;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .page-wrap { max-width: 1380px; margin: 0 auto; padding: 0 0 72px; }
+
+    /* ------------------------------------------------------------------ */
+    /* Header                                                               */
+    /* ------------------------------------------------------------------ */
+    .page-header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #1d4ed8 100%);
+      padding: 40px 44px 36px; position: relative; overflow: hidden;
+    }
+    .page-header::after {
+      content:''; position:absolute; top:-50px; right:-50px;
+      width:300px; height:300px; border-radius:50%;
+      background:rgba(255,255,255,0.04); pointer-events:none;
+    }
+    .header-top {
+      display:flex; align-items:flex-start; justify-content:space-between;
+      flex-wrap:wrap; gap:16px; margin-bottom:28px;
+    }
+    .brand {
+      font-size:0.72rem; font-weight:700; letter-spacing:0.14em;
+      text-transform:uppercase; color:rgba(255,255,255,0.45); margin-bottom:8px;
+    }
+    .page-header h1 {
+      font-size:2rem; font-weight:800; color:#fff;
+      line-height:1.15; letter-spacing:-0.03em;
+    }
+    .period-badge {
+      background:rgba(255,255,255,0.13); border:1px solid rgba(255,255,255,0.22);
+      color:rgba(255,255,255,0.92); padding:7px 18px; border-radius:999px;
+      font-size:0.84rem; font-weight:600; white-space:nowrap; align-self:flex-start;
+    }
+    .header-meta { display:flex; flex-wrap:wrap; gap:32px; }
+    .header-meta-item .h-label {
+      font-size:0.68rem; font-weight:700; text-transform:uppercase;
+      letter-spacing:0.09em; color:rgba(255,255,255,0.38); margin-bottom:3px;
+    }
+    .header-meta-item .h-value {
+      font-size:0.88rem; font-weight:600; color:rgba(255,255,255,0.9);
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* KPI Tiles                                                            */
+    /* ------------------------------------------------------------------ */
+    .stats-row {
+      display:grid; grid-template-columns:repeat(4,1fr);
+      gap:16px; padding:24px 28px;
+      background:#fff; border-bottom:1px solid #e2e8f0;
+    }
+    .stat-tile {
+      padding:18px 20px; border-radius:10px;
+      display:flex; flex-direction:column; gap:6px;
+      box-shadow:0 1px 3px rgba(0,0,0,0.07);
+    }
+    .stat-tile.blue   { background:linear-gradient(135deg,#ebf8ff,#e6fffa); border:1px solid #90cdf4; }
+    .stat-tile.red    { background:linear-gradient(135deg,#fff5f5,#fff); border:1px solid #fed7d7; }
+    .stat-tile.amber  { background:linear-gradient(135deg,#fffff0,#fff); border:1px solid #fefcbf; }
+    .stat-tile.slate  { background:linear-gradient(135deg,#faf5ff,#fff); border:1px solid #e9d8fd; }
+    .stat-tile .t-label {
+      font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.07em;
+    }
+    .stat-tile.blue  .t-label { color:#2b6cb0; }
+    .stat-tile.red   .t-label { color:#c53030; }
+    .stat-tile.amber .t-label { color:#b7791f; }
+    .stat-tile.slate .t-label { color:#553c9a; }
+    .stat-tile .t-value {
+      font-size:2rem; font-weight:800; line-height:1; letter-spacing:-0.04em;
+    }
+    .stat-tile.blue  .t-value { color:#2b6cb0; }
+    .stat-tile.red   .t-value { color:#c53030; }
+    .stat-tile.amber .t-value { color:#b7791f; }
+    .stat-tile.slate .t-value { color:#553c9a; }
+    .stat-tile .t-sub { font-size:0.76rem; color:#718096; margin-top:2px; }
+
+    /* ------------------------------------------------------------------ */
+    /* Content                                                              */
+    /* ------------------------------------------------------------------ */
+    .content { padding:28px; }
+
+    /* ------------------------------------------------------------------ */
+    /* Group Cards                                                          */
+    /* ------------------------------------------------------------------ */
+    .group-card {
+      background:#fff; border:1px solid #e2e8f0;
+      border-radius:10px; margin-bottom:24px; overflow:hidden;
+      box-shadow:0 2px 8px rgba(0,0,0,0.06);
+    }
+    .group-header {
+      padding:14px 20px; background:#f8fafc;
+      border-bottom:1px solid #e2e8f0;
+      display:flex; align-items:center; flex-wrap:wrap; gap:12px;
+    }
+    .group-num {
+      width:28px; height:28px; border-radius:7px;
+      background:#1d4ed8; color:#fff;
+      font-size:0.82rem; font-weight:800;
+      display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    }
+    .group-title {
+      font-size:1rem; font-weight:800; color:#1a202c; letter-spacing:0.01em;
+    }
+    .member-count-pill {
+      background:#eff6ff; color:#1d4ed8;
+      font-size:0.74rem; font-weight:700;
+      padding:3px 10px; border-radius:999px; border:1px solid #bfdbfe;
+    }
+    .group-meta {
+      padding:8px 20px; background:#f0f4ff;
+      border-bottom:2px solid #e2e8f0;
+      display:flex; gap:28px; flex-wrap:wrap;
+    }
+    .group-meta span { font-size:0.83rem; color:#4a5568; }
+    .group-meta strong { color:#1a202c; font-weight:700; }
+
+    /* ------------------------------------------------------------------ */
+    /* Tables                                                               */
+    /* ------------------------------------------------------------------ */
+    .table-wrapper { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; font-size:14px; }
+
+    thead tr { background:#1a202c; }
+    thead th {
+      color:#a0aec0; padding:11px 14px;
+      font-size:12px; font-weight:600;
+      letter-spacing:0.06em; text-transform:uppercase;
+      white-space:nowrap; text-align:left;
+      border-right:1px solid #2d3748;
+    }
+    thead th:last-child { border-right:none; }
+    thead th.center { text-align:center; }
+
+    tbody tr { background:#fff; border-bottom:1px solid #edf2f7; }
+    tbody tr:nth-child(even) { background:#f8fafc; }
+    tbody tr:last-child { border-bottom:none; }
+    tbody tr:hover td { background:#ebf8ff !important; }
+    tbody td {
+      padding:10px 14px; vertical-align:middle;
+      white-space:nowrap; color:#1a202c;
+      border-right:1px solid #f0f4f8;
+    }
+    tbody td:last-child { border-right:none; }
+    tbody td.center { text-align:center; }
+
+    /* Manager row */
+    tr.manager-row td { background:#eff6ff; }
+    tr.manager-row td.member-col { font-weight:700; color:#1e40af; }
+    .manager-tag {
+      display:inline-block; font-size:11px; font-weight:700;
+      color:#1d4ed8; background:#dbeafe;
+      padding:1px 8px; border-radius:999px; margin-left:6px;
+      border:1px solid #bfdbfe;
+    }
+
+    /* New hire tag */
+    .new-hire-tag {
+      display:inline-block; font-size:10px; font-weight:700;
+      color:#166534; background:#dcfce7;
+      padding:1px 7px; border-radius:999px; margin-left:5px;
+      border:1px solid #86efac;
+    }
+
+    /* Peer outlier */
+    tr.peer-outlier-row td { background:#fffbeb; }
+    tr.peer-outlier-row td:first-child { box-shadow:inset 3px 0 0 #f59e0b; }
+
+    td.member-col { font-weight:600; color:#1a202c; min-width:155px; }
+
+    /* ------------------------------------------------------------------ */
+    /* Metric Pill Cells                                                    */
+    /* ------------------------------------------------------------------ */
+    td.metric-col { text-align:center; }
+    .m-pill {
+      display:inline-block; padding:3px 11px; border-radius:6px;
+      font-size:13px; font-weight:700;
+      font-family:'DM Mono', monospace;
+      font-variant-numeric:tabular-nums; white-space:nowrap;
+    }
+    .m-pill.p-red    { background:#fed7d7; color:#9b2c2c; }
+    .m-pill.p-orange { background:#fbd38d; color:#7b341e; }
+    .m-pill.p-yellow { background:#fefcbf; color:#744210; }
+    .m-pill.p-clean  { background:#edf2f7; color:#4a5568; }
+
+    /* Variance pill */
+    td.variance-col { text-align:center; }
+    .var-pill {
+      display:inline-block; padding:3px 10px; border-radius:6px;
+      font-size:13px; font-weight:700;
+      font-family:'DM Mono', monospace;
+    }
+    .var-pos     { background:#c6f6d5; color:#22543d; }
+    .var-neg     { background:#fed7d7; color:#9b2c2c; }
+    .var-neutral { background:#edf2f7; color:#718096; }
+
+    td.flags-col { text-align:center; font-size:13px; white-space:nowrap; }
+
+    /* ------------------------------------------------------------------ */
+    /* Team Average Row                                                     */
+    /* ------------------------------------------------------------------ */
+    tr.avg-row { border-top:2px solid #4a5568; }
+    tr.avg-row td {
+      background:#2d3748 !important;
+      padding:10px 14px;
+      border-right:1px solid #4a5568;
+    }
+    tr.avg-row:hover td { background:#374151 !important; }
+    td.avg-label {
+      font-size:11px; font-weight:800;
+      text-transform:uppercase; letter-spacing:0.09em; color:#a0aec0;
+    }
+    tr.avg-row .m-pill {
+      background:#4a5568; color:#e2e8f0;
+      font-weight:600;
+    }
+
+    /* Absent note */
+    .absent-note {
+      padding:9px 20px; background:#fffbeb; border-top:1px solid #fef3c7;
+      font-size:0.80rem; color:#92400e;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Footer                                                               */
+    /* ------------------------------------------------------------------ */
+    .page-footer {
+      margin-top:16px; padding:0 28px;
+      display:flex; justify-content:space-between;
+      align-items:center; flex-wrap:wrap; gap:8px;
+    }
+    .page-footer span { font-size:0.76rem; color:#a0aec0; }
+
+    @media (max-width:900px) {
+      .stats-row { grid-template-columns:repeat(2,1fr); padding:16px; }
+      .content   { padding:16px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <div class="page-header">
+    <div class="header-top">
+      <div>
+        <div class="brand">WebLife Ventures &nbsp;·&nbsp; Internal Use Only</div>
+        <h1>Role-Based Peer Comparison Report</h1>
+      </div>
+      <div class="period-badge">April 2026</div>
+    </div>
+    <div class="header-meta">
+      <div class="header-meta-item">
+        <div class="h-label">Report Period</div>
+        <div class="h-value">April 01, 2026 — April 22, 2026</div>
+      </div>
+      <div class="header-meta-item">
+        <div class="h-label">Peer Groups</div>
+        <div class="h-value">17</div>
+      </div>
+      <div class="header-meta-item">
+        <div class="h-label">Employees Covered</div>
+        <div class="h-value">77</div>
+      </div>
+      <div class="header-meta-item">
+        <div class="h-label">Hours Threshold</div>
+        <div class="h-value">🔴 &lt; 116h &nbsp;·&nbsp; 🟠 ≥ 145h</div>
+      </div>
+      <div class="header-meta-item">
+        <div class="h-label">Generated</div>
+        <div class="h-value">2026-04-23 12:10</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-tile blue">
+      <div class="t-label">Peer Groups</div>
+      <div class="t-value">17</div>
+      <div class="t-sub">functional teams</div>
+    </div>
+    <div class="stat-tile slate">
+      <div class="t-label">Employees Covered</div>
+      <div class="t-value">77</div>
+      <div class="t-sub">across all groups</div>
+    </div>
+    <div class="stat-tile red">
+      <div class="t-label">SLA Violations</div>
+      <div class="t-value">38</div>
+      <div class="t-sub">employees with flags</div>
+    </div>
+    <div class="stat-tile amber">
+      <div class="t-label">Peer Outliers</div>
+      <div class="t-value">3</div>
+      <div class="t-sub">below team avg, no SLA flag</div>
+    </div>
+  </div>
+
+  <div class="content">
+    
+    <div class="group-card" id="group-leadership">
+
+      <div class="group-header">
+        <div class="group-num">1</div>
+        <span class="group-title">LEADERSHIP / SENIOR LEVEL</span>
+        <span class="member-count-pill">6 members</span>
+      </div>
+
+      <div class="group-meta">
+        <span><strong>Team:</strong> Executive &amp; Senior Management</span>
+        
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="">
+              <td class="member-col">
+                Lucas Robinson
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 40.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-3.7pts</span></td>
+              <td class="metric-col"><span class="m-pill p-orange">🟠 190.8h</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 7.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">4.7%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 16.6%</span></td>
+              <td class="flags-col">🟠 1 ⚠️ 3</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                jorn wossner
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 30.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-13.7pts</span></td>
+              <td class="metric-col"><span class="m-pill p-orange">🟠 145.8h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">3.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">6.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 49.8%</span></td>
+              <td class="flags-col">🔴 2 🟠 1 ⚠️ 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Eden Schweyer
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 44.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+0.3pts</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 115.1h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">7.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">7.8%</span></td>
+              <td class="flags-col">🔴 1 ⚠️ 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Fred Butson
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 43.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-0.7pts</span></td>
+              <td class="metric-col"><span class="m-pill p-orange">🟠 175.1h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.2%</span></td>
+              <td class="flags-col">🟠 1 ⚠️ 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Adam Burdeshaw
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">53.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+9.3pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">136.5h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">7.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.2%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Saduka Sachintha
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">52.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+8.3pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">120.1h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">6.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center"><span class="m-pill">43.7%</span></td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
+              <td class="metric-col center"><span class="m-pill">147.2h</span></td>
+              <td class="metric-col center"><span class="m-pill">2.2%</span></td>
+              <td class="metric-col center"><span class="m-pill">4.9%</span></td>
+              <td class="metric-col center"><span class="m-pill">2.5%</span></td>
+              <td class="metric-col center"><span class="m-pill">12.9%</span></td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-dp_engineering">
+
+      <div class="group-header">
+        <div class="group-num">2</div>
+        <span class="group-title">DIGITAL PRODUCT — ENGINEERING</span>
+        <span class="member-count-pill">9 members</span>
+      </div>
+
+      <div class="group-meta">
+        <span><strong>Team:</strong> DP-PLATFORM / DP-CRM</span>
+        <span><strong>Manager:</strong> Adam Burdeshaw</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Adam Burdeshaw
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">53.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+2.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">136.5h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">7.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.2%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Nishantha Hettiarachchi
+                
+                <span class="new-hire-tag">New Hire</span>
+              </td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 33.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-17.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-orange">🟠 169.4h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">3.9%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 23.2%</span></td>
+              <td class="flags-col">🔴 2 🟠 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Muhammad Usman
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">59.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+8.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 95.0h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">4.9%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="flags-col">🔴 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Kianna Xue
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">46.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-4.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 102.7h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">6.7%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.7%</span></td>
+              <td class="flags-col">🔴 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Upeksha Liyanage
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">57.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+6.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">139.3h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">6.6%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Hasala Jayasuriya
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">54.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+3.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">129.3h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">7.7%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.3%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Thushan Fernando
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">53.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+2.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">139.0h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">7.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.9%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">4.7%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Chathuranga Weerakoon
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">51.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+0.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">122.2h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.0%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Dr. Yashoda Velananda
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">46.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-4.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">128.5h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.3%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center"><span class="m-pill">50.2%</span></td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
+              <td class="metric-col center"><span class="m-pill">129.1h</span></td>
+              <td class="metric-col center"><span class="m-pill">0.3%</span></td>
+              <td class="metric-col center"><span class="m-pill">7.1%</span></td>
+              <td class="metric-col center"><span class="m-pill">0.6%</span></td>
+              <td class="metric-col center"><span class="m-pill">5.3%</span></td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-dp_site_content">
+
+      <div class="group-header">
+        <div class="group-num">3</div>
+        <span class="group-title">DIGITAL PRODUCT — SITE CONTENT</span>
+        <span class="member-count-pill">3 members</span>
+      </div>
+
+      <div class="group-meta">
+        <span><strong>Team:</strong> DP-SITECONTENT</span>
+        <span><strong>Manager:</strong> Shehara Meadows</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Shehara Meadows
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 33.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-18.3pts</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 98.6h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">6.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 29.3%</span></td>
+              <td class="flags-col">🔴 3</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Ramez Sedra
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">51.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-0.3pts</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 106.5h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">7.9%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.7%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">3.4%</span></td>
+              <td class="flags-col">🔴 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Kunchana Prabashwara
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">70.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+18.7pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">132.7h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">7.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center"><span class="m-pill">51.3%</span></td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
+              <td class="metric-col center"><span class="m-pill">112.6h</span></td>
+              <td class="metric-col center"><span class="m-pill">0.1%</span></td>
+              <td class="metric-col center"><span class="m-pill">7.9%</span></td>
+              <td class="metric-col center"><span class="m-pill">3.0%</span></td>
+              <td class="metric-col center"><span class="m-pill">10.9%</span></td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-dp_catalog">
+
+      <div class="group-header">
+        <div class="group-num">4</div>
+        <span class="group-title">DIGITAL PRODUCT — CATALOG</span>
+        <span class="member-count-pill">2 members</span>
+      </div>
+
+      <div class="group-meta">
+        <span><strong>Team:</strong> DP-CATALOG</span>
+        <span><strong>Manager:</strong> Laleesha Wijeratne</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Laleesha Wijeratne
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 44.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-7.5pts</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 115.2h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">7.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 8.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 20.8%</span></td>
+              <td class="flags-col">🔴 2 ⚠️ 2</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Jomal Mathew
+                
+                <span class="new-hire-tag">New Hire</span>
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">59.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+7.5pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">125.9h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.9%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">3.9%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center"><span class="m-pill">51.5%</span></td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
+              <td class="metric-col center"><span class="m-pill">120.5h</span></td>
+              <td class="metric-col center"><span class="m-pill">0.2%</span></td>
+              <td class="metric-col center"><span class="m-pill">8.7%</span></td>
+              <td class="metric-col center"><span class="m-pill">4.3%</span></td>
+              <td class="metric-col center"><span class="m-pill">12.3%</span></td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-dp_bi_data">
+
+      <div class="group-header">
+        <div class="group-num">5</div>
+        <span class="group-title">DIGITAL PRODUCT — BI &amp; DATA</span>
+        <span class="member-count-pill">2 members</span>
+      </div>
+
+      <div class="group-meta">
+        <span><strong>Team:</strong> DP-BI</span>
+        <span><strong>Manager:</strong> Bihani Madushika</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Bihani Madushika
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">48.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-4.5pts</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 116.2h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">6.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">4.9%</span></td>
+              <td class="flags-col">🔴 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Modhuka Paranagama
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">57.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+4.5pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">134.2h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.8%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center"><span class="m-pill">52.5%</span></td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
+              <td class="metric-col center"><span class="m-pill">125.2h</span></td>
+              <td class="metric-col center"><span class="m-pill">0.0%</span></td>
+              <td class="metric-col center"><span class="m-pill">7.4%</span></td>
+              <td class="metric-col center"><span class="m-pill">0.8%</span></td>
+              <td class="metric-col center"><span class="m-pill">3.9%</span></td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+      <div class="absent-note">⚠️ Not in this month's data: Dilini Pathirana</div>
+      
+
+    </div>
+    
+    <div class="group-card" id="group-venia_cam">
+
+      <div class="group-header">
+        <div class="group-num">6</div>
+        <span class="group-title">VENIA — COMMERCIAL ACCOUNTS</span>
+        <span class="member-count-pill">4 members</span>
+      </div>
+
+      <div class="group-meta">
+        <span><strong>Team:</strong> VP-CO-CAM</span>
+        <span><strong>Manager:</strong> Shannon Woods</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Shannon Woods
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">63.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+4.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 112.2h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">4.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">7.4%</span></td>
+              <td class="flags-col">🔴 1</td>
+            </tr>
+            
+            <tr class="peer-outlier-row">
+              <td class="member-col">
+                Meredith Goostree
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">47.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-11.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 112.0h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.9%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">5.2%</span></td>
+              <td class="flags-col">🔴 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Monica Lopez
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">75.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+16.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">120.7h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.8%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="peer-outlier-row">
+              <td class="member-col">
+                Jesus Corral
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">48.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-10.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">129.3h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">4.2%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center"><span class="m-pill">58.2%</span></td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
+              <td class="metric-col center"><span class="m-pill">118.5h</span></td>
+              <td class="metric-col center"><span class="m-pill">1.0%</span></td>
+              <td class="metric-col center"><span class="m-pill">8.5%</span></td>
+              <td class="metric-col center"><span class="m-pill">0.7%</span></td>
+              <td class="metric-col center"><span class="m-pill">4.9%</span></td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-venia_cr">
+
+      <div class="group-header">
+        <div class="group-num">7</div>
+        <span class="group-title">VENIA — CUSTOMER RELATIONS</span>
+        <span class="member-count-pill">3 members</span>
+      </div>
+
+      <div class="group-meta">
+        <span><strong>Team:</strong> VP-CO-CR</span>
+        <span><strong>Manager:</strong> Darren Karunaratne</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Darren Karunaratne
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">46.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+2.7pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">128.4h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">6.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 15.5%</span></td>
+              <td class="flags-col">⚠️ 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                leora megan
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 44.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+0.7pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">128.9h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.3%</span></td>
+              <td class="flags-col">⚠️ 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Ounvin Ranaweera
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 40.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-3.3pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">129.7h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">7.7%</span></td>
+              <td class="flags-col">⚠️ 1</td>
+            </tr>
+            
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center"><span class="m-pill">43.3%</span></td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
+              <td class="metric-col center"><span class="m-pill">129.0h</span></td>
+              <td class="metric-col center"><span class="m-pill">0.0%</span></td>
+              <td class="metric-col center"><span class="m-pill">9.7%</span></td>
+              <td class="metric-col center"><span class="m-pill">3.1%</span></td>
+              <td class="metric-col center"><span class="m-pill">10.8%</span></td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-venia_cs">
+
+      <div class="group-header">
+        <div class="group-num">8</div>
+        <span class="group-title">VENIA — CUSTOMER SUPPORT</span>
+        <span class="member-count-pill">7 members</span>
+      </div>
+
+      <div class="group-meta">
+        <span><strong>Team:</strong> VP-CO-CS</span>
+        <span><strong>Manager:</strong> Sara Higgason</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Sara Higgason
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">70.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+10.6pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">125.6h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 11.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Ma Aubrey Sustento
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">59.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-0.4pts</span></td>
+              <td class="metric-col"><span class="m-pill p-orange">🟠 147.0h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.0%</span></td>
+              <td class="flags-col">🟠 1</td>
+            </tr>
+            
+            <tr class="peer-outlier-row">
+              <td class="member-col">
+                Andrés Victoriano
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">46.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-13.4pts</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 112.7h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.9%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">7.3%</span></td>
+              <td class="flags-col">🔴 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Joan Lopez
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">65.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+5.6pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">121.6h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.3%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Mary Anne Soriano
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">62.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+2.6pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">130.8h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.4%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Vincent Deximo
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">62.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+2.6pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">136.6h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Christine Mayol
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">52.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-7.4pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">128.8h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 11.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.3%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center"><span class="m-pill">59.4%</span></td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
+              <td class="metric-col center"><span class="m-pill">129.0h</span></td>
+              <td class="metric-col center"><span class="m-pill">0.2%</span></td>
+              <td class="metric-col center"><span class="m-pill">10.6%</span></td>
+              <td class="metric-col center"><span class="m-pill">0.7%</span></td>
+              <td class="metric-col center"><span class="m-pill">1.9%</span></td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-venia_op">
+
+      <div class="group-header">
+        <div class="group-num">9</div>
+        <span class="group-title">VENIA — ORDER PROCESSING</span>
+        <span class="member-count-pill">5 members</span>
+      </div>
+
+      <div class="group-meta">
+        <span><strong>Team:</strong> VP-CO-OP</span>
+        <span><strong>Manager:</strong> Rebecca Corona</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Rebecca Corona
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">52.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-0.6pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">125.8h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.5%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Subashi Silva
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">47.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-5.6pts</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 115.6h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="flags-col">🔴 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Erandi Bandaranayake
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 44.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-8.6pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">139.8h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.9%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="flags-col">⚠️ 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Shenallie Jayathillake
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">69.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+16.4pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">131.4h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.9%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.9%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Carmen Santos
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">51.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-1.6pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">116.7h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">3.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.3%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center"><span class="m-pill">52.6%</span></td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
+              <td class="metric-col center"><span class="m-pill">125.9h</span></td>
+              <td class="metric-col center"><span class="m-pill">0.0%</span></td>
+              <td class="metric-col center"><span class="m-pill">6.0%</span></td>
+              <td class="metric-col center"><span class="m-pill">1.1%</span></td>
+              <td class="metric-col center"><span class="m-pill">2.1%</span></td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-venia_sdr">
+
+      <div class="group-header">
+        <div class="group-num">10</div>
+        <span class="group-title">VENIA — SALES DEVELOPMENT</span>
+        <span class="member-count-pill">5 members</span>
+      </div>
+
+      <div class="group-meta">
+        <span><strong>Team:</strong> VP-CO-SDR</span>
+        <span><strong>Manager:</strong> Denise Marsha Elisa Moscare</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Denise Marsha Elisa Moscare
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">49.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-5.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">132.9h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">3.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">6.4%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Caryl Agamao
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">62.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+7.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">123.2h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.7%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.9%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Sarah Madoro
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">59.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+4.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">128.0h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Farhanah Junainah Umpar
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">53.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-1.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">120.0h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.7%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Kristine Anne Dela Cruz
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">51.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-3.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">128.0h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">3.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center"><span class="m-pill">54.8%</span></td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
+              <td class="metric-col center"><span class="m-pill">126.4h</span></td>
+              <td class="metric-col center"><span class="m-pill">0.7%</span></td>
+              <td class="metric-col center"><span class="m-pill">8.1%</span></td>
+              <td class="metric-col center"><span class="m-pill">0.2%</span></td>
+              <td class="metric-col center"><span class="m-pill">2.2%</span></td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-task_agency">
+
+      <div class="group-header">
+        <div class="group-num">11</div>
+        <span class="group-title">TASK AGENCY</span>
+        <span class="member-count-pill">7 members</span>
+      </div>
+
+      <div class="group-meta">
+        <span><strong>Team:</strong> TA-OPS / TA-PO / TA-TS</span>
+        <span><strong>Manager:</strong> Sean Dehoedt</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Sean Dehoedt
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">47.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-0.4pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">138.7h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">7.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">3.6%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Shen Perera
+                
+                <span class="new-hire-tag">New Hire</span>
+              </td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 33.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-14.4pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">127.5h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 7.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 37.2%</span></td>
+              <td class="flags-col">🔴 2 ⚠️ 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Nawodya De Silva
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">54.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+6.6pts</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 110.7h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">6.9%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.8%</span></td>
+              <td class="flags-col">🔴 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Staffey Murugadas
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">49.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+1.6pts</span></td>
+              <td class="metric-col"><span class="m-pill p-orange">🟠 146.1h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">6.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.3%</span></td>
+              <td class="flags-col">🟠 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Tashia Bernardus
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 42.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-5.4pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">126.2h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">7.9%</span></td>
+              <td class="flags-col">⚠️ 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Aaqib Hafeel
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">56.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+8.6pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">137.7h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.7%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.2%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Jason Diaz
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">51.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+3.6pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">126.9h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">3.8%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center"><span class="m-pill">47.4%</span></td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
+              <td class="metric-col center"><span class="m-pill">130.5h</span></td>
+              <td class="metric-col center"><span class="m-pill">0.3%</span></td>
+              <td class="metric-col center"><span class="m-pill">8.1%</span></td>
+              <td class="metric-col center"><span class="m-pill">2.3%</span></td>
+              <td class="metric-col center"><span class="m-pill">10.3%</span></td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-mkt_media">
+
+      <div class="group-header">
+        <div class="group-num">12</div>
+        <span class="group-title">MARKETING — MEDIA &amp; SOCIAL</span>
+        <span class="member-count-pill">3 members</span>
+      </div>
+
+      <div class="group-meta">
+        <span><strong>Team:</strong> MKT-MEDIA</span>
+        <span><strong>Manager:</strong> Rannie Belen</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Rannie Belen
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">59.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+5.0pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">139.7h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.5%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Ransika Kalutharage
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">53.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-1.0pts</span></td>
+              <td class="metric-col"><span class="m-pill p-orange">🟠 146.3h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.3%</span></td>
+              <td class="flags-col">🟠 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Anna May Rubia
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">50.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-4.0pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">119.8h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">3.1%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center"><span class="m-pill">54.0%</span></td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
+              <td class="metric-col center"><span class="m-pill">135.2h</span></td>
+              <td class="metric-col center"><span class="m-pill">0.2%</span></td>
+              <td class="metric-col center"><span class="m-pill">6.1%</span></td>
+              <td class="metric-col center"><span class="m-pill">0.0%</span></td>
+              <td class="metric-col center"><span class="m-pill">2.0%</span></td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-mkt_design_video">
+
+      <div class="group-header">
+        <div class="group-num">13</div>
+        <span class="group-title">MARKETING — DESIGNERS &amp; VIDEO</span>
+        <span class="member-count-pill">4 members</span>
+      </div>
+
+      <div class="group-meta">
+        <span><strong>Team:</strong> MKT-MEDIA (Creative)</span>
+        <span><strong>Manager:</strong> Rannie Belen</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="">
+              <td class="member-col">
+                Rishonath Siva
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">45.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-7.5pts</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 113.9h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.0%</span></td>
+              <td class="flags-col">🔴 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Farshad Ramsee
+                
+                <span class="new-hire-tag">New Hire</span>
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">62.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+9.5pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">132.3h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.1%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Kawya Samarasinghe
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">55.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+2.5pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">137.8h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">3.6%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                sanjula paulis
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">48.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-4.5pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">126.6h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.7%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.9%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">4.5%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center"><span class="m-pill">52.5%</span></td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
+              <td class="metric-col center"><span class="m-pill">127.6h</span></td>
+              <td class="metric-col center"><span class="m-pill">0.3%</span></td>
+              <td class="metric-col center"><span class="m-pill">9.0%</span></td>
+              <td class="metric-col center"><span class="m-pill">1.0%</span></td>
+              <td class="metric-col center"><span class="m-pill">4.3%</span></td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-mkt_performance">
+
+      <div class="group-header">
+        <div class="group-num">14</div>
+        <span class="group-title">MARKETING — PERFORMANCE &amp; AMAZON</span>
+        <span class="member-count-pill">5 members</span>
+      </div>
+
+      <div class="group-meta">
+        <span><strong>Team:</strong> MKT-AMAZON / MKT-PERFMKT / MKT-RGC</span>
+        <span><strong>Manager:</strong> Saduka Sachintha</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Saduka Sachintha
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">52.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+11.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">120.1h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">6.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Sasindee Wijeratne
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 36.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-4.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 112.3h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">5.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 15.9%</span></td>
+              <td class="flags-col">🔴 1 ⚠️ 2</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Prajwal Kumar
+                
+                <span class="new-hire-tag">New Hire</span>
+              </td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 33.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-7.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">121.2h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 25.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 44.7%</span></td>
+              <td class="flags-col">🔴 3</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                shenali edirisinghe
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 39.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-1.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">126.1h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.6%</span></td>
+              <td class="flags-col">⚠️ 2</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Hafiz Mudasir
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 41.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+0.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">128.1h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">4.4%</span></td>
+              <td class="flags-col">⚠️ 1</td>
+            </tr>
+            
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center"><span class="m-pill">40.2%</span></td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
+              <td class="metric-col center"><span class="m-pill">121.6h</span></td>
+              <td class="metric-col center"><span class="m-pill">0.0%</span></td>
+              <td class="metric-col center"><span class="m-pill">6.8%</span></td>
+              <td class="metric-col center"><span class="m-pill">6.4%</span></td>
+              <td class="metric-col center"><span class="m-pill">15.1%</span></td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+      <div class="absent-note">⚠️ Not in this month's data: Unaiza Imran</div>
+      
+
+    </div>
+    
+    <div class="group-card" id="group-finance">
+
+      <div class="group-header">
+        <div class="group-num">15</div>
+        <span class="group-title">ACCOUNTING &amp; FINANCE</span>
+        <span class="member-count-pill">4 members</span>
+      </div>
+
+      <div class="group-meta">
+        <span><strong>Team:</strong> FIN-ACC</span>
+        <span><strong>Manager:</strong> Laci Burton</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Laci Burton
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">61.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+12.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-orange">🟠 176.2h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">3.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.7%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.7%</span></td>
+              <td class="flags-col">🟠 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Irene Padilla
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 35.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-13.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 108.0h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 16.6%</span></td>
+              <td class="flags-col">🔴 1 ⚠️ 2</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Dharshika Perera
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">52.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+3.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 87.8h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="flags-col">🔴 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Melanie Joy Pecaña
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">47.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-1.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">124.4h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 10.7%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center"><span class="m-pill">48.8%</span></td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
+              <td class="metric-col center"><span class="m-pill">124.1h</span></td>
+              <td class="metric-col center"><span class="m-pill">0.6%</span></td>
+              <td class="metric-col center"><span class="m-pill">8.5%</span></td>
+              <td class="metric-col center"><span class="m-pill">0.6%</span></td>
+              <td class="metric-col center"><span class="m-pill">4.3%</span></td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-allintalent">
+
+      <div class="group-header">
+        <div class="group-num">16</div>
+        <span class="group-title">RECRUITMENT — ALLINTALENT</span>
+        <span class="member-count-pill">4 members</span>
+      </div>
+
+      <div class="group-meta">
+        <span><strong>Team:</strong> AiT-CLIENT / AiT-CANDIDATE</span>
+        <span><strong>Manager:</strong> Kushani Kalpage</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Kushani Kalpage
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 42.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-10.5pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">119.5h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">6.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 23.7%</span></td>
+              <td class="flags-col">🔴 1 ⚠️ 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Menara Kahatapitiya
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 44.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-8.5pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">129.1h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.6%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.6%</span></td>
+              <td class="flags-col">⚠️ 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Nireshwaran Aravinth
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">63.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+10.5pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">122.2h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.8%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">4.0%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Krishanthiny Krishnaraj
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">61.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+8.5pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">126.8h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.9%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">5.9%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center"><span class="m-pill">52.5%</span></td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
+              <td class="metric-col center"><span class="m-pill">124.4h</span></td>
+              <td class="metric-col center"><span class="m-pill">0.0%</span></td>
+              <td class="metric-col center"><span class="m-pill">8.8%</span></td>
+              <td class="metric-col center"><span class="m-pill">2.2%</span></td>
+              <td class="metric-col center"><span class="m-pill">8.8%</span></td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+    <div class="group-card" id="group-framework_friday">
+
+      <div class="group-header">
+        <div class="group-num">17</div>
+        <span class="group-title">FRAMEWORK FRIDAY — L&amp;D</span>
+        <span class="member-count-pill">4 members</span>
+      </div>
+
+      <div class="group-meta">
+        <span><strong>Team:</strong> FF-L&amp;D</span>
+        <span><strong>Manager:</strong> Jebby Rochelle</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th class="center">Activity %</th>
+              <th class="center">Variance</th>
+              <th class="center">Hours</th>
+              <th class="center">Manual %</th>
+              <th class="center">Break %</th>
+              <th class="center">Low ≤20%</th>
+              <th class="center">Low ≤30%</th>
+              <th class="center">Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr class="manager-row">
+              <td class="member-col">
+                Jebby Rochelle
+                <span class="manager-tag">Manager</span>
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 35.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neutral">-3.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">134.7h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">9.4%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.9%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 18.6%</span></td>
+              <td class="flags-col">⚠️ 2</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Reynalyn Gramatica
+                
+                <span class="new-hire-tag">New Hire</span>
+              </td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 28.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-neg">-10.2pts</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 111.5h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">7.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 13.3%</span></td>
+              <td class="metric-col"><span class="m-pill p-red">🔴 53.8%</span></td>
+              <td class="flags-col">🔴 3 ⚠️ 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Fred Butson
+                
+                
+              </td>
+              <td class="metric-col"><span class="m-pill p-yellow">⚠️ 43.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+4.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-orange">🟠 175.1h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.2%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.2%</span></td>
+              <td class="flags-col">🟠 1 ⚠️ 1</td>
+            </tr>
+            
+            <tr class="">
+              <td class="member-col">
+                Sarena Nicole Arokiasamy
+                
+                <span class="new-hire-tag">New Hire</span>
+              </td>
+              <td class="metric-col"><span class="m-pill p-clean">47.0%</span></td>
+              <td class="variance-col"><span class="var-pill var-pos">+8.8pts</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">126.9h</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">0.0%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">8.5%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">1.1%</span></td>
+              <td class="metric-col"><span class="m-pill p-clean">2.4%</span></td>
+              <td class="flags-col">—</td>
+            </tr>
+            
+            <tr class="avg-row">
+              <td class="avg-label">Team Average</td>
+              <td class="metric-col center"><span class="m-pill">38.2%</span></td>
+              <td class="metric-col center" style="color:#a0aec0;">—</td>
+              <td class="metric-col center"><span class="m-pill">137.1h</span></td>
+              <td class="metric-col center"><span class="m-pill">0.3%</span></td>
+              <td class="metric-col center"><span class="m-pill">6.9%</span></td>
+              <td class="metric-col center"><span class="m-pill">3.8%</span></td>
+              <td class="metric-col center"><span class="m-pill">19.0%</span></td>
+              <td class="flags-col" style="color:#a0aec0;">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      
+
+    </div>
+    
+  </div>
+
+  <div class="page-footer">
+    <span>WebLife Ventures Performance Reporting System &nbsp;·&nbsp; SLA thresholds per WebLife SLA Violation Legend v1.0</span>
+    <span>Generated 2026-04-23 12:10 &nbsp;·&nbsp; Internal use only — do not distribute</span>
+  </div>
+
+</div>
+</body>
+</html>
