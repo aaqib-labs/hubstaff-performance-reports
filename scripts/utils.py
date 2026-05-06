@@ -59,7 +59,11 @@ PERMANENT_EXCLUSIONS = [
     "Nangyial Ahmad",
     "Hafiz Aqeel",
     "Artyom Velmojko",
-    # Resigned — add names here as confirmed offboarded
+    # Part-time — excluded from performance reports
+    "Unaiza Imran",
+    # Terminated / Resigned — add names here as confirmed offboarded
+    "Sarena Nicole Arokiasamy",
+    "Reynalyn Gramatica",
 ]
 
 # Friday Solutions members tracked via TMetric — excluded from Hubstaff reports

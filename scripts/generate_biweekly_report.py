@@ -56,6 +56,7 @@ from utils import (
     get_month_working_days,
     print_threshold_header,
     DOCS_DIR,
+    PERMANENT_EXCLUSIONS,
 )
 
 # ---------------------------------------------------------------------------
@@ -537,22 +538,6 @@ def main():
     if missing:
         print(f"WARNING: Missing expected columns: {missing}", file=sys.stderr)
         print(f"Available columns: {list(df.columns)}", file=sys.stderr)
-
-    # Permanent exclusions: contractors and resigned personnel (per personnel_index.md)
-    PERMANENT_EXCLUSIONS = [
-        # Contractors
-        "Nouman Khan",
-        "Amjad Ali",
-        "Abdullah Shinwari",
-        "Hammad Rafique",
-        "Tim Steele",
-        "Hira Tariq",
-        "Muhammad Talib",
-        "Nangyial Ahmad",
-        "Hafiz Aqeel",
-        "Artyom Velmojko",
-        # Resigned — add names here as they are confirmed offboarded
-    ]
 
     # Cycle-specific exclusions passed via --exclude
     cycle_exclusions = [n.strip() for n in args.exclude.split(",") if n.strip()]

@@ -51,8 +51,8 @@ NEW_HIRES = {
     "farshad ramsee",
     "prajwal kumar",
     "jomal mathew",
-    "reynalyn gramatica",
-    "sarena nicole arokiasamy",
+    "ibrahim adeeb",
+    "akram khan",
 }
 
 # ---------------------------------------------------------------------------
