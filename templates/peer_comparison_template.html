@@ -372,10 +372,6 @@
         </table>
       </div>
 
-      {% if group.absent %}
-      <div class="absent-note">⚠️ Not in this month's data: {{ group.absent | join(", ") }}</div>
-      {% endif %}
-
     </div>
     {% endfor %}
   </div>

@@ -279,6 +279,8 @@ PEER_GROUPS = [
             "Menara Kahatapitiya",
             "Nireshwaran Aravinth",
             "Krishanthiny Krishnaraj",
+            "Natalia Jayasundera",
+            "Rasma Rizwan",
         ],
     },
     {
@@ -290,8 +292,6 @@ PEER_GROUPS = [
         "members": [
             "Jebby Rochelle",
             "Fred Butson",
-            "Reynalyn Gramatica",
-            "Sarena Nicole Arokiasamy",
         ],
     },
 ]
