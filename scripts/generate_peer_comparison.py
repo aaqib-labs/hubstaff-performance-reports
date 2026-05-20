@@ -46,7 +46,6 @@ TEMPLATES_DIR = REPO_ROOT / "templates"
 # New hires still in onboarding — flagged with context note in report
 # ---------------------------------------------------------------------------
 NEW_HIRES = {
-    "nishantha hettiarachchi",
     "shen perera",
     "farshad ramsee",
     "prajwal kumar",
