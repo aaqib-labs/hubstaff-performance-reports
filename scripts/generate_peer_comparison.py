@@ -538,9 +538,10 @@ def write_report(html: str, start: date, end: date) -> Path:
 
 def main():
     parser = argparse.ArgumentParser(description="Generate role-based peer comparison report.")
-    parser.add_argument("--input",  required=True, help="Path to monthly Hubstaff master CSV")
-    parser.add_argument("--start",  required=True, help="Month start YYYY-MM-DD")
-    parser.add_argument("--end",    required=True, help="Month end YYYY-MM-DD")
+    parser.add_argument("--input",   required=True, help="Path to monthly Hubstaff master CSV")
+    parser.add_argument("--start",   required=True, help="Month start YYYY-MM-DD")
+    parser.add_argument("--end",     required=True, help="Month end YYYY-MM-DD")
+    parser.add_argument("--exclude", default="",    help="Comma-separated names to exclude this cycle")
     args = parser.parse_args()
 
     start    = date.fromisoformat(args.start)
@@ -559,8 +560,11 @@ def main():
     print("=" * 60)
 
     df = load_master_table(csv_path)
-    excl = set(n.lower() for n in PERMANENT_EXCLUSIONS)
+    cycle_excl = [n.strip() for n in args.exclude.split(",") if n.strip()]
+    excl = set(n.lower() for n in PERMANENT_EXCLUSIONS + cycle_excl)
     df   = df[~df["member"].apply(lambda n: n.lower().strip() in excl)].reset_index(drop=True)
+    if cycle_excl:
+        print(f"Cycle exclusions: {', '.join(cycle_excl)}")
     print(f"Employees loaded: {len(df)}")
 
     groups = []
