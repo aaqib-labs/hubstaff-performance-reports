@@ -269,7 +269,7 @@ def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: fl
     hours_violators.sort(key=lambda x: float(x["hours_worked"].replace("h", "")))
 
     return {
-        "report_title":          "Friday Solutions — Performance Report",
+        "report_title":          "Centrifuse Engineers — Performance Report",
         "date_range":            f"{start.strftime('%B %d, %Y')} — {end.strftime('%B %d, %Y')}",
         "start_date":            start.isoformat(),
         "end_date":              end.isoformat(),

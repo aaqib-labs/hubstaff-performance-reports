@@ -205,7 +205,7 @@ def load_all_months(
             name      = row["member"]
             norm_name = name.lower().strip()
             if norm_name not in employee_data:
-                employee_data[norm_name] = {"display": name, "team": "Friday Solutions"}
+                employee_data[norm_name] = {"display": name, "team": "Centrifuse Engineers"}
             employee_data[norm_name][label] = row
 
     return employee_data, thresholds
@@ -384,7 +384,7 @@ def build_context(
     period_label = f"Q1 {start.year}" if (start.month == 1 and end.month >= 3) else f"{start} to {end}"
 
     return {
-        "report_title":   "Friday Solutions — Q1 Pattern Analysis",
+        "report_title":   "Centrifuse Engineers — Q1 Pattern Analysis",
         "period_label":   period_label,
         "date_range":     f"{start.strftime('%B %d, %Y')} — {end.strftime('%B %d, %Y')}",
         "labels":         labels,
