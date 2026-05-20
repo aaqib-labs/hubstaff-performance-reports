@@ -345,7 +345,6 @@
               <td class="member-col">
                 {{ row.display }}
                 {% if row.is_manager %}<span class="manager-tag">Manager</span>{% endif %}
-                {% if row.is_new_hire %}<span class="new-hire-tag">New Hire</span>{% endif %}
               </td>
               <td class="metric-col"><span class="m-pill p-{{ row.activity_status }}">{{ row.activity }}</span></td>
               <td class="variance-col"><span class="var-pill {{ row.variance_class }}">{{ row.variance_fmt }}</span></td>

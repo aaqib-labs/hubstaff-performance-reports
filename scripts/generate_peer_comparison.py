@@ -43,17 +43,6 @@ REPO_ROOT     = Path(__file__).parent.parent
 TEMPLATES_DIR = REPO_ROOT / "templates"
 
 # ---------------------------------------------------------------------------
-# New hires still in onboarding — flagged with context note in report
-# ---------------------------------------------------------------------------
-NEW_HIRES = {
-    "shen perera",
-    "farshad ramsee",
-    "prajwal kumar",
-    "jomal mathew",
-    "ibrahim adeeb",
-    "akram khan",
-}
-
 # ---------------------------------------------------------------------------
 # Peer Group Definitions
 # Member names must match the Hubstaff CSV (case-insensitive matching used)
@@ -114,6 +103,7 @@ PEER_GROUPS = [
         "manager_label": None,
         "members": [
             "Laleesha Wijeratne",
+            "Akram Khan",
             "Jomal Mathew",
         ],
     },
@@ -421,7 +411,6 @@ def build_group(
         member_data = {
             "display":          display,
             "is_manager":       norm_name == manager_norm,
-            "is_new_hire":      norm_name in NEW_HIRES,
             "is_peer_outlier":  peer_outlier,
             "activity":         _fmt_metric(activity, flags["A"]),
             "activity_status":  _status_class(flags["A"]),
