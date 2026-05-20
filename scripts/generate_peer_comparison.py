@@ -81,6 +81,8 @@ PEER_GROUPS = [
             "Muhammad Usman",
             "Chathuranga Weerakoon",
             "Kianna Xue",
+            "Saumya Sewwandi",
+            "Tharusha Kulasinghe",
         ],
     },
     {
@@ -258,6 +260,7 @@ PEER_GROUPS = [
             "Irene Padilla",
             "Dharshika Perera",
             "Ibrahim Adeeb",
+            "Nitika Bansal",
         ],
     },
     {
