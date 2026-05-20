@@ -186,6 +186,8 @@ PEER_GROUPS = [
             "Caryl Agamao",
             "Farhanah Junainah Umpar",
             "Sarah Madoro",
+            "Bernard Valdenebro",
+            "Jehu Graza",
         ],
     },
     {
@@ -271,6 +273,7 @@ PEER_GROUPS = [
             "Krishanthiny Krishnaraj",
             "Natalia Jayasundera",
             "Rasma Rizwan",
+            "Ali Asghar",
         ],
     },
     {
@@ -282,6 +285,7 @@ PEER_GROUPS = [
         "members": [
             "Jebby Rochelle",
             "Fred Butson",
+            "Brayden Robinson",
         ],
     },
 ]
