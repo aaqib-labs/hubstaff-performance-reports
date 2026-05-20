@@ -93,6 +93,7 @@ PEER_GROUPS = [
             "Shehara Meadows",
             "Ramez Sedra",
             "Kunchana Prabashwara",
+            "Tashia Bernardus",
         ],
     },
     {
@@ -198,7 +199,7 @@ PEER_GROUPS = [
             "Jason Diaz",
             "Aaqib Hafeel",
             "Nawodya De Silva",
-            "Tashia Bernardus",
+            "Dewmi Hathurusingha",
             "Staffey Murugadas",
             "Shen Perera",
         ],
