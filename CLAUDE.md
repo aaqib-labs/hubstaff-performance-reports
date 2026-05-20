@@ -45,7 +45,7 @@ CLAUDE.md            This file
 |------|--------|---------|
 | Hubstaff full month | `HS-YYYY-MM-master.csv` | `HS-2026-03-master.csv` |
 | Hubstaff bi-weekly | `HS-YYYY-MM-DD_to_YYYY-MM-DD.csv` | `HS-2026-03-01_to_2026-03-24.csv` |
-| Friday Solutions | `FS-YYYY-MM-DD_to_YYYY-MM-DD.csv` | `FS-2026-03-01_to_2026-03-24.csv` |
+| Centrifuse Engineers (CE) | `CE-YYYY-MM-DD_to_YYYY-MM-DD.csv` | `CE-2026-05-01_to_2026-05-19.csv` |
 
 *HTML outputs (`docs/`):*
 | Type | Format | Example |
