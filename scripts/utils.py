@@ -64,6 +64,7 @@ PERMANENT_EXCLUSIONS = [
     # Terminated / Resigned — add names here as confirmed offboarded
     "Sarena Nicole Arokiasamy",
     "Reynalyn Gramatica",
+    "Dilini Pathirana",
 ]
 
 # Friday Solutions members tracked via TMetric — excluded from Hubstaff reports

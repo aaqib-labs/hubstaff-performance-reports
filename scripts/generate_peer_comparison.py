@@ -127,7 +127,6 @@ PEER_GROUPS = [
         "members": [
             "Bihani Madushika",
             "Modhuka Paranagama",
-            "Dilini Pathirana",
         ],
     },
     {
