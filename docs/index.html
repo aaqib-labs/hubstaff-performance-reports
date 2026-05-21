@@ -93,20 +93,22 @@
     }
     .type-pill[data-type="all"].active { background: #1a202c; border-color: #1a202c; color: #fff; }
 
-    /* Date range */
+    /* Month filter */
     .date-group {
-      display: flex; align-items: center; gap: 8px;
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
       margin-left: auto;
     }
-    .date-input {
-      padding: 6px 12px; border-radius: 8px;
-      border: 1.5px solid #e5e7eb; font-size: 0.8rem;
-      font-family: inherit; color: #374151;
-      background: #f9fafb; cursor: pointer;
-      transition: border-color 0.15s;
+    .month-pill {
+      padding: 6px 14px; border-radius: 999px;
+      border: 1.5px solid #e5e7eb; background: #fff;
+      font-size: 0.8rem; font-weight: 600; color: #6b7280;
+      cursor: pointer; font-family: inherit;
+      transition: all 0.15s; white-space: nowrap;
     }
-    .date-input:focus { outline: none; border-color: #2563eb; background: #fff; }
-    .date-sep { font-size: 0.78rem; color: #9ca3af; }
+    .month-pill:hover { border-color: #9ca3af; color: #374151; background: #f9fafb; }
+    .month-pill.active {
+      background: #0f172a; border-color: #0f172a; color: #fff;
+    }
     .clear-btn {
       padding: 6px 14px; border-radius: 8px;
       border: 1.5px solid #fecaca; background: #fff5f5;
@@ -220,11 +222,8 @@
         <button class="type-pill active" data-type="all" onclick="filterType(this,'all')">All Reports</button><button class="type-pill" data-type="peer_comparison" onclick="filterType(this,'peer_comparison')" style="--pill-color:#7c3aed;--pill-light:#ede9fe;--pill-text:#4c1d95;">Peer Comparison</button><button class="type-pill" data-type="fs_report" onclick="filterType(this,'fs_report')" style="--pill-color:#d97706;--pill-light:#fef3c7;--pill-text:#92400e;">CE</button><button class="type-pill" data-type="biweekly_top_violators" onclick="filterType(this,'biweekly_top_violators')" style="--pill-color:#2563eb;--pill-light:#dbeafe;--pill-text:#1e40af;">Bi-Weekly</button><button class="type-pill" data-type="pattern_analysis" onclick="filterType(this,'pattern_analysis')" style="--pill-color:#059669;--pill-light:#d1fae5;--pill-text:#065f46;">Pattern Analysis</button><button class="type-pill" data-type="fs_pattern_analysis" onclick="filterType(this,'fs_pattern_analysis')" style="--pill-color:#ea580c;--pill-light:#ffedd5;--pill-text:#9a3412;">FS Pattern</button>
       </div>
       <div class="date-group">
-        <span class="filter-label">From</span>
-        <input type="date" class="date-input" id="date-from" min="2026-01-01" max="2026-05-19" onchange="applyFilters()">
-        <span class="date-sep">—</span>
-        <span class="filter-label">To</span>
-        <input type="date" class="date-input" id="date-to" min="2026-01-01" max="2026-05-19" onchange="applyFilters()">
+        <span class="filter-label">Month</span>
+        <button class="month-pill" data-month="2026-05" onclick="filterMonth(this,'2026-05')">May 2026</button><button class="month-pill" data-month="2026-04" onclick="filterMonth(this,'2026-04')">Apr 2026</button><button class="month-pill" data-month="2026-03" onclick="filterMonth(this,'2026-03')">Mar 2026</button><button class="month-pill" data-month="2026-01" onclick="filterMonth(this,'2026-01')">Jan 2026</button>
         <button class="clear-btn" id="clear-btn" onclick="clearFilters()">✕ Clear</button>
       </div>
     </div>
@@ -233,7 +232,7 @@
   <div class="content">
     <div class="content-header">
       <span class="results-count" id="results-count"><strong>15</strong> reports found</span>
-      <span class="content-updated">Updated 2026-05-20 21:32</span>
+      <span class="content-updated">Updated 2026-05-21 23:07</span>
     </div>
     <div class="grid" id="cards-grid">
             <a class="card" href="2026-05-01_to_2026-05-19_peer_comparison.html"
@@ -538,10 +537,11 @@
             </a></div><div class="no-results" id="no-results" style="display:none;">No reports match your filters. <button onclick="clearFilters()">Clear filters</button></div>
   </div>
 
-  <footer>WebLife Ventures Performance Reporting System &nbsp;·&nbsp; 2026-05-20 21:32</footer>
+  <footer>WebLife Ventures Performance Reporting System &nbsp;·&nbsp; 2026-05-21 23:07</footer>
 
   <script>
-    let activeType = 'all';
+    let activeType  = 'all';
+    let activeMonth = '';
 
     function filterType(btn, type) {
       activeType = type;
@@ -550,24 +550,31 @@
       applyFilters();
     }
 
+    function filterMonth(btn, month) {
+      if (activeMonth === month) {
+        activeMonth = '';
+        btn.classList.remove('active');
+      } else {
+        activeMonth = month;
+        document.querySelectorAll('.month-pill').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+      }
+      applyFilters();
+    }
+
     function applyFilters() {
-      const from     = document.getElementById('date-from').value;
-      const to       = document.getElementById('date-to').value;
       const clearBtn = document.getElementById('clear-btn');
       const cards    = document.querySelectorAll('.card');
       let visible    = 0;
 
-      const hasFilter = activeType !== 'all' || from || to;
+      const hasFilter = activeType !== 'all' || activeMonth !== '';
       clearBtn.classList.toggle('visible', hasFilter);
 
       cards.forEach(card => {
-        const typeMatch = activeType === 'all' || card.dataset.type === activeType;
-        const start     = card.dataset.start;
-        const end       = card.dataset.end;
-        const fromMatch = !from || start >= from;
-        const toMatch   = !to   || end   <= to;
+        const typeMatch  = activeType  === 'all' || card.dataset.type  === activeType;
+        const monthMatch = activeMonth === ''    || card.dataset.start.startsWith(activeMonth);
 
-        if (typeMatch && fromMatch && toMatch) {
+        if (typeMatch && monthMatch) {
           card.classList.remove('hidden');
           visible++;
         } else {
@@ -584,12 +591,10 @@
     }
 
     function clearFilters() {
-      activeType = 'all';
-      document.getElementById('date-from').value = '';
-      document.getElementById('date-to').value   = '';
-      document.querySelectorAll('.type-pill').forEach((p, i) => {
-        p.classList.toggle('active', i === 0);
-      });
+      activeType  = 'all';
+      activeMonth = '';
+      document.querySelectorAll('.type-pill').forEach((p, i) => p.classList.toggle('active', i === 0));
+      document.querySelectorAll('.month-pill').forEach(p => p.classList.remove('active'));
       applyFilters();
     }
   </script>

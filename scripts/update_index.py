@@ -131,11 +131,15 @@ def build_html(entries: list[dict], updated_at: str) -> str:
             f'{short}</button>'
         )
 
-    # Date range bounds
-    all_starts = [e["start_str"] for e in entries]
-    all_ends   = [e["end_str"]   for e in entries]
-    min_date   = min(all_starts) if all_starts else ""
-    max_date   = max(all_ends)   if all_ends   else ""
+    # Month pills — one per unique YYYY-MM derived from report start dates, newest first
+    seen_months: dict[str, str] = {}
+    for e in sorted(entries, key=lambda x: x["start_str"], reverse=True):
+        ym  = e["start_str"][:7]           # "2026-05"
+        lbl = datetime.strptime(ym + "-01", "%Y-%m-%d").strftime("%b %Y")
+        seen_months[ym] = lbl
+    month_pills = ""
+    for ym, lbl in seen_months.items():
+        month_pills += f'<button class="month-pill" data-month="{ym}" onclick="filterMonth(this,\'{ym}\')">{lbl}</button>'
 
     # Cards
     if not entries:
@@ -263,20 +267,22 @@ def build_html(entries: list[dict], updated_at: str) -> str:
     }}
     .type-pill[data-type="all"].active {{ background: #1a202c; border-color: #1a202c; color: #fff; }}
 
-    /* Date range */
+    /* Month filter */
     .date-group {{
-      display: flex; align-items: center; gap: 8px;
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
       margin-left: auto;
     }}
-    .date-input {{
-      padding: 6px 12px; border-radius: 8px;
-      border: 1.5px solid #e5e7eb; font-size: 0.8rem;
-      font-family: inherit; color: #374151;
-      background: #f9fafb; cursor: pointer;
-      transition: border-color 0.15s;
+    .month-pill {{
+      padding: 6px 14px; border-radius: 999px;
+      border: 1.5px solid #e5e7eb; background: #fff;
+      font-size: 0.8rem; font-weight: 600; color: #6b7280;
+      cursor: pointer; font-family: inherit;
+      transition: all 0.15s; white-space: nowrap;
     }}
-    .date-input:focus {{ outline: none; border-color: #2563eb; background: #fff; }}
-    .date-sep {{ font-size: 0.78rem; color: #9ca3af; }}
+    .month-pill:hover {{ border-color: #9ca3af; color: #374151; background: #f9fafb; }}
+    .month-pill.active {{
+      background: #0f172a; border-color: #0f172a; color: #fff;
+    }}
     .clear-btn {{
       padding: 6px 14px; border-radius: 8px;
       border: 1.5px solid #fecaca; background: #fff5f5;
@@ -390,11 +396,8 @@ def build_html(entries: list[dict], updated_at: str) -> str:
         {type_pills}
       </div>
       <div class="date-group">
-        <span class="filter-label">From</span>
-        <input type="date" class="date-input" id="date-from" min="{min_date}" max="{max_date}" onchange="applyFilters()">
-        <span class="date-sep">—</span>
-        <span class="filter-label">To</span>
-        <input type="date" class="date-input" id="date-to" min="{min_date}" max="{max_date}" onchange="applyFilters()">
+        <span class="filter-label">Month</span>
+        {month_pills}
         <button class="clear-btn" id="clear-btn" onclick="clearFilters()">✕ Clear</button>
       </div>
     </div>
@@ -411,7 +414,8 @@ def build_html(entries: list[dict], updated_at: str) -> str:
   <footer>WebLife Ventures Performance Reporting System &nbsp;·&nbsp; {updated_at}</footer>
 
   <script>
-    let activeType = 'all';
+    let activeType  = 'all';
+    let activeMonth = '';
 
     function filterType(btn, type) {{
       activeType = type;
@@ -420,24 +424,31 @@ def build_html(entries: list[dict], updated_at: str) -> str:
       applyFilters();
     }}
 
+    function filterMonth(btn, month) {{
+      if (activeMonth === month) {{
+        activeMonth = '';
+        btn.classList.remove('active');
+      }} else {{
+        activeMonth = month;
+        document.querySelectorAll('.month-pill').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+      }}
+      applyFilters();
+    }}
+
     function applyFilters() {{
-      const from     = document.getElementById('date-from').value;
-      const to       = document.getElementById('date-to').value;
       const clearBtn = document.getElementById('clear-btn');
       const cards    = document.querySelectorAll('.card');
       let visible    = 0;
 
-      const hasFilter = activeType !== 'all' || from || to;
+      const hasFilter = activeType !== 'all' || activeMonth !== '';
       clearBtn.classList.toggle('visible', hasFilter);
 
       cards.forEach(card => {{
-        const typeMatch = activeType === 'all' || card.dataset.type === activeType;
-        const start     = card.dataset.start;
-        const end       = card.dataset.end;
-        const fromMatch = !from || start >= from;
-        const toMatch   = !to   || end   <= to;
+        const typeMatch  = activeType  === 'all' || card.dataset.type  === activeType;
+        const monthMatch = activeMonth === ''    || card.dataset.start.startsWith(activeMonth);
 
-        if (typeMatch && fromMatch && toMatch) {{
+        if (typeMatch && monthMatch) {{
           card.classList.remove('hidden');
           visible++;
         }} else {{
@@ -454,12 +465,10 @@ def build_html(entries: list[dict], updated_at: str) -> str:
     }}
 
     function clearFilters() {{
-      activeType = 'all';
-      document.getElementById('date-from').value = '';
-      document.getElementById('date-to').value   = '';
-      document.querySelectorAll('.type-pill').forEach((p, i) => {{
-        p.classList.toggle('active', i === 0);
-      }});
+      activeType  = 'all';
+      activeMonth = '';
+      document.querySelectorAll('.type-pill').forEach((p, i) => p.classList.toggle('active', i === 0));
+      document.querySelectorAll('.month-pill').forEach(p => p.classList.remove('active'));
       applyFilters();
     }}
   </script>
