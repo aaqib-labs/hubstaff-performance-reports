@@ -57,6 +57,7 @@ from utils import (
     print_threshold_header,
     DOCS_DIR,
     PERMANENT_EXCLUSIONS,
+    FS_EXCLUSIONS,
 )
 
 # ---------------------------------------------------------------------------
@@ -542,7 +543,7 @@ def main():
     # Cycle-specific exclusions passed via --exclude
     cycle_exclusions = [n.strip() for n in args.exclude.split(",") if n.strip()]
 
-    all_exclusions = PERMANENT_EXCLUSIONS + cycle_exclusions
+    all_exclusions = PERMANENT_EXCLUSIONS + FS_EXCLUSIONS + cycle_exclusions
     if all_exclusions:
         before = len(df)
         df = df[~df["member"].isin(all_exclusions)].reset_index(drop=True)

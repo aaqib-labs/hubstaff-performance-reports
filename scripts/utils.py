@@ -65,6 +65,7 @@ PERMANENT_EXCLUSIONS = [
     "Sarena Nicole Arokiasamy",
     "Reynalyn Gramatica",
     "Dilini Pathirana",
+    "Nitika Bansal",
 ]
 
 # Centrifuse Engineers tracked via TMetric — excluded from Hubstaff reports
