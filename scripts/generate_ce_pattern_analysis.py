@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 """
-WebLife Ventures — Friday Solutions Q1 Repeated Pattern Analysis
-=================================================================
-Identifies FS team members with 2+ month SLA violation patterns
+WebLife Ventures — Centrifuse Engineers Q1 Repeated Pattern Analysis
+=====================================================================
+Identifies CE team members with 2+ month SLA violation patterns
 across a full quarter, using TMetric CSV data.
 
 Available metrics (TMetric only tracks 3):
@@ -21,7 +21,7 @@ Available metrics (TMetric only tracks 3):
   7. Executive Summary
 
 Usage:
-    python scripts/generate_fs_pattern_analysis.py \
+    python scripts/generate_ce_pattern_analysis.py \
         --months data/input/monthly/FS-2026-01-master.csv \
                  data/input/monthly/FS-2026-02-master.csv \
                  data/input/monthly/FS-2026-03-master.csv \
@@ -29,7 +29,7 @@ Usage:
         --start 2026-01-01 --end 2026-03-31
 
 Outputs:
-    docs/<start>_to_<end>_fs_pattern_analysis.html
+    docs/<start>_to_<end>_ce_pattern_analysis.html
     docs/index.html  (updated)
 """
 
@@ -407,7 +407,7 @@ def render_report(context: dict) -> str:
 
 def write_report(html: str, start: date, end: date) -> Path:
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
-    path = DOCS_DIR / f"{start.isoformat()}_to_{end.isoformat()}_fs_pattern_analysis.html"
+    path = DOCS_DIR / f"{start.isoformat()}_to_{end.isoformat()}_ce_pattern_analysis.html"
     path.write_text(html, encoding="utf-8")
     return path
 
@@ -417,7 +417,7 @@ def write_report(html: str, start: date, end: date) -> Path:
 # ---------------------------------------------------------------------------
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate Friday Solutions Q1 pattern analysis.")
+    parser = argparse.ArgumentParser(description="Generate Centrifuse Engineers Q1 pattern analysis.")
     parser.add_argument("--months", nargs=3, metavar="CSV", required=True)
     parser.add_argument("--labels", nargs=3, metavar="LABEL",
                         default=["Month 1", "Month 2", "Month 3"])
@@ -435,7 +435,7 @@ def main():
             sys.exit(1)
 
     print("=" * 60)
-    print(f"FS Q1 Pattern Analysis: {start} to {end}")
+    print(f"CE Q1 Pattern Analysis: {start} to {end}")
     print("=" * 60)
 
     employee_data, thresholds = load_all_months(csv_paths, args.labels)

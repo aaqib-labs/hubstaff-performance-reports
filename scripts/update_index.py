@@ -25,14 +25,14 @@ REPORT_TYPE_CONFIG = {
         "icon":  "📊",
         "desc":  "SLA compliance · Top violators ranked by severity",
     },
-    "fs_pattern_analysis": {
-        "label": "FS Pattern Analysis",
-        "short": "FS Pattern",
+    "ce_pattern_analysis": {
+        "label": "CE Pattern Analysis",
+        "short": "CE Pattern",
         "color": "#ea580c", "light": "#ffedd5", "text": "#9a3412",
         "icon":  "🔍",
         "desc":  "Centrifuse Engineers · Repeated violation patterns",
     },
-    "fs_report": {
+    "ce_report": {
         "label": "Centrifuse Engineers",
         "short": "CE",
         "color": "#d97706", "light": "#fef3c7", "text": "#92400e",

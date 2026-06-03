@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Repo Does
 
-Automates bi-weekly workforce performance compliance reports for ~80–90 WebLife Ventures employees tracked via Hubstaff (plus Friday Solutions via TMetric). Reports are published as static HTML via GitHub Pages for internal executive review.
+Automates bi-weekly workforce performance compliance reports for ~80–90 WebLife Ventures employees tracked via Hubstaff (plus Centrifuse Engineers via TMetric). Reports are published as static HTML via GitHub Pages for internal executive review.
 
 ---
 
@@ -28,7 +28,7 @@ At the start of every session, before doing anything else:
 data/input/
   monthly/           Full calendar month CSVs      → HS-YYYY-MM-master.csv
   biweekly/          Partial/bi-weekly period CSVs → HS-YYYY-MM-DD_to_YYYY-MM-DD.csv
-                                                     FS-YYYY-MM-DD_to_YYYY-MM-DD.csv
+                                                     CE-YYYY-MM-DD_to_YYYY-MM-DD.csv
 data/personnel/      Personnel Index — authoritative role/team source
 data/reference/      SLA thresholds and violation legend
 scripts/             Python report generation scripts
@@ -51,12 +51,12 @@ CLAUDE.md            This file
 | Type | Format | Example |
 |------|--------|---------|
 | Hubstaff bi-weekly | `YYYY-MM-DD_to_YYYY-MM-DD_biweekly_top_violators.html` | `2026-03-01_to_2026-03-24_biweekly_top_violators.html` |
-| Friday Solutions | `YYYY-MM-DD_to_YYYY-MM-DD_fs_report.html` | `2026-03-01_to_2026-03-24_fs_report.html` |
+| Centrifuse Engineers (CE) | `YYYY-MM-DD_to_YYYY-MM-DD_ce_report.html` | `2026-03-01_to_2026-03-24_ce_report.html` |
 | Pattern Analysis (HS) | `YYYY-MM-DD_to_YYYY-MM-DD_pattern_analysis.html` | `2026-01-01_to_2026-03-31_pattern_analysis.html` |
-| Pattern Analysis (FS) | `YYYY-MM-DD_to_YYYY-MM-DD_fs_pattern_analysis.html` | `2026-01-01_to_2026-03-31_fs_pattern_analysis.html` |
+| Pattern Analysis (CE) | `YYYY-MM-DD_to_YYYY-MM-DD_ce_pattern_analysis.html` | `2026-01-01_to_2026-03-31_ce_pattern_analysis.html` |
 | Peer Comparison | `YYYY-MM-DD_to_YYYY-MM-DD_peer_comparison.html` | `2026-03-01_to_2026-03-31_peer_comparison.html` |
 
-Note: HTML outputs use date-range prefix + report-type suffix. No `HS-`/`FS-` prefix on outputs — the suffix identifies the source/type. This is by design so `update_index.py` can parse them consistently.
+Note: HTML outputs use date-range prefix + report-type suffix. No `HS-`/`CE-` prefix on outputs — the suffix identifies the source/type. This is by design so `update_index.py` can parse them consistently.
 
 **GitHub Pages serves from `/docs`.** All generated reports are written directly to `/docs/` — there is no separate `/reports/` archive folder. Never rename or remove the `/docs` folder.
 
@@ -138,7 +138,7 @@ The personnel index (`data/personnel/personnel_index.md`) is used for:
 
 If a name in the CSV does not match anyone in the index, flag it to Aaqib before finalising — do not silently skip or guess.
 
-**Friday Solutions (FS-OPS):** Will have a separate dedicated report page. Do not include FS members in the standard bi-weekly Hubstaff report unless explicitly instructed.
+**Centrifuse Engineers (CE):** Will have a separate dedicated report page. Do not include CE members in the standard bi-weekly Hubstaff report unless explicitly instructed.
 
 ---
 
@@ -192,8 +192,8 @@ Score = sum of (base × multiplier) across all flags
 - Commit message formats:
   - Bi-weekly: `Report: Bi-Weekly YYYY-MM-DD to YYYY-MM-DD`
   - Pattern Analysis: `Report: Q1 Pattern Analysis YYYY-MM-DD to YYYY-MM-DD`
-  - FS Pattern Analysis: `Report: FS Q1 Pattern Analysis YYYY-MM-DD to YYYY-MM-DD`
-  - Friday Solutions: `Report: Friday Solutions YYYY-MM-DD to YYYY-MM-DD`
+  - CE Pattern Analysis: `Report: CE Q1 Pattern Analysis YYYY-MM-DD to YYYY-MM-DD`
+  - Centrifuse Engineers: `Report: Centrifuse Engineers YYYY-MM-DD to YYYY-MM-DD`
   - Peer Comparison: `Report: Peer Comparison YYYY-MM`
 - Never leave uncommitted changes after a session
 - Never force-push
@@ -206,11 +206,11 @@ Score = sum of (base × multiplier) across all flags
 |--------|---------|
 | `scripts/utils.py` | Shared helpers — working-days, proration, SLA thresholds, flag evaluation, exclusion lists. Import from here, never duplicate. |
 | `scripts/generate_biweekly_report.py` | Hubstaff bi-weekly report generation |
-| `scripts/generate_fs_report.py` | Friday Solutions (TMetric) report generation |
+| `scripts/generate_ce_report.py` | Centrifuse Engineers (TMetric) report generation |
 | `scripts/generate_pattern_analysis.py` | Quarterly repeated pattern analysis — fully implemented |
 | `scripts/update_index.py` | Regenerate `docs/index.html` from all reports in `/docs/` |
 | `scripts/generate_peer_comparison.py` | Role-based peer comparison — fully implemented |
-| `scripts/generate_fs_pattern_analysis.py` | Friday Solutions Q1 pattern analysis (TMetric data) |
+| `scripts/generate_ce_pattern_analysis.py` | Centrifuse Engineers Q1 pattern analysis (TMetric data) |
 
 ---
 
@@ -253,7 +253,7 @@ python scripts/generate_peer_comparison.py \
 - New hires flagged with green `New Hire` badge (list in `NEW_HIRES` set in script)
 - Team Average row at bottom of each table — dark charcoal background for visibility
 - Pill-styled metric cells: red/orange/yellow filled for violations, gray for clean
-- FS members excluded (they have separate FS reports)
+- CE members excluded (they have separate CE reports)
 - Contractors excluded (PERMANENT_EXCLUSIONS in utils.py)
 - **To update peer groups** (new hires, team changes, resignations): edit `PEER_GROUPS` list in `generate_peer_comparison.py`
 
@@ -287,7 +287,7 @@ python scripts/generate_pattern_analysis.py \
 - Only includes employees present in **all 3 months** — partial quarter employees excluded
 - 10 sections: Activity Red, Activity Yellow, Overwork, Low Hours, Manual Red, Manual Yellow, Low Act ≤20% Red, Low Act ≤20% Yellow, Low Act ≤30% Red, Low Act ≤30% Yellow
 - An employee appears in a section only if they have **2+ months** of violations of that specific severity for that metric
-- Friday Solutions members excluded (FS_EXCLUSIONS list in utils.py)
+- Centrifuse Engineers members excluded (FS_EXCLUSIONS list in utils.py)
 - Contractors excluded (PERMANENT_EXCLUSIONS list in utils.py)
 - Hours thresholds for full months: red < 160h, orange ≥ 200h (no proration needed)
 - Manual, Low Act ≤20%, Low Act ≤30% cells display as `XX.X% (Xh)` format
@@ -300,5 +300,5 @@ python scripts/generate_pattern_analysis.py \
 **Owner:** Aaqib Hafeel, Process Optimization Lead, WebLife Stores LLC (TA-PO)
 **Cycle:** Bi-weekly
 **Coverage:** ~80–90 employees across 5 ventures
-**Data sources:** Hubstaff (all teams) + TMetric (Friday Solutions)
+**Data sources:** Hubstaff (all teams) + TMetric (Centrifuse Engineers)
 **Audience:** Executive review (Lucas Robinson, Jorn Wossner, department directors)

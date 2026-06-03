@@ -1,13 +1,13 @@
 """
-WebLife Ventures — Friday Solutions Performance Report Generator
-================================================================
+WebLife Ventures — Centrifuse Engineers Performance Report Generator
+====================================================================
 Generates an HTML performance report from a TMetric activity summary CSV.
 
 Usage:
-    python scripts/generate_fs_report.py \
-        --input data/input/activity_summary_20260301_20260324.csv \
-        --start 2026-03-01 \
-        --end 2026-03-24
+    python scripts/generate_ce_report.py \
+        --input data/input/biweekly/CE-2026-05-01_to_2026-05-19.csv \
+        --start 2026-05-01 \
+        --end 2026-05-19
 
 TMetric CSV columns expected:
     Person, Total Time (HH:MM:SS), Manually Added (HH:MM:SS), Activity Level (0–1 decimal)
@@ -297,7 +297,7 @@ def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: fl
 
 def render_report(context: dict) -> str:
     env = Environment(loader=FileSystemLoader(str(TEMPLATES_DIR)), autoescape=True)
-    template = env.get_template("fs_report_template.html")
+    template = env.get_template("ce_report_template.html")
     return template.render(**context)
 
 
@@ -305,7 +305,7 @@ def write_report(html: str, start: date, end: date) -> Path:
     """Write report directly to /docs/. Returns docs_path."""
     folder_name = f"{start.isoformat()}_to_{end.isoformat()}"
     DOCS_DIR.mkdir(parents=True, exist_ok=True)
-    docs_path = DOCS_DIR / f"{folder_name}_fs_report.html"
+    docs_path = DOCS_DIR / f"{folder_name}_ce_report.html"
     docs_path.write_text(html, encoding="utf-8")
     return docs_path
 
@@ -321,7 +321,7 @@ def update_index():
 # ---------------------------------------------------------------------------
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate Friday Solutions performance report.")
+    parser = argparse.ArgumentParser(description="Generate Centrifuse Engineers performance report.")
     parser.add_argument("--input",  required=True, help="Path to TMetric activity summary CSV")
     parser.add_argument("--start",  required=True, help="Period start date YYYY-MM-DD")
     parser.add_argument("--end",    required=True, help="Period end date YYYY-MM-DD")

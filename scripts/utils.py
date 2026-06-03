@@ -67,7 +67,7 @@ PERMANENT_EXCLUSIONS = [
     "Dilini Pathirana",
 ]
 
-# Friday Solutions members tracked via TMetric — excluded from Hubstaff reports
+# Centrifuse Engineers tracked via TMetric — excluded from Hubstaff reports
 FS_EXCLUSIONS = [
     "Dhananjana Rathnayake",
     "Dulan Jayawickrama",
