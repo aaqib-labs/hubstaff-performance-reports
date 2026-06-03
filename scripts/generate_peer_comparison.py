@@ -361,6 +361,145 @@ def _fmt_hours(val, status) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Triage outlier logic (5-condition peer comparison)
+# ---------------------------------------------------------------------------
+
+def _tv(v) -> bool:
+    """True if value is a valid non-NaN float."""
+    import math
+    return v is not None and not (isinstance(v, float) and math.isnan(v))
+
+
+def _tf(v, d=1, s="") -> str:
+    """Format a triage value, returning '—' for NaN/None."""
+    import math
+    if v is None or (isinstance(v, float) and math.isnan(v)):
+        return "—"
+    return f"{v:.{d}f}{s}"
+
+
+def _build_triage_entry(row: dict, group: dict, ra: dict,
+                        n: int, sev: str,
+                        c1: bool, c2: bool, c3: bool, c4: bool, c5: bool) -> dict:
+    import math
+    mh  = row.get("hours_raw",    float("nan"))
+    ma  = row.get("activity_raw", float("nan"))
+    mm  = row.get("manual_raw",   float("nan"))
+    m20 = row.get("low20_raw",    float("nan"))
+    m30 = row.get("low30_raw",    float("nan"))
+    avg_h = ra.get("total_hours",  float("nan"))
+    avg_a = ra.get("activity_pct", float("nan"))
+    avg_m = ra.get("manual_pct",   float("nan"))
+
+    expand_cards = [
+        {
+            "label": "Hours vs Team",
+            "value": _tf(mh, s="h"),
+            "sub":   f"Team avg {_tf(avg_h, s='h')} · flag < {_tf(avg_h * 0.8 if _tv(avg_h) else float('nan'), s='h')}",
+            "delta": f"{avg_h - mh:.1f}h below avg" if c1 and _tv(avg_h) else "",
+            "cls":   "fail" if c1 else "pass",
+        },
+        {
+            "label": "Activity vs Team",
+            "value": _tf(ma, s="%"),
+            "sub":   f"Team avg {_tf(avg_a, s='%')} · flag 20+ pts below",
+            "delta": f"{avg_a - ma:.1f}pts below avg" if c2 and _tv(avg_a) else "",
+            "cls":   "fail" if c2 else "pass",
+        },
+        {
+            "label": "Manual Hours",
+            "value": _tf(mm, s="%"),
+            "sub":   (f"Team avg {_tf(avg_m, s='%')} · flag ≥ {_tf(avg_m * 2 if _tv(avg_m) else float('nan'), s='%')}"
+                      if _tv(avg_m) and avg_m > 0 else "Skipped — team avg is 0%"),
+            "delta": f"{mm / avg_m:.1f}× team avg" if c3 and _tv(avg_m) and avg_m > 0 else "",
+            "cls":   "fail" if c3 else ("skip" if not _tv(avg_m) or avg_m == 0 else "pass"),
+        },
+        {
+            "label": "Low Activity ≤20%",
+            "value": _tf(m20, s="%"),
+            "sub":   "Flag when > 15% of hours",
+            "delta": f"{m20 - 15:.1f}pts over limit" if c4 else "",
+            "cls":   "fail" if c4 else "pass",
+        },
+        {
+            "label": "Low Activity ≤30%",
+            "value": _tf(m30, s="%"),
+            "sub":   "Flag when > 25% of hours",
+            "delta": f"{m30 - 25:.1f}pts over limit" if c5 else "",
+            "cls":   "fail" if c5 else "pass",
+        },
+    ]
+
+    team_short = group["name"].split(" — ")[0].split(" / ")[0]
+    return {
+        "name":         row["display"],
+        "team_short":   team_short,
+        "severity":     sev,
+        "cond_count":   n,
+        "small_team":   group["member_count"] <= 2,
+        "hours_val":    _tf(mh, s="h"),
+        "hours_avg":    f"avg {_tf(avg_h, s='h')}",
+        "hours_cls":    "breach-red" if c1 else "clean",
+        "act_val":      _tf(ma, s="%"),
+        "act_avg":      f"avg {_tf(avg_a, s='%')}",
+        "act_cls":      "breach-red" if c2 else "clean",
+        "man_val":      _tf(mm, s="%"),
+        "man_avg":      f"avg {_tf(avg_m, s='%')}",
+        "man_cls":      "breach-red" if c3 else "clean",
+        "low20_val":    _tf(m20, s="%"),
+        "low20_cls":    "breach-red" if c4 else "clean",
+        "low30_val":    _tf(m30, s="%"),
+        "low30_cls":    "breach-red" if c5 else "clean",
+        "expand_cards": expand_cards,
+    }
+
+
+def build_outlier_triage(groups: list[dict]) -> list[dict]:
+    """5-condition triage across all groups, deduplicated by canonical group."""
+    # Canonical group: group where member is manager; else first occurrence
+    canonical: dict[str, tuple] = {}
+    for group in groups:
+        for row in group["rows"]:
+            key = row["display"].lower().strip()
+            if key not in canonical or row["is_manager"]:
+                canonical[key] = (group, row)
+
+    outliers = []
+    for _key, (group, row) in canonical.items():
+        ra    = group["raw_avgs"]
+        avg_h = ra.get("total_hours",  float("nan"))
+        avg_a = ra.get("activity_pct", float("nan"))
+        avg_m = ra.get("manual_pct",   float("nan"))
+        mh    = row.get("hours_raw",    float("nan"))
+        ma    = row.get("activity_raw", float("nan"))
+        mm    = row.get("manual_raw",   float("nan"))
+        m20   = row.get("low20_raw",    float("nan"))
+        m30   = row.get("low30_raw",    float("nan"))
+
+        # Zero hours = auto-critical
+        if _tv(mh) and mh == 0:
+            outliers.append(_build_triage_entry(row, group, ra, 5, "critical",
+                                                True, True, True, True, True))
+            continue
+
+        c1 = _tv(mh)  and _tv(avg_h) and avg_h > 0 and mh < avg_h * 0.8
+        c2 = _tv(ma)  and _tv(avg_a) and ma <= avg_a - 20
+        c3 = _tv(mm)  and _tv(avg_m) and avg_m > 0 and mm >= avg_m * 2
+        c4 = _tv(m20) and m20 > 15
+        c5 = _tv(m30) and m30 > 25
+        n  = sum([c1, c2, c3, c4, c5])
+        if n == 0:
+            continue
+
+        sev = "critical" if n >= 3 else ("high" if n == 2 else "watch")
+        outliers.append(_build_triage_entry(row, group, ra, n, sev, c1, c2, c3, c4, c5))
+
+    sev_ord = {"critical": 0, "high": 1, "watch": 2}
+    outliers.sort(key=lambda o: (-o["cond_count"], sev_ord[o["severity"]]))
+    return outliers
+
+
+# ---------------------------------------------------------------------------
 # Build group data
 # ---------------------------------------------------------------------------
 
@@ -424,6 +563,10 @@ def build_group(
             "activity":         _fmt_metric(activity, flags["A"]),
             "activity_status":  _status_class(flags["A"]),
             "activity_raw":     activity,
+            "hours_raw":   row.get("total_hours", float("nan")),
+            "manual_raw":  row.get("manual_pct", float("nan")),
+            "low20_raw":   row.get("low20_pct", float("nan")),
+            "low30_raw":   row.get("low30_pct", float("nan")),
             "variance":         variance,
             "variance_fmt":     f"+{variance:.1f}pts" if variance > 0 else f"{variance:.1f}pts" if not pd.isna(variance) else "—",
             "variance_class":   "var-pos" if variance > 0 else ("var-neg" if variance < -5 else "var-neutral") if not pd.isna(variance) else "var-neutral",
@@ -477,6 +620,7 @@ def build_group(
         "avg_row":       avg_row,
         "absent":        absent,
         "has_violations": any(r["total_flags"] > 0 for r in rows),
+        "raw_avgs":      avgs,
     }
 
 
@@ -499,6 +643,8 @@ def build_context(
     total_flagged     = sum(1 for g in groups for r in g["rows"] if r["total_flags"] > 0)
     total_peer_outliers = sum(1 for g in groups for r in g["rows"] if r["is_peer_outlier"])
 
+    triage = build_outlier_triage(groups)
+
     return {
         "report_title":       "Role-Based Peer Comparison Report",
         "month_label":        month_label,
@@ -513,6 +659,8 @@ def build_context(
         "total_flagged":      total_flagged,
         "total_peer_outliers": total_peer_outliers,
         "groups":             groups,
+        "triage_outliers":        triage,
+        "total_triage_outliers":  len(triage),
     }
 
 
