@@ -380,16 +380,13 @@ def _tf(v, d=1, s="") -> str:
 
 def _build_triage_entry(row: dict, group: dict, ra: dict,
                         n: int, sev: str,
-                        c1: bool, c2: bool, c3: bool, c4: bool, c5: bool) -> dict:
-    import math
+                        c1: bool, c2: bool, c4: bool, c5: bool) -> dict:
     mh  = row.get("hours_raw",    float("nan"))
     ma  = row.get("activity_raw", float("nan"))
-    mm  = row.get("manual_raw",   float("nan"))
     m20 = row.get("low20_raw",    float("nan"))
     m30 = row.get("low30_raw",    float("nan"))
     avg_h = ra.get("total_hours",  float("nan"))
     avg_a = ra.get("activity_pct", float("nan"))
-    avg_m = ra.get("manual_pct",   float("nan"))
 
     expand_cards = [
         {
@@ -405,14 +402,6 @@ def _build_triage_entry(row: dict, group: dict, ra: dict,
             "sub":   f"Team avg {_tf(avg_a, s='%')} · flag 20+ pts below",
             "delta": f"{avg_a - ma:.1f}pts below avg" if c2 and _tv(avg_a) else "",
             "cls":   "fail" if c2 else "pass",
-        },
-        {
-            "label": "Manual Hours",
-            "value": _tf(mm, s="%"),
-            "sub":   (f"Team avg {_tf(avg_m, s='%')} · flag ≥ {_tf(avg_m * 2 if _tv(avg_m) else float('nan'), s='%')}"
-                      if _tv(avg_m) and avg_m > 0 else "Skipped — team avg is 0%"),
-            "delta": f"{mm / avg_m:.1f}× team avg" if c3 and _tv(avg_m) and avg_m > 0 else "",
-            "cls":   "fail" if c3 else ("skip" if not _tv(avg_m) or avg_m == 0 else "pass"),
         },
         {
             "label": "Low Activity ≤20%",
@@ -443,9 +432,6 @@ def _build_triage_entry(row: dict, group: dict, ra: dict,
         "act_val":      _tf(ma, s="%"),
         "act_avg":      f"avg {_tf(avg_a, s='%')}",
         "act_cls":      "breach-red" if c2 else "clean",
-        "man_val":      _tf(mm, s="%"),
-        "man_avg":      f"avg {_tf(avg_m, s='%')}",
-        "man_cls":      "breach-red" if c3 else "clean",
         "low20_val":    _tf(m20, s="%"),
         "low20_cls":    "breach-red" if c4 else "clean",
         "low30_val":    _tf(m30, s="%"),
@@ -469,30 +455,27 @@ def build_outlier_triage(groups: list[dict]) -> list[dict]:
         ra    = group["raw_avgs"]
         avg_h = ra.get("total_hours",  float("nan"))
         avg_a = ra.get("activity_pct", float("nan"))
-        avg_m = ra.get("manual_pct",   float("nan"))
         mh    = row.get("hours_raw",    float("nan"))
         ma    = row.get("activity_raw", float("nan"))
-        mm    = row.get("manual_raw",   float("nan"))
         m20   = row.get("low20_raw",    float("nan"))
         m30   = row.get("low30_raw",    float("nan"))
 
         # Zero hours = auto-critical
         if _tv(mh) and mh == 0:
-            outliers.append(_build_triage_entry(row, group, ra, 5, "critical",
-                                                True, True, True, True, True))
+            outliers.append(_build_triage_entry(row, group, ra, 4, "critical",
+                                                True, True, True, True))
             continue
 
         c1 = _tv(mh)  and _tv(avg_h) and avg_h > 0 and mh < avg_h * 0.8
         c2 = _tv(ma)  and _tv(avg_a) and ma <= avg_a - 20
-        c3 = _tv(mm)  and _tv(avg_m) and avg_m > 0 and mm >= avg_m * 2
         c4 = _tv(m20) and m20 > 15
         c5 = _tv(m30) and m30 > 25
-        n  = sum([c1, c2, c3, c4, c5])
+        n  = sum([c1, c2, c4, c5])
         if n == 0:
             continue
 
         sev = "critical" if n >= 3 else ("high" if n == 2 else "watch")
-        outliers.append(_build_triage_entry(row, group, ra, n, sev, c1, c2, c3, c4, c5))
+        outliers.append(_build_triage_entry(row, group, ra, n, sev, c1, c2, c4, c5))
 
     sev_ord = {"critical": 0, "high": 1, "watch": 2}
     outliers.sort(key=lambda o: (-o["cond_count"], sev_ord[o["severity"]]))

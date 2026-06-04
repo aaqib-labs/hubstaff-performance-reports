@@ -415,7 +415,7 @@
       </div>
       <div class="header-meta-item">
         <div class="h-label">Generated</div>
-        <div class="h-value">2026-06-03 22:55</div>
+        <div class="h-value">2026-06-04 09:03</div>
       </div>
     </div>
   </div>
@@ -438,7 +438,7 @@
     </div>
     <div class="stat-tile amber">
       <div class="t-label">Triage Outliers</div>
-      <div class="t-value">26</div>
+      <div class="t-value">11</div>
       <div class="t-sub">flagged by peer context</div>
     </div>
   </div>
@@ -2546,10 +2546,6 @@
           <span class="bm-cap-rule">20+ pts below team avg activity</span>
         </div>
         <div class="bm-cap">
-          <span class="bm-cap-label">Manual %</span>
-          <span class="bm-cap-rule">&#8805; 2&#xD7; the team avg manual rate</span>
-        </div>
-        <div class="bm-cap">
           <span class="bm-cap-label">Low &#8804;20%</span>
           <span class="bm-cap-rule">&gt; 15% of total tracked hours</span>
         </div>
@@ -2563,7 +2559,7 @@
     <div class="outlier-card">
       <div class="outlier-card-header">
         <h2>Triage Outliers</h2>
-        <span class="outlier-count-pill">26 flagged</span>
+        <span class="outlier-count-pill">11 flagged</span>
         <div class="legend-row">
           <div class="legend-item"><div class="legend-stripe critical"></div>Critical &#8212; 3+ conditions</div>
           <div class="legend-item"><div class="legend-stripe high"></div>High &#8212; 2 conditions</div>
@@ -2579,7 +2575,6 @@
               <th style="width:180px">Member</th>
               <th style="width:105px">Hours</th>
               <th style="width:100px">Activity %</th>
-              <th style="width:100px">Manual %</th>
               <th style="width:100px">Low &#8804;20%</th>
               <th style="width:100px">Low &#8804;30%</th>
             </tr>
@@ -2587,8 +2582,8 @@
           <tbody>
             
               
-              <tr class="ot-row critical" onclick="toggleExpand(this)">
-                <td><div style="padding:10px 14px;"><span class="sev-badge critical"><span class="sev-dot"></span>Critical</span></div></td>
+              <tr class="ot-row high" onclick="toggleExpand(this)">
+                <td><div style="padding:10px 14px;"><span class="sev-badge high"><span class="sev-dot"></span>High</span></div></td>
                 <td style="padding:10px 14px;">
                   <div class="ot-member-name">Brayden Robinson</div>
                   <span class="ot-team-pill">Framework Friday</span>
@@ -2596,12 +2591,11 @@
                 </td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">166.5h</div><div class="stat-avg">avg 184.7h</div></div></td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">20.0%</div><div class="stat-avg">avg 31.7%</div></div></td>
-                <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">4.9%</div><div class="stat-avg">avg 2.4%</div></div></td>
                 <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">50.7%</div></div></td>
                 <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">81.0%</div></div></td>
               </tr>
               <tr class="ot-expand-row">
-                <td colspan="7">
+                <td colspan="6">
                   <div class="expand-grid">
                     
                     <div class="ec pass">
@@ -2616,13 +2610,6 @@
                       <div class="ec-big-val">20.0%</div>
                       <div class="ec-sub">Team avg 31.7% · flag 20+ pts below</div>
                       
-                    </div>
-                    
-                    <div class="ec fail">
-                      <div class="ec-label">Manual Hours</div>
-                      <div class="ec-big-val">4.9%</div>
-                      <div class="ec-sub">Team avg 2.4% · flag ≥ 4.8%</div>
-                      <span class="ec-delta">2.0× team avg</span>
                     </div>
                     
                     <div class="ec fail">
@@ -2643,62 +2630,6 @@
                 </td>
               </tr>
               
-              <tr class="ot-row high" onclick="toggleExpand(this)">
-                <td><div style="padding:10px 14px;"><span class="sev-badge high"><span class="sev-dot"></span>High</span></div></td>
-                <td style="padding:10px 14px;">
-                  <div class="ot-member-name">Natalia Jayasundera</div>
-                  <span class="ot-team-pill">Recruitment</span>
-                  
-                </td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">172.5h</div><div class="stat-avg">avg 179.1h</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">34.0%</div><div class="stat-avg">avg 40.3%</div></div></td>
-                <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">2.6%</div><div class="stat-avg">avg 0.8%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">8.7%</div></div></td>
-                <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">33.6%</div></div></td>
-              </tr>
-              <tr class="ot-expand-row">
-                <td colspan="7">
-                  <div class="expand-grid">
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Hours vs Team</div>
-                      <div class="ec-big-val">172.5h</div>
-                      <div class="ec-sub">Team avg 179.1h · flag &lt; 143.3h</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Activity vs Team</div>
-                      <div class="ec-big-val">34.0%</div>
-                      <div class="ec-sub">Team avg 40.3% · flag 20+ pts below</div>
-                      
-                    </div>
-                    
-                    <div class="ec fail">
-                      <div class="ec-label">Manual Hours</div>
-                      <div class="ec-big-val">2.6%</div>
-                      <div class="ec-sub">Team avg 0.8% · flag ≥ 1.6%</div>
-                      <span class="ec-delta">3.2× team avg</span>
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤20%</div>
-                      <div class="ec-big-val">8.7%</div>
-                      <div class="ec-sub">Flag when &gt; 15% of hours</div>
-                      
-                    </div>
-                    
-                    <div class="ec fail">
-                      <div class="ec-label">Low Activity ≤30%</div>
-                      <div class="ec-big-val">33.6%</div>
-                      <div class="ec-sub">Flag when &gt; 25% of hours</div>
-                      <span class="ec-delta">8.6pts over limit</span>
-                    </div>
-                    
-                  </div>
-                </td>
-              </tr>
-              
               <tr class="ot-row watch" onclick="toggleExpand(this)">
                 <td><div style="padding:10px 14px;"><span class="sev-badge watch"><span class="sev-dot"></span>Watch</span></div></td>
                 <td style="padding:10px 14px;">
@@ -2708,12 +2639,11 @@
                 </td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">171.5h</div><div class="stat-avg">avg 199.2h</div></div></td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">33.0%</div><div class="stat-avg">avg 43.2%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">3.0%</div><div class="stat-avg">avg 2.7%</div></div></td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">13.0%</div></div></td>
                 <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">32.7%</div></div></td>
               </tr>
               <tr class="ot-expand-row">
-                <td colspan="7">
+                <td colspan="6">
                   <div class="expand-grid">
                     
                     <div class="ec pass">
@@ -2727,13 +2657,6 @@
                       <div class="ec-label">Activity vs Team</div>
                       <div class="ec-big-val">33.0%</div>
                       <div class="ec-sub">Team avg 43.2% · flag 20+ pts below</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Manual Hours</div>
-                      <div class="ec-big-val">3.0%</div>
-                      <div class="ec-sub">Team avg 2.7% · flag ≥ 5.3%</div>
                       
                     </div>
                     
@@ -2764,12 +2687,11 @@
                 </td>
                 <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">132.1h</div><div class="stat-avg">avg 199.2h</div></div></td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">48.0%</div><div class="stat-avg">avg 43.2%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">1.1%</div><div class="stat-avg">avg 2.7%</div></div></td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">2.1%</div></div></td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">8.3%</div></div></td>
               </tr>
               <tr class="ot-expand-row">
-                <td colspan="7">
+                <td colspan="6">
                   <div class="expand-grid">
                     
                     <div class="ec fail">
@@ -2783,13 +2705,6 @@
                       <div class="ec-label">Activity vs Team</div>
                       <div class="ec-big-val">48.0%</div>
                       <div class="ec-sub">Team avg 43.2% · flag 20+ pts below</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Manual Hours</div>
-                      <div class="ec-big-val">1.1%</div>
-                      <div class="ec-sub">Team avg 2.7% · flag ≥ 5.3%</div>
                       
                     </div>
                     
@@ -2814,130 +2729,17 @@
               <tr class="ot-row watch" onclick="toggleExpand(this)">
                 <td><div style="padding:10px 14px;"><span class="sev-badge watch"><span class="sev-dot"></span>Watch</span></div></td>
                 <td style="padding:10px 14px;">
-                  <div class="ot-member-name">Adam Burdeshaw</div>
-                  <span class="ot-team-pill">Digital Product</span>
-                  
-                </td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">166.5h</div><div class="stat-avg">avg 182.1h</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">50.0%</div><div class="stat-avg">avg 45.9%</div></div></td>
-                <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">4.6%</div><div class="stat-avg">avg 0.7%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">0.0%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">0.5%</div></div></td>
-              </tr>
-              <tr class="ot-expand-row">
-                <td colspan="7">
-                  <div class="expand-grid">
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Hours vs Team</div>
-                      <div class="ec-big-val">166.5h</div>
-                      <div class="ec-sub">Team avg 182.1h · flag &lt; 145.7h</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Activity vs Team</div>
-                      <div class="ec-big-val">50.0%</div>
-                      <div class="ec-sub">Team avg 45.9% · flag 20+ pts below</div>
-                      
-                    </div>
-                    
-                    <div class="ec fail">
-                      <div class="ec-label">Manual Hours</div>
-                      <div class="ec-big-val">4.6%</div>
-                      <div class="ec-sub">Team avg 0.7% · flag ≥ 1.5%</div>
-                      <span class="ec-delta">6.2× team avg</span>
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤20%</div>
-                      <div class="ec-big-val">0.0%</div>
-                      <div class="ec-sub">Flag when &gt; 15% of hours</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤30%</div>
-                      <div class="ec-big-val">0.5%</div>
-                      <div class="ec-sub">Flag when &gt; 25% of hours</div>
-                      
-                    </div>
-                    
-                  </div>
-                </td>
-              </tr>
-              
-              <tr class="ot-row watch" onclick="toggleExpand(this)">
-                <td><div style="padding:10px 14px;"><span class="sev-badge watch"><span class="sev-dot"></span>Watch</span></div></td>
-                <td style="padding:10px 14px;">
-                  <div class="ot-member-name">Saduka Sachintha</div>
-                  <span class="ot-team-pill">Marketing</span>
-                  
-                </td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">175.6h</div><div class="stat-avg">avg 170.1h</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">49.0%</div><div class="stat-avg">avg 40.8%</div></div></td>
-                <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">0.2%</div><div class="stat-avg">avg 0.1%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">0.0%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">0.0%</div></div></td>
-              </tr>
-              <tr class="ot-expand-row">
-                <td colspan="7">
-                  <div class="expand-grid">
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Hours vs Team</div>
-                      <div class="ec-big-val">175.6h</div>
-                      <div class="ec-sub">Team avg 170.1h · flag &lt; 136.1h</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Activity vs Team</div>
-                      <div class="ec-big-val">49.0%</div>
-                      <div class="ec-sub">Team avg 40.8% · flag 20+ pts below</div>
-                      
-                    </div>
-                    
-                    <div class="ec fail">
-                      <div class="ec-label">Manual Hours</div>
-                      <div class="ec-big-val">0.2%</div>
-                      <div class="ec-sub">Team avg 0.1% · flag ≥ 0.2%</div>
-                      <span class="ec-delta">2.0× team avg</span>
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤20%</div>
-                      <div class="ec-big-val">0.0%</div>
-                      <div class="ec-sub">Flag when &gt; 15% of hours</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤30%</div>
-                      <div class="ec-big-val">0.0%</div>
-                      <div class="ec-sub">Flag when &gt; 25% of hours</div>
-                      
-                    </div>
-                    
-                  </div>
-                </td>
-              </tr>
-              
-              <tr class="ot-row watch" onclick="toggleExpand(this)">
-                <td><div style="padding:10px 14px;"><span class="sev-badge watch"><span class="sev-dot"></span>Watch</span></div></td>
-                <td style="padding:10px 14px;">
                   <div class="ot-member-name">Nishantha Hettiarachchi</div>
                   <span class="ot-team-pill">Digital Product</span>
                   
                 </td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">209.4h</div><div class="stat-avg">avg 182.1h</div></div></td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">30.0%</div><div class="stat-avg">avg 45.9%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">0.0%</div><div class="stat-avg">avg 0.7%</div></div></td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">2.0%</div></div></td>
                 <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">44.1%</div></div></td>
               </tr>
               <tr class="ot-expand-row">
-                <td colspan="7">
+                <td colspan="6">
                   <div class="expand-grid">
                     
                     <div class="ec pass">
@@ -2951,13 +2753,6 @@
                       <div class="ec-label">Activity vs Team</div>
                       <div class="ec-big-val">30.0%</div>
                       <div class="ec-sub">Team avg 45.9% · flag 20+ pts below</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Manual Hours</div>
-                      <div class="ec-big-val">0.0%</div>
-                      <div class="ec-sub">Team avg 0.7% · flag ≥ 1.5%</div>
                       
                     </div>
                     
@@ -2988,12 +2783,11 @@
                 </td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">177.2h</div><div class="stat-avg">avg 182.1h</div></div></td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">34.0%</div><div class="stat-avg">avg 45.9%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">0.0%</div><div class="stat-avg">avg 0.7%</div></div></td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">4.6%</div></div></td>
                 <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">25.3%</div></div></td>
               </tr>
               <tr class="ot-expand-row">
-                <td colspan="7">
+                <td colspan="6">
                   <div class="expand-grid">
                     
                     <div class="ec pass">
@@ -3007,13 +2801,6 @@
                       <div class="ec-label">Activity vs Team</div>
                       <div class="ec-big-val">34.0%</div>
                       <div class="ec-sub">Team avg 45.9% · flag 20+ pts below</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Manual Hours</div>
-                      <div class="ec-big-val">0.0%</div>
-                      <div class="ec-sub">Team avg 0.7% · flag ≥ 1.5%</div>
                       
                     </div>
                     
@@ -3044,12 +2831,11 @@
                 </td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">185.6h</div><div class="stat-avg">avg 182.1h</div></div></td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">32.0%</div><div class="stat-avg">avg 45.9%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">0.9%</div><div class="stat-avg">avg 0.7%</div></div></td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">5.6%</div></div></td>
                 <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">29.8%</div></div></td>
               </tr>
               <tr class="ot-expand-row">
-                <td colspan="7">
+                <td colspan="6">
                   <div class="expand-grid">
                     
                     <div class="ec pass">
@@ -3063,13 +2849,6 @@
                       <div class="ec-label">Activity vs Team</div>
                       <div class="ec-big-val">32.0%</div>
                       <div class="ec-sub">Team avg 45.9% · flag 20+ pts below</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Manual Hours</div>
-                      <div class="ec-big-val">0.9%</div>
-                      <div class="ec-sub">Team avg 0.7% · flag ≥ 1.5%</div>
                       
                     </div>
                     
@@ -3094,578 +2873,17 @@
               <tr class="ot-row watch" onclick="toggleExpand(this)">
                 <td><div style="padding:10px 14px;"><span class="sev-badge watch"><span class="sev-dot"></span>Watch</span></div></td>
                 <td style="padding:10px 14px;">
-                  <div class="ot-member-name">Hasala Jayasuriya</div>
-                  <span class="ot-team-pill">Digital Product</span>
-                  
-                </td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">189.1h</div><div class="stat-avg">avg 182.1h</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">56.0%</div><div class="stat-avg">avg 45.9%</div></div></td>
-                <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">1.5%</div><div class="stat-avg">avg 0.7%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">0.0%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">0.9%</div></div></td>
-              </tr>
-              <tr class="ot-expand-row">
-                <td colspan="7">
-                  <div class="expand-grid">
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Hours vs Team</div>
-                      <div class="ec-big-val">189.1h</div>
-                      <div class="ec-sub">Team avg 182.1h · flag &lt; 145.7h</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Activity vs Team</div>
-                      <div class="ec-big-val">56.0%</div>
-                      <div class="ec-sub">Team avg 45.9% · flag 20+ pts below</div>
-                      
-                    </div>
-                    
-                    <div class="ec fail">
-                      <div class="ec-label">Manual Hours</div>
-                      <div class="ec-big-val">1.5%</div>
-                      <div class="ec-sub">Team avg 0.7% · flag ≥ 1.5%</div>
-                      <span class="ec-delta">2.0× team avg</span>
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤20%</div>
-                      <div class="ec-big-val">0.0%</div>
-                      <div class="ec-sub">Flag when &gt; 15% of hours</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤30%</div>
-                      <div class="ec-big-val">0.9%</div>
-                      <div class="ec-sub">Flag when &gt; 25% of hours</div>
-                      
-                    </div>
-                    
-                  </div>
-                </td>
-              </tr>
-              
-              <tr class="ot-row watch" onclick="toggleExpand(this)">
-                <td><div style="padding:10px 14px;"><span class="sev-badge watch"><span class="sev-dot"></span>Watch</span></div></td>
-                <td style="padding:10px 14px;">
-                  <div class="ot-member-name">Shehara Meadows</div>
-                  <span class="ot-team-pill">Digital Product</span>
-                  
-                </td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">167.2h</div><div class="stat-avg">avg 175.8h</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">36.0%</div><div class="stat-avg">avg 49.8%</div></div></td>
-                <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">24.1%</div><div class="stat-avg">avg 6.0%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">4.6%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">17.9%</div></div></td>
-              </tr>
-              <tr class="ot-expand-row">
-                <td colspan="7">
-                  <div class="expand-grid">
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Hours vs Team</div>
-                      <div class="ec-big-val">167.2h</div>
-                      <div class="ec-sub">Team avg 175.8h · flag &lt; 140.6h</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Activity vs Team</div>
-                      <div class="ec-big-val">36.0%</div>
-                      <div class="ec-sub">Team avg 49.8% · flag 20+ pts below</div>
-                      
-                    </div>
-                    
-                    <div class="ec fail">
-                      <div class="ec-label">Manual Hours</div>
-                      <div class="ec-big-val">24.1%</div>
-                      <div class="ec-sub">Team avg 6.0% · flag ≥ 12.1%</div>
-                      <span class="ec-delta">4.0× team avg</span>
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤20%</div>
-                      <div class="ec-big-val">4.6%</div>
-                      <div class="ec-sub">Flag when &gt; 15% of hours</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤30%</div>
-                      <div class="ec-big-val">17.9%</div>
-                      <div class="ec-sub">Flag when &gt; 25% of hours</div>
-                      
-                    </div>
-                    
-                  </div>
-                </td>
-              </tr>
-              
-              <tr class="ot-row watch" onclick="toggleExpand(this)">
-                <td><div style="padding:10px 14px;"><span class="sev-badge watch"><span class="sev-dot"></span>Watch</span></div></td>
-                <td style="padding:10px 14px;">
-                  <div class="ot-member-name">Bihani Madushika</div>
-                  <span class="ot-team-pill">Digital Product</span>
-                  <span class="ot-small-team">small team baseline</span>
-                </td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">159.2h</div><div class="stat-avg">avg 164.6h</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">44.0%</div><div class="stat-avg">avg 51.0%</div></div></td>
-                <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">0.2%</div><div class="stat-avg">avg 0.1%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">2.0%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">4.6%</div></div></td>
-              </tr>
-              <tr class="ot-expand-row">
-                <td colspan="7">
-                  <div class="expand-grid">
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Hours vs Team</div>
-                      <div class="ec-big-val">159.2h</div>
-                      <div class="ec-sub">Team avg 164.6h · flag &lt; 131.7h</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Activity vs Team</div>
-                      <div class="ec-big-val">44.0%</div>
-                      <div class="ec-sub">Team avg 51.0% · flag 20+ pts below</div>
-                      
-                    </div>
-                    
-                    <div class="ec fail">
-                      <div class="ec-label">Manual Hours</div>
-                      <div class="ec-big-val">0.2%</div>
-                      <div class="ec-sub">Team avg 0.1% · flag ≥ 0.2%</div>
-                      <span class="ec-delta">2.0× team avg</span>
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤20%</div>
-                      <div class="ec-big-val">2.0%</div>
-                      <div class="ec-sub">Flag when &gt; 15% of hours</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤30%</div>
-                      <div class="ec-big-val">4.6%</div>
-                      <div class="ec-sub">Flag when &gt; 25% of hours</div>
-                      
-                    </div>
-                    
-                  </div>
-                </td>
-              </tr>
-              
-              <tr class="ot-row watch" onclick="toggleExpand(this)">
-                <td><div style="padding:10px 14px;"><span class="sev-badge watch"><span class="sev-dot"></span>Watch</span></div></td>
-                <td style="padding:10px 14px;">
-                  <div class="ot-member-name">Shannon Woods</div>
-                  <span class="ot-team-pill">Venia</span>
-                  
-                </td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">168.0h</div><div class="stat-avg">avg 161.9h</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">64.0%</div><div class="stat-avg">avg 56.8%</div></div></td>
-                <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">3.5%</div><div class="stat-avg">avg 1.1%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">0.2%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">2.4%</div></div></td>
-              </tr>
-              <tr class="ot-expand-row">
-                <td colspan="7">
-                  <div class="expand-grid">
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Hours vs Team</div>
-                      <div class="ec-big-val">168.0h</div>
-                      <div class="ec-sub">Team avg 161.9h · flag &lt; 129.5h</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Activity vs Team</div>
-                      <div class="ec-big-val">64.0%</div>
-                      <div class="ec-sub">Team avg 56.8% · flag 20+ pts below</div>
-                      
-                    </div>
-                    
-                    <div class="ec fail">
-                      <div class="ec-label">Manual Hours</div>
-                      <div class="ec-big-val">3.5%</div>
-                      <div class="ec-sub">Team avg 1.1% · flag ≥ 2.1%</div>
-                      <span class="ec-delta">3.3× team avg</span>
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤20%</div>
-                      <div class="ec-big-val">0.2%</div>
-                      <div class="ec-sub">Flag when &gt; 15% of hours</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤30%</div>
-                      <div class="ec-big-val">2.4%</div>
-                      <div class="ec-sub">Flag when &gt; 25% of hours</div>
-                      
-                    </div>
-                    
-                  </div>
-                </td>
-              </tr>
-              
-              <tr class="ot-row watch" onclick="toggleExpand(this)">
-                <td><div style="padding:10px 14px;"><span class="sev-badge watch"><span class="sev-dot"></span>Watch</span></div></td>
-                <td style="padding:10px 14px;">
-                  <div class="ot-member-name">Darren Karunaratne</div>
-                  <span class="ot-team-pill">Venia</span>
-                  
-                </td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">173.0h</div><div class="stat-avg">avg 166.9h</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">43.0%</div><div class="stat-avg">avg 41.0%</div></div></td>
-                <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">1.4%</div><div class="stat-avg">avg 0.5%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">5.7%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">18.8%</div></div></td>
-              </tr>
-              <tr class="ot-expand-row">
-                <td colspan="7">
-                  <div class="expand-grid">
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Hours vs Team</div>
-                      <div class="ec-big-val">173.0h</div>
-                      <div class="ec-sub">Team avg 166.9h · flag &lt; 133.5h</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Activity vs Team</div>
-                      <div class="ec-big-val">43.0%</div>
-                      <div class="ec-sub">Team avg 41.0% · flag 20+ pts below</div>
-                      
-                    </div>
-                    
-                    <div class="ec fail">
-                      <div class="ec-label">Manual Hours</div>
-                      <div class="ec-big-val">1.4%</div>
-                      <div class="ec-sub">Team avg 0.5% · flag ≥ 0.9%</div>
-                      <span class="ec-delta">3.0× team avg</span>
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤20%</div>
-                      <div class="ec-big-val">5.7%</div>
-                      <div class="ec-sub">Flag when &gt; 15% of hours</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤30%</div>
-                      <div class="ec-big-val">18.8%</div>
-                      <div class="ec-sub">Flag when &gt; 25% of hours</div>
-                      
-                    </div>
-                    
-                  </div>
-                </td>
-              </tr>
-              
-              <tr class="ot-row watch" onclick="toggleExpand(this)">
-                <td><div style="padding:10px 14px;"><span class="sev-badge watch"><span class="sev-dot"></span>Watch</span></div></td>
-                <td style="padding:10px 14px;">
-                  <div class="ot-member-name">Sara Higgason</div>
-                  <span class="ot-team-pill">Venia</span>
-                  
-                </td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">162.5h</div><div class="stat-avg">avg 172.4h</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">68.0%</div><div class="stat-avg">avg 59.6%</div></div></td>
-                <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">2.0%</div><div class="stat-avg">avg 0.5%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">0.0%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">0.7%</div></div></td>
-              </tr>
-              <tr class="ot-expand-row">
-                <td colspan="7">
-                  <div class="expand-grid">
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Hours vs Team</div>
-                      <div class="ec-big-val">162.5h</div>
-                      <div class="ec-sub">Team avg 172.4h · flag &lt; 137.9h</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Activity vs Team</div>
-                      <div class="ec-big-val">68.0%</div>
-                      <div class="ec-sub">Team avg 59.6% · flag 20+ pts below</div>
-                      
-                    </div>
-                    
-                    <div class="ec fail">
-                      <div class="ec-label">Manual Hours</div>
-                      <div class="ec-big-val">2.0%</div>
-                      <div class="ec-sub">Team avg 0.5% · flag ≥ 1.1%</div>
-                      <span class="ec-delta">3.7× team avg</span>
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤20%</div>
-                      <div class="ec-big-val">0.0%</div>
-                      <div class="ec-sub">Flag when &gt; 15% of hours</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤30%</div>
-                      <div class="ec-big-val">0.7%</div>
-                      <div class="ec-sub">Flag when &gt; 25% of hours</div>
-                      
-                    </div>
-                    
-                  </div>
-                </td>
-              </tr>
-              
-              <tr class="ot-row watch" onclick="toggleExpand(this)">
-                <td><div style="padding:10px 14px;"><span class="sev-badge watch"><span class="sev-dot"></span>Watch</span></div></td>
-                <td style="padding:10px 14px;">
-                  <div class="ot-member-name">Ma Aubrey Sustento</div>
-                  <span class="ot-team-pill">Venia</span>
-                  
-                </td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">201.8h</div><div class="stat-avg">avg 172.4h</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">65.0%</div><div class="stat-avg">avg 59.6%</div></div></td>
-                <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">1.8%</div><div class="stat-avg">avg 0.5%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">0.0%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">0.0%</div></div></td>
-              </tr>
-              <tr class="ot-expand-row">
-                <td colspan="7">
-                  <div class="expand-grid">
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Hours vs Team</div>
-                      <div class="ec-big-val">201.8h</div>
-                      <div class="ec-sub">Team avg 172.4h · flag &lt; 137.9h</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Activity vs Team</div>
-                      <div class="ec-big-val">65.0%</div>
-                      <div class="ec-sub">Team avg 59.6% · flag 20+ pts below</div>
-                      
-                    </div>
-                    
-                    <div class="ec fail">
-                      <div class="ec-label">Manual Hours</div>
-                      <div class="ec-big-val">1.8%</div>
-                      <div class="ec-sub">Team avg 0.5% · flag ≥ 1.1%</div>
-                      <span class="ec-delta">3.3× team avg</span>
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤20%</div>
-                      <div class="ec-big-val">0.0%</div>
-                      <div class="ec-sub">Flag when &gt; 15% of hours</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤30%</div>
-                      <div class="ec-big-val">0.0%</div>
-                      <div class="ec-sub">Flag when &gt; 25% of hours</div>
-                      
-                    </div>
-                    
-                  </div>
-                </td>
-              </tr>
-              
-              <tr class="ot-row watch" onclick="toggleExpand(this)">
-                <td><div style="padding:10px 14px;"><span class="sev-badge watch"><span class="sev-dot"></span>Watch</span></div></td>
-                <td style="padding:10px 14px;">
-                  <div class="ot-member-name">Subashi Silva</div>
-                  <span class="ot-team-pill">Venia</span>
-                  
-                </td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">180.9h</div><div class="stat-avg">avg 166.5h</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">52.0%</div><div class="stat-avg">avg 54.2%</div></div></td>
-                <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">3.7%</div><div class="stat-avg">avg 0.8%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">0.0%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">0.0%</div></div></td>
-              </tr>
-              <tr class="ot-expand-row">
-                <td colspan="7">
-                  <div class="expand-grid">
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Hours vs Team</div>
-                      <div class="ec-big-val">180.9h</div>
-                      <div class="ec-sub">Team avg 166.5h · flag &lt; 133.2h</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Activity vs Team</div>
-                      <div class="ec-big-val">52.0%</div>
-                      <div class="ec-sub">Team avg 54.2% · flag 20+ pts below</div>
-                      
-                    </div>
-                    
-                    <div class="ec fail">
-                      <div class="ec-label">Manual Hours</div>
-                      <div class="ec-big-val">3.7%</div>
-                      <div class="ec-sub">Team avg 0.8% · flag ≥ 1.6%</div>
-                      <span class="ec-delta">4.6× team avg</span>
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤20%</div>
-                      <div class="ec-big-val">0.0%</div>
-                      <div class="ec-sub">Flag when &gt; 15% of hours</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤30%</div>
-                      <div class="ec-big-val">0.0%</div>
-                      <div class="ec-sub">Flag when &gt; 25% of hours</div>
-                      
-                    </div>
-                    
-                  </div>
-                </td>
-              </tr>
-              
-              <tr class="ot-row watch" onclick="toggleExpand(this)">
-                <td><div style="padding:10px 14px;"><span class="sev-badge watch"><span class="sev-dot"></span>Watch</span></div></td>
-                <td style="padding:10px 14px;">
-                  <div class="ot-member-name">Denise Marsha Elisa Moscare</div>
-                  <span class="ot-team-pill">Venia</span>
-                  
-                </td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">174.7h</div><div class="stat-avg">avg 168.2h</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">47.0%</div><div class="stat-avg">avg 54.3%</div></div></td>
-                <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">3.0%</div><div class="stat-avg">avg 0.4%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">3.3%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">10.5%</div></div></td>
-              </tr>
-              <tr class="ot-expand-row">
-                <td colspan="7">
-                  <div class="expand-grid">
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Hours vs Team</div>
-                      <div class="ec-big-val">174.7h</div>
-                      <div class="ec-sub">Team avg 168.2h · flag &lt; 134.6h</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Activity vs Team</div>
-                      <div class="ec-big-val">47.0%</div>
-                      <div class="ec-sub">Team avg 54.3% · flag 20+ pts below</div>
-                      
-                    </div>
-                    
-                    <div class="ec fail">
-                      <div class="ec-label">Manual Hours</div>
-                      <div class="ec-big-val">3.0%</div>
-                      <div class="ec-sub">Team avg 0.4% · flag ≥ 0.9%</div>
-                      <span class="ec-delta">7.0× team avg</span>
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤20%</div>
-                      <div class="ec-big-val">3.3%</div>
-                      <div class="ec-sub">Flag when &gt; 15% of hours</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤30%</div>
-                      <div class="ec-big-val">10.5%</div>
-                      <div class="ec-sub">Flag when &gt; 25% of hours</div>
-                      
-                    </div>
-                    
-                  </div>
-                </td>
-              </tr>
-              
-              <tr class="ot-row watch" onclick="toggleExpand(this)">
-                <td><div style="padding:10px 14px;"><span class="sev-badge watch"><span class="sev-dot"></span>Watch</span></div></td>
-                <td style="padding:10px 14px;">
-                  <div class="ot-member-name">Jason Diaz</div>
-                  <span class="ot-team-pill">Task Agency</span>
-                  
-                </td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">138.0h</div><div class="stat-avg">avg 165.6h</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">53.0%</div><div class="stat-avg">avg 51.0%</div></div></td>
-                <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">15.6%</div><div class="stat-avg">avg 2.7%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">0.0%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">1.2%</div></div></td>
-              </tr>
-              <tr class="ot-expand-row">
-                <td colspan="7">
-                  <div class="expand-grid">
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Hours vs Team</div>
-                      <div class="ec-big-val">138.0h</div>
-                      <div class="ec-sub">Team avg 165.6h · flag &lt; 132.5h</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Activity vs Team</div>
-                      <div class="ec-big-val">53.0%</div>
-                      <div class="ec-sub">Team avg 51.0% · flag 20+ pts below</div>
-                      
-                    </div>
-                    
-                    <div class="ec fail">
-                      <div class="ec-label">Manual Hours</div>
-                      <div class="ec-big-val">15.6%</div>
-                      <div class="ec-sub">Team avg 2.7% · flag ≥ 5.5%</div>
-                      <span class="ec-delta">5.7× team avg</span>
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤20%</div>
-                      <div class="ec-big-val">0.0%</div>
-                      <div class="ec-sub">Flag when &gt; 15% of hours</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤30%</div>
-                      <div class="ec-big-val">1.2%</div>
-                      <div class="ec-sub">Flag when &gt; 25% of hours</div>
-                      
-                    </div>
-                    
-                  </div>
-                </td>
-              </tr>
-              
-              <tr class="ot-row watch" onclick="toggleExpand(this)">
-                <td><div style="padding:10px 14px;"><span class="sev-badge watch"><span class="sev-dot"></span>Watch</span></div></td>
-                <td style="padding:10px 14px;">
                   <div class="ot-member-name">Anna May Rubia</div>
                   <span class="ot-team-pill">Marketing</span>
                   
                 </td>
                 <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">124.3h</div><div class="stat-avg">avg 167.2h</div></div></td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">44.0%</div><div class="stat-avg">avg 52.7%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">0.0%</div><div class="stat-avg">avg 0.2%</div></div></td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">0.0%</div></div></td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">6.0%</div></div></td>
               </tr>
               <tr class="ot-expand-row">
-                <td colspan="7">
+                <td colspan="6">
                   <div class="expand-grid">
                     
                     <div class="ec fail">
@@ -3679,13 +2897,6 @@
                       <div class="ec-label">Activity vs Team</div>
                       <div class="ec-big-val">44.0%</div>
                       <div class="ec-sub">Team avg 52.7% · flag 20+ pts below</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Manual Hours</div>
-                      <div class="ec-big-val">0.0%</div>
-                      <div class="ec-sub">Team avg 0.2% · flag ≥ 0.4%</div>
                       
                     </div>
                     
@@ -3710,186 +2921,17 @@
               <tr class="ot-row watch" onclick="toggleExpand(this)">
                 <td><div style="padding:10px 14px;"><span class="sev-badge watch"><span class="sev-dot"></span>Watch</span></div></td>
                 <td style="padding:10px 14px;">
-                  <div class="ot-member-name">Ransika Kalutharage</div>
-                  <span class="ot-team-pill">Marketing</span>
-                  
-                </td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">198.9h</div><div class="stat-avg">avg 167.2h</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">52.0%</div><div class="stat-avg">avg 52.7%</div></div></td>
-                <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">0.6%</div><div class="stat-avg">avg 0.2%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">0.0%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">0.2%</div></div></td>
-              </tr>
-              <tr class="ot-expand-row">
-                <td colspan="7">
-                  <div class="expand-grid">
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Hours vs Team</div>
-                      <div class="ec-big-val">198.9h</div>
-                      <div class="ec-sub">Team avg 167.2h · flag &lt; 133.8h</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Activity vs Team</div>
-                      <div class="ec-big-val">52.0%</div>
-                      <div class="ec-sub">Team avg 52.7% · flag 20+ pts below</div>
-                      
-                    </div>
-                    
-                    <div class="ec fail">
-                      <div class="ec-label">Manual Hours</div>
-                      <div class="ec-big-val">0.6%</div>
-                      <div class="ec-sub">Team avg 0.2% · flag ≥ 0.4%</div>
-                      <span class="ec-delta">3.0× team avg</span>
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤20%</div>
-                      <div class="ec-big-val">0.0%</div>
-                      <div class="ec-sub">Flag when &gt; 15% of hours</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤30%</div>
-                      <div class="ec-big-val">0.2%</div>
-                      <div class="ec-sub">Flag when &gt; 25% of hours</div>
-                      
-                    </div>
-                    
-                  </div>
-                </td>
-              </tr>
-              
-              <tr class="ot-row watch" onclick="toggleExpand(this)">
-                <td><div style="padding:10px 14px;"><span class="sev-badge watch"><span class="sev-dot"></span>Watch</span></div></td>
-                <td style="padding:10px 14px;">
-                  <div class="ot-member-name">shenali edirisinghe</div>
-                  <span class="ot-team-pill">Marketing</span>
-                  
-                </td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">142.0h</div><div class="stat-avg">avg 170.1h</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">38.0%</div><div class="stat-avg">avg 40.8%</div></div></td>
-                <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">0.3%</div><div class="stat-avg">avg 0.1%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">0.1%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">9.6%</div></div></td>
-              </tr>
-              <tr class="ot-expand-row">
-                <td colspan="7">
-                  <div class="expand-grid">
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Hours vs Team</div>
-                      <div class="ec-big-val">142.0h</div>
-                      <div class="ec-sub">Team avg 170.1h · flag &lt; 136.1h</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Activity vs Team</div>
-                      <div class="ec-big-val">38.0%</div>
-                      <div class="ec-sub">Team avg 40.8% · flag 20+ pts below</div>
-                      
-                    </div>
-                    
-                    <div class="ec fail">
-                      <div class="ec-label">Manual Hours</div>
-                      <div class="ec-big-val">0.3%</div>
-                      <div class="ec-sub">Team avg 0.1% · flag ≥ 0.2%</div>
-                      <span class="ec-delta">3.0× team avg</span>
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤20%</div>
-                      <div class="ec-big-val">0.1%</div>
-                      <div class="ec-sub">Flag when &gt; 15% of hours</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤30%</div>
-                      <div class="ec-big-val">9.6%</div>
-                      <div class="ec-sub">Flag when &gt; 25% of hours</div>
-                      
-                    </div>
-                    
-                  </div>
-                </td>
-              </tr>
-              
-              <tr class="ot-row watch" onclick="toggleExpand(this)">
-                <td><div style="padding:10px 14px;"><span class="sev-badge watch"><span class="sev-dot"></span>Watch</span></div></td>
-                <td style="padding:10px 14px;">
-                  <div class="ot-member-name">Ibrahim Adeeb</div>
-                  <span class="ot-team-pill">Accounting &amp; Finance</span>
-                  
-                </td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">175.6h</div><div class="stat-avg">avg 175.4h</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">59.0%</div><div class="stat-avg">avg 51.6%</div></div></td>
-                <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">0.7%</div><div class="stat-avg">avg 0.3%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">0.0%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">0.0%</div></div></td>
-              </tr>
-              <tr class="ot-expand-row">
-                <td colspan="7">
-                  <div class="expand-grid">
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Hours vs Team</div>
-                      <div class="ec-big-val">175.6h</div>
-                      <div class="ec-sub">Team avg 175.4h · flag &lt; 140.3h</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Activity vs Team</div>
-                      <div class="ec-big-val">59.0%</div>
-                      <div class="ec-sub">Team avg 51.6% · flag 20+ pts below</div>
-                      
-                    </div>
-                    
-                    <div class="ec fail">
-                      <div class="ec-label">Manual Hours</div>
-                      <div class="ec-big-val">0.7%</div>
-                      <div class="ec-sub">Team avg 0.3% · flag ≥ 0.7%</div>
-                      <span class="ec-delta">2.1× team avg</span>
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤20%</div>
-                      <div class="ec-big-val">0.0%</div>
-                      <div class="ec-sub">Flag when &gt; 15% of hours</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Low Activity ≤30%</div>
-                      <div class="ec-big-val">0.0%</div>
-                      <div class="ec-sub">Flag when &gt; 25% of hours</div>
-                      
-                    </div>
-                    
-                  </div>
-                </td>
-              </tr>
-              
-              <tr class="ot-row watch" onclick="toggleExpand(this)">
-                <td><div style="padding:10px 14px;"><span class="sev-badge watch"><span class="sev-dot"></span>Watch</span></div></td>
-                <td style="padding:10px 14px;">
                   <div class="ot-member-name">Kushani Kalpage</div>
                   <span class="ot-team-pill">Recruitment</span>
                   
                 </td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">176.3h</div><div class="stat-avg">avg 179.1h</div></div></td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">42.0%</div><div class="stat-avg">avg 40.3%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">0.7%</div><div class="stat-avg">avg 0.8%</div></div></td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">6.5%</div></div></td>
                 <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">26.8%</div></div></td>
               </tr>
               <tr class="ot-expand-row">
-                <td colspan="7">
+                <td colspan="6">
                   <div class="expand-grid">
                     
                     <div class="ec pass">
@@ -3903,13 +2945,6 @@
                       <div class="ec-label">Activity vs Team</div>
                       <div class="ec-big-val">42.0%</div>
                       <div class="ec-sub">Team avg 40.3% · flag 20+ pts below</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Manual Hours</div>
-                      <div class="ec-big-val">0.7%</div>
-                      <div class="ec-sub">Team avg 0.8% · flag ≥ 1.6%</div>
                       
                     </div>
                     
@@ -3934,18 +2969,65 @@
               <tr class="ot-row watch" onclick="toggleExpand(this)">
                 <td><div style="padding:10px 14px;"><span class="sev-badge watch"><span class="sev-dot"></span>Watch</span></div></td>
                 <td style="padding:10px 14px;">
+                  <div class="ot-member-name">Natalia Jayasundera</div>
+                  <span class="ot-team-pill">Recruitment</span>
+                  
+                </td>
+                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">172.5h</div><div class="stat-avg">avg 179.1h</div></div></td>
+                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">34.0%</div><div class="stat-avg">avg 40.3%</div></div></td>
+                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">8.7%</div></div></td>
+                <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">33.6%</div></div></td>
+              </tr>
+              <tr class="ot-expand-row">
+                <td colspan="6">
+                  <div class="expand-grid">
+                    
+                    <div class="ec pass">
+                      <div class="ec-label">Hours vs Team</div>
+                      <div class="ec-big-val">172.5h</div>
+                      <div class="ec-sub">Team avg 179.1h · flag &lt; 143.3h</div>
+                      
+                    </div>
+                    
+                    <div class="ec pass">
+                      <div class="ec-label">Activity vs Team</div>
+                      <div class="ec-big-val">34.0%</div>
+                      <div class="ec-sub">Team avg 40.3% · flag 20+ pts below</div>
+                      
+                    </div>
+                    
+                    <div class="ec pass">
+                      <div class="ec-label">Low Activity ≤20%</div>
+                      <div class="ec-big-val">8.7%</div>
+                      <div class="ec-sub">Flag when &gt; 15% of hours</div>
+                      
+                    </div>
+                    
+                    <div class="ec fail">
+                      <div class="ec-label">Low Activity ≤30%</div>
+                      <div class="ec-big-val">33.6%</div>
+                      <div class="ec-sub">Flag when &gt; 25% of hours</div>
+                      <span class="ec-delta">8.6pts over limit</span>
+                    </div>
+                    
+                  </div>
+                </td>
+              </tr>
+              
+              <tr class="ot-row watch" onclick="toggleExpand(this)">
+                <td><div style="padding:10px 14px;"><span class="sev-badge watch"><span class="sev-dot"></span>Watch</span></div></td>
+                <td style="padding:10px 14px;">
                   <div class="ot-member-name">Ali Asghar</div>
                   <span class="ot-team-pill">Recruitment</span>
                   
                 </td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">193.9h</div><div class="stat-avg">avg 179.1h</div></div></td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">30.0%</div><div class="stat-avg">avg 40.3%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">1.4%</div><div class="stat-avg">avg 0.8%</div></div></td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">9.7%</div></div></td>
                 <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">44.5%</div></div></td>
               </tr>
               <tr class="ot-expand-row">
-                <td colspan="7">
+                <td colspan="6">
                   <div class="expand-grid">
                     
                     <div class="ec pass">
@@ -3959,13 +3041,6 @@
                       <div class="ec-label">Activity vs Team</div>
                       <div class="ec-big-val">30.0%</div>
                       <div class="ec-sub">Team avg 40.3% · flag 20+ pts below</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Manual Hours</div>
-                      <div class="ec-big-val">1.4%</div>
-                      <div class="ec-sub">Team avg 0.8% · flag ≥ 1.6%</div>
                       
                     </div>
                     
@@ -3996,12 +3071,11 @@
                 </td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">170.7h</div><div class="stat-avg">avg 179.1h</div></div></td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">40.0%</div><div class="stat-avg">avg 40.3%</div></div></td>
-                <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">0.2%</div><div class="stat-avg">avg 0.8%</div></div></td>
                 <td class="ot-stat clean"><div class="stat-inner"><div class="stat-val">7.2%</div></div></td>
                 <td class="ot-stat breach-red"><div class="stat-inner"><div class="stat-val">25.6%</div></div></td>
               </tr>
               <tr class="ot-expand-row">
-                <td colspan="7">
+                <td colspan="6">
                   <div class="expand-grid">
                     
                     <div class="ec pass">
@@ -4015,13 +3089,6 @@
                       <div class="ec-label">Activity vs Team</div>
                       <div class="ec-big-val">40.0%</div>
                       <div class="ec-sub">Team avg 40.3% · flag 20+ pts below</div>
-                      
-                    </div>
-                    
-                    <div class="ec pass">
-                      <div class="ec-label">Manual Hours</div>
-                      <div class="ec-big-val">0.2%</div>
-                      <div class="ec-sub">Team avg 0.8% · flag ≥ 1.6%</div>
                       
                     </div>
                     
@@ -4056,7 +3123,7 @@
 
   <div class="page-footer">
     <span>WebLife Ventures Performance Reporting System &nbsp;·&nbsp; SLA thresholds per WebLife SLA Violation Legend v1.0</span>
-    <span>Generated 2026-06-03 22:55 &nbsp;·&nbsp; Internal use only — do not distribute</span>
+    <span>Generated 2026-06-04 09:03 &nbsp;·&nbsp; Internal use only — do not distribute</span>
   </div>
 
 </div>

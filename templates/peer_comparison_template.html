@@ -534,10 +534,6 @@
           <span class="bm-cap-rule">20+ pts below team avg activity</span>
         </div>
         <div class="bm-cap">
-          <span class="bm-cap-label">Manual %</span>
-          <span class="bm-cap-rule">&#8805; 2&#xD7; the team avg manual rate</span>
-        </div>
-        <div class="bm-cap">
           <span class="bm-cap-label">Low &#8804;20%</span>
           <span class="bm-cap-rule">&gt; 15% of total tracked hours</span>
         </div>
@@ -567,7 +563,6 @@
               <th style="width:180px">Member</th>
               <th style="width:105px">Hours</th>
               <th style="width:100px">Activity %</th>
-              <th style="width:100px">Manual %</th>
               <th style="width:100px">Low &#8804;20%</th>
               <th style="width:100px">Low &#8804;30%</th>
             </tr>
@@ -584,12 +579,11 @@
                 </td>
                 <td class="ot-stat {{ o.hours_cls }}"><div class="stat-inner"><div class="stat-val">{{ o.hours_val }}</div><div class="stat-avg">{{ o.hours_avg }}</div></div></td>
                 <td class="ot-stat {{ o.act_cls }}"><div class="stat-inner"><div class="stat-val">{{ o.act_val }}</div><div class="stat-avg">{{ o.act_avg }}</div></div></td>
-                <td class="ot-stat {{ o.man_cls }}"><div class="stat-inner"><div class="stat-val">{{ o.man_val }}</div><div class="stat-avg">{{ o.man_avg }}</div></div></td>
                 <td class="ot-stat {{ o.low20_cls }}"><div class="stat-inner"><div class="stat-val">{{ o.low20_val }}</div></div></td>
                 <td class="ot-stat {{ o.low30_cls }}"><div class="stat-inner"><div class="stat-val">{{ o.low30_val }}</div></div></td>
               </tr>
               <tr class="ot-expand-row">
-                <td colspan="7">
+                <td colspan="6">
                   <div class="expand-grid">
                     {% for card in o.expand_cards %}
                     <div class="ec {{ card.cls }}">
@@ -604,7 +598,7 @@
               </tr>
               {% endfor %}
             {% else %}
-              <tr><td colspan="7" style="text-align:center;padding:40px;color:#64748b;font-style:italic;">No triage outliers detected this period.</td></tr>
+              <tr><td colspan="6" style="text-align:center;padding:40px;color:#64748b;font-style:italic;">No triage outliers detected this period.</td></tr>
             {% endif %}
           </tbody>
         </table>
