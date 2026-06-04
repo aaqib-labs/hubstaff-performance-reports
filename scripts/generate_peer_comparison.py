@@ -17,7 +17,6 @@ Output:
 """
 
 import argparse
-import calendar
 import sys
 from datetime import date
 from pathlib import Path
@@ -399,7 +398,7 @@ def _build_triage_entry(row: dict, group: dict, ra: dict,
         {
             "label": "Activity vs Team",
             "value": _tf(ma, s="%"),
-            "sub":   f"Team avg {_tf(avg_a, s='%')} · flag 20+ pts below",
+            "sub":   f"Team avg {_tf(avg_a, s='%')} · flag 15+ pts below",
             "delta": f"{avg_a - ma:.1f}pts below avg" if c2 and _tv(avg_a) else "",
             "cls":   "fail" if c2 else "pass",
         },
@@ -467,7 +466,7 @@ def build_outlier_triage(groups: list[dict]) -> list[dict]:
             continue
 
         c1 = _tv(mh)  and _tv(avg_h) and avg_h > 0 and mh < avg_h * 0.8
-        c2 = _tv(ma)  and _tv(avg_a) and ma <= avg_a - 20
+        c2 = _tv(ma)  and _tv(avg_a) and ma <= avg_a - 15
         c4 = _tv(m20) and m20 > 15
         c5 = _tv(m30) and m30 > 25
         n  = sum([c1, c2, c4, c5])
@@ -612,7 +611,6 @@ def build_group(
 # ---------------------------------------------------------------------------
 
 def build_context(
-    df: pd.DataFrame,
     groups: list[dict],
     start: date,
     end: date,
@@ -709,7 +707,7 @@ def main():
         result["num"] = len(groups) + 1
         groups.append(result)
 
-    context   = build_context(df, groups, start, end, prorated_red, prorated_orange)
+    context   = build_context(groups, start, end, prorated_red, prorated_orange)
     html      = render_report(context)
     docs_path = write_report(html, start, end)
     print(f"Report written: {docs_path}")
