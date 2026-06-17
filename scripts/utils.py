@@ -67,6 +67,8 @@ PERMANENT_EXCLUSIONS = [
     "Dilini Pathirana",
     "Nitika Bansal",
     "Nireshwaran Aravinth",
+    "Irza Khan",
+    "Sanjula Paulis",
 ]
 
 # Centrifuse Engineers tracked via TMetric — excluded from Hubstaff reports
