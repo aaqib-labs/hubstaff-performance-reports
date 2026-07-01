@@ -69,9 +69,11 @@ PERMANENT_EXCLUSIONS = [
     "Nireshwaran Aravinth",
     "Irza Khan",
     "Sanjula Paulis",
+    "Shen Perera",
+    "Shen Dilushan Perera",
 ]
 
-# Centrifuse Engineers tracked via TMetric — excluded from Hubstaff reports
+# Friday Solutions / Centrifuse Engineers tracked via TMetric — excluded from Hubstaff reports
 FS_EXCLUSIONS = [
     "Dhananjana Rathnayake",
     "Dulan Jayawickrama",
@@ -79,7 +81,7 @@ FS_EXCLUSIONS = [
     "Hasan Zarook",
     "Abdul Gafoor Hasan Zarook",
     "Richard Fernando",
-    "Ruwanya Wijesuriya",
+    "Ruwanya Wijesuriya",   # Resigned 2026-07
     "Suleman",
     "Suleman Khan",
     "Thimal Caldera",
