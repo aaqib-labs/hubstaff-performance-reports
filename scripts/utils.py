@@ -80,7 +80,7 @@ FS_EXCLUSIONS = [
     "Gayan Keppetipola",
     "Hasan Zarook",
     "Abdul Gafoor Hasan Zarook",
-    "Richard Fernando",
+    "Richard Fernando",     # Terminated 2026-07
     "Ruwanya Wijesuriya",   # Resigned 2026-07
     "Suleman",
     "Suleman Khan",
