@@ -71,6 +71,8 @@ PERMANENT_EXCLUSIONS = [
     "Sanjula Paulis",
     "Shen Perera",
     "Shen Dilushan Perera",
+    "Umair Ali",           # Withdrawn 2026-07
+    "Dewmi Hathurusingha", # Resigned 2026-07
 ]
 
 # Friday Solutions / Centrifuse Engineers tracked via TMetric — excluded from Hubstaff reports

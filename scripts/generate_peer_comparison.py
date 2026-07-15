@@ -202,7 +202,6 @@ PEER_GROUPS = [
             "Jason Diaz",
             "Aaqib Hafeel",
             "Nawodya De Silva",
-            "Dewmi Hathurusingha",
             "Staffey Murugadas",
             "Shen Perera",
         ],
