@@ -78,6 +78,8 @@ PERMANENT_EXCLUSIONS = [
 
 # Friday Solutions / Centrifuse Engineers tracked via TMetric — excluded from Hubstaff reports
 FS_EXCLUSIONS = [
+    "Ashan Perera",          # Sole-team CE, added 2026-08
+    "Pubudu Ekanayake",      # Sole-team CE, added 2026-08
     "Dhananjana Rathnayake",
     "Dulan Jayawickrama",
     "Gayan Keppetipola",

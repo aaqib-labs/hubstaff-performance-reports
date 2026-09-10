@@ -546,7 +546,8 @@ def main():
     all_exclusions = PERMANENT_EXCLUSIONS + FS_EXCLUSIONS + cycle_exclusions
     if all_exclusions:
         before = len(df)
-        df = df[~df["member"].isin(all_exclusions)].reset_index(drop=True)
+        _excl_set = set(n.lower().strip() for n in all_exclusions)
+        df = df[~df["member"].apply(lambda n: str(n).lower().strip() in _excl_set)].reset_index(drop=True)
         excluded_count = before - len(df)
         print(f"Excluded {excluded_count} employee(s): {', '.join(all_exclusions)}")
         print(f"Remaining: {len(df)} employees.")
