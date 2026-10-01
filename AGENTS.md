@@ -1,6 +1,6 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Codex (Codex.ai/code) when working with code in this repository.
 
 ---
 
@@ -14,7 +14,7 @@ Automates bi-weekly workforce performance compliance reports for ~80–90 WebLif
 
 At the start of every session, before doing anything else:
 
-1. Read this file (`CLAUDE.md`)
+1. Read this file (`AGENTS.md`)
 2. Read `data/reference/sla_violation_legend.md` — authoritative threshold logic
 3. Read `data/personnel/personnel_index.md` — authoritative team/role assignments
 4. Check `data/input/` for any new master table CSV files
@@ -35,7 +35,7 @@ scripts/             Python report generation scripts
   utils.py           Shared helpers (working-days, proration) — import from here
 templates/           Jinja2 HTML report templates
 docs/                GitHub Pages source — index.html + all report HTML files
-CLAUDE.md            This file
+AGENTS.md            This file
 ```
 
 **File naming conventions (strictly enforced):**
