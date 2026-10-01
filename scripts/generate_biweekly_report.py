@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 """
 WebLife Ventures — Bi-Weekly Performance Report Generator
 ==========================================================
@@ -39,12 +41,25 @@ prorated_orange = (working_days_in_period / working_days_in_month) × 200
 Working days = Monday–Friday only.
 Note: US holidays and approved time-off are already included in Hubstaff
 Total Worked Hours — no further exclusion is needed here.
+
+Month-End Time Off (--leave)
+----------------------------
+For a full calendar month, pass --leave <TO CSV> (built by build_timeoff_csv.py)
+or an explicit --no-leave. With --leave, Section 2 rows expand to show the
+hours / time-off breakdown and a Section 3 Leave Summary is added.
+    Hours Worked = Total Worked Hours − approved time off
+Unapproved time off is shown but never subtracted. SLA flags are unchanged.
+Use --dry-run to write to a scratch path without touching docs/.
 """
 
 import argparse
+import calendar
+import json
 import os
 import sys
-from datetime import date
+import tempfile
+from collections import defaultdict
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 import pandas as pd
@@ -56,8 +71,7 @@ from utils import (
     get_month_working_days,
     print_threshold_header,
     DOCS_DIR,
-    PERMANENT_EXCLUSIONS,
-    FS_EXCLUSIONS,
+    get_exclusions,
 )
 
 # ---------------------------------------------------------------------------
@@ -366,11 +380,203 @@ def row_severity_class(score: float) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Month-end time off
+# ---------------------------------------------------------------------------
+
+HOURS_PER_DAY = 8.0
+CATEGORY_PAID   = "Paid/Allocated"
+CATEGORY_UNPAID = "Unpaid/Flex"
+
+
+def norm_name(name) -> str:
+    """Lowercase, trim and collapse internal whitespace."""
+    return " ".join(str(name).split()).lower()
+
+
+def is_full_month(start: date, end: date) -> bool:
+    last = calendar.monthrange(start.year, start.month)[1]
+    return (start.day == 1 and end.year == start.year and end.month == start.month
+            and end.day == last)
+
+
+def fmt_h(hours: float) -> str:
+    return f"{hours:.1f}h"
+
+
+def fmt_hd(hours: float) -> str:
+    """'16.0h (2.0d)' — days = hours / 8."""
+    return f"{hours:.1f}h ({hours / HOURS_PER_DAY:.1f}d)"
+
+
+def load_leave(path: Path) -> tuple[pd.DataFrame, str]:
+    """Load the TO CSV and its pull timestamp (from the .meta.json sidecar)."""
+    df = pd.read_csv(path, dtype={"member": str, "policy_name": str, "category": str,
+                                  "status": str, "date": str})
+    required = {"member", "request_id", "policy_name", "category", "status", "date", "hours"}
+    missing = required - set(df.columns)
+    if missing:
+        print(f"ERROR: Time-off CSV is missing columns: {sorted(missing)}", file=sys.stderr)
+        sys.exit(1)
+    bad_status = set(df["status"]) - {"approved", "unapproved"}
+    bad_cat    = set(df["category"]) - {CATEGORY_PAID, CATEGORY_UNPAID}
+    if bad_status or bad_cat:
+        print(f"ERROR: Unexpected status {bad_status or ''} / category {bad_cat or ''} "
+              f"in time-off CSV", file=sys.stderr)
+        sys.exit(1)
+    df["date"] = df["date"].apply(date.fromisoformat)
+    df["hours"] = df["hours"].astype(float)
+    df["norm"] = df["member"].apply(norm_name)
+
+    pulled_at = None
+    meta = Path(str(path) + ".meta.json")
+    if meta.exists():
+        pulled_at = json.loads(meta.read_text(encoding="utf-8")).get("pulled_at")
+    if not pulled_at:
+        pulled_at = datetime.utcfromtimestamp(path.stat().st_mtime).strftime("%Y-%m-%dT%H:%M:%SZ")
+    try:
+        pulled_label = datetime.strptime(pulled_at, "%Y-%m-%dT%H:%M:%SZ").strftime("%Y-%m-%d %H:%M UTC")
+    except ValueError:
+        pulled_label = pulled_at
+    return df, pulled_label
+
+
+def _date_ranges(dates: list[date]) -> list[tuple[date, date]]:
+    """Group sorted dates into runs; a gap made only of weekend days keeps a run going."""
+    runs: list[list[date]] = []
+    for d in sorted(dates):
+        if runs:
+            prev = runs[-1][1]
+            gap = [prev + timedelta(days=i) for i in range(1, (d - prev).days)]
+            if all(g.weekday() >= 5 for g in gap):
+                runs[-1][1] = d
+                continue
+        runs.append([d, d])
+    return [(a, b) for a, b in runs]
+
+
+def _fmt_range(a: date, b: date) -> str:
+    if a == b:
+        return f"{a.strftime('%b')} {a.day}"
+    if a.month == b.month:
+        return f"{a.strftime('%b')} {a.day}–{b.day}"
+    return f"{a.strftime('%b')} {a.day} – {b.strftime('%b')} {b.day}"
+
+
+def build_leave_entries(rows: pd.DataFrame, detail: str) -> list[dict]:
+    """One entry per contiguous run of days from the same request + status."""
+    entries = []
+    for (req_id, status), grp in rows.groupby(["request_id", "status"], sort=False):
+        first = grp.iloc[0]
+        for a, b in _date_ranges(list(grp["date"])):
+            in_run = grp[(grp["date"] >= a) & (grp["date"] <= b)]
+            hours = float(in_run["hours"].sum())
+            entries.append({
+                "policy":      first["policy_name"] if detail == "full" else first["category"],
+                "category":    first["category"],
+                "dates":       _fmt_range(a, b),
+                "sort_key":    a,
+                "hours":       fmt_hd(hours),
+                "status":      status,
+                "status_label": "approved" if status == "approved" else "unapproved · not in total",
+            })
+    entries.sort(key=lambda e: (e["sort_key"], e["policy"]))
+    return entries
+
+
+def member_leave_figures(rows: pd.DataFrame, total_hours: float, detail: str) -> dict:
+    """Per-member figures (plan §5.3)."""
+    approved   = float(rows.loc[rows["status"] == "approved", "hours"].sum())
+    unapproved = float(rows.loc[rows["status"] == "unapproved", "hours"].sum())
+    by_cat = {}
+    for cat in (CATEGORY_PAID, CATEGORY_UNPAID):
+        c = rows[rows["category"] == cat]
+        by_cat[cat] = (float(c.loc[c["status"] == "approved", "hours"].sum()),
+                       float(c.loc[c["status"] == "unapproved", "hours"].sum()))
+    worked = total_hours - approved if not pd.isna(total_hours) else float("nan")
+    return {
+        "approved":       approved,
+        "unapproved":     unapproved,
+        "by_cat":         by_cat,
+        "total_fmt":      fmt_h(total_hours) if not pd.isna(total_hours) else "—",
+        "worked_fmt":     fmt_h(worked) if not pd.isna(worked) else "—",
+        "approved_fmt":   fmt_hd(approved),
+        "unapproved_fmt": fmt_hd(unapproved) if unapproved else "",
+        "over_total":     (not pd.isna(total_hours)) and approved > total_hours + 1e-9,
+        "entries":        build_leave_entries(rows, detail) if len(rows) else [],
+    }
+
+
+def leave_tag(approved: float, unapproved: float) -> str:
+    """Section 2 Time Off tag, e.g. '16.0h' or '11.0h + 8.0h unapproved'."""
+    parts = []
+    if approved:
+        parts.append(fmt_h(approved))
+    if unapproved:
+        parts.append(f"{fmt_h(unapproved)} unapproved")
+    return " + ".join(parts)
+
+
+def leave_cell(approved: float, unapproved: float) -> str:
+    """Section 3 cell, e.g. '16.0h (approved) · 8.0h (unapproved)'."""
+    parts = []
+    if approved:
+        parts.append(f"{fmt_h(approved)} (approved)")
+    if unapproved:
+        parts.append(f"{fmt_h(unapproved)} (unapproved)")
+    return " · ".join(parts)
+
+
+def join_leave(leave_df: pd.DataFrame, df: pd.DataFrame, excluded: list[str]) -> pd.DataFrame:
+    """Match leave rows to the (post-exclusion) master CSV. Stops on unmatched names."""
+    excl = {norm_name(n) for n in excluded}
+    csv_names = set(df["member"].apply(norm_name))
+
+    is_excl = leave_df["norm"].isin(excl)
+    dropped = leave_df[is_excl]
+    if len(dropped):
+        names = sorted(dropped["member"].unique())
+        print(f"Time off: dropped {len(dropped)} row(s) / {dropped['hours'].sum():.1f}h for "
+              f"{len(names)} excluded member(s): {', '.join(names)}")
+    kept = leave_df[~is_excl]
+
+    unmatched = sorted(kept.loc[~kept["norm"].isin(csv_names), "member"].unique())
+    if unmatched:
+        print("ERROR: These time-off members are not excluded and not in the master CSV:",
+              file=sys.stderr)
+        for n in unmatched:
+            print(f"  - {n}", file=sys.stderr)
+        print("Flag these to Aaqib — name mismatch or missing employee. Report NOT written.",
+              file=sys.stderr)
+        sys.exit(1)
+
+    print(f"Time off: matched {kept['norm'].nunique()} member(s), {len(kept)} row(s), "
+          f"{kept['hours'].sum():.1f}h")
+    return kept
+
+
+def build_leave_summary(leave_df: pd.DataFrame, detail: str) -> dict:
+    """Totals strip above Section 3."""
+    def h(cat, status):
+        return float(leave_df[(leave_df["category"] == cat) & (leave_df["status"] == status)]["hours"].sum())
+    cats = [{"name": c, "approved": fmt_h(h(c, "approved")), "unapproved": fmt_h(h(c, "unapproved"))}
+            for c in (CATEGORY_PAID, CATEGORY_UNPAID)]
+    policies = []
+    if detail == "full":
+        for (pol, cat), grp in leave_df.groupby(["policy_name", "category"]):
+            a = float(grp.loc[grp["status"] == "approved", "hours"].sum())
+            u = float(grp.loc[grp["status"] == "unapproved", "hours"].sum())
+            policies.append({"name": pol, "category": cat, "cell": leave_cell(a, u), "total": a + u})
+        policies.sort(key=lambda p: -p["total"])
+    return {"categories": cats, "policies": policies}
+
+
+# ---------------------------------------------------------------------------
 # Report data assembly
 # ---------------------------------------------------------------------------
 
 def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: float,
-                      start: date, end: date) -> dict:
+                      start: date, end: date, leave_df: pd.DataFrame | None = None,
+                      leave_detail: str = "full", leave_pulled: str = "") -> dict:
     """Process all rows and build template context dict."""
 
     rows_scored = []
@@ -419,6 +625,26 @@ def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: fl
             "row_class": row_severity_class(r["score"]),
         })
 
+    leave_enabled = leave_df is not None
+    leave_by_member = {}
+    if leave_enabled:
+        for norm, grp in leave_df.groupby("norm"):
+            leave_by_member[norm] = grp
+    empty_leave = leave_df.iloc[0:0] if leave_enabled else None
+    leave_warnings = []
+    figures_cache = {}
+
+    def figures_for(r):
+        key = norm_name(r["member"])
+        if key not in figures_cache:
+            rows = leave_by_member.get(key, empty_leave)
+            fig = member_leave_figures(rows, r["total_hours"], leave_detail)
+            if fig["over_total"]:
+                leave_warnings.append(f"{r['member']}: approved time off {fig['approved']:.1f}h "
+                                      f"> Total Worked Hours {r['total_hours']:.1f}h")
+            figures_cache[key] = fig
+        return figures_cache[key]
+
     # Section 2: All Hours Violators (below prorated red threshold)
     hours_violators = []
     for r in rows_scored:
@@ -426,16 +652,44 @@ def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: fl
         if not pd.isna(h) and h < prorated_red:
             shortfall = prorated_red - h
             other_flags = fmt_flags_badge(r["red_count"], r["yellow_count"])
-            hours_violators.append({
+            entry = {
                 "member": r["member"],
                 "team": r["team"],
                 "hours_worked": f"{h:.1f}h",
+                "hours_raw": h,
                 "expected_hours": f"{prorated_red:.1f}h",
                 "shortfall": f"{shortfall:.1f}h",
                 "other_flags": other_flags,
-            })
+            }
+            if leave_enabled:
+                fig = figures_for(r)
+                entry["leave"] = fig
+                entry["time_off_tag"] = leave_tag(fig["approved"], fig["unapproved"])
+            hours_violators.append(entry)
     # Sort ascending by hours (worst = least hours first)
-    hours_violators.sort(key=lambda x: float(x["hours_worked"].replace("h", "")))
+    hours_violators.sort(key=lambda x: x["hours_raw"])
+
+    # Section 3: Leave Summary (month-end only)
+    leave_rows = []
+    leave_summary = None
+    if leave_enabled:
+        for r in rows_scored:
+            if norm_name(r["member"]) not in leave_by_member:
+                continue
+            fig = figures_for(r)
+            pa, pu = fig["by_cat"][CATEGORY_PAID]
+            ua, uu = fig["by_cat"][CATEGORY_UNPAID]
+            leave_rows.append({
+                "member":     r["member"],
+                "team":       r["team"],
+                "paid_cell":  leave_cell(pa, pu),
+                "unpaid_cell": leave_cell(ua, uu),
+                "total_cell": leave_cell(fig["approved"], fig["unapproved"]),
+                "total_raw":  fig["approved"] + fig["unapproved"],
+                "leave":      fig,
+            })
+        leave_rows.sort(key=lambda x: (-x["total_raw"], x["member"].lower()))
+        leave_summary = build_leave_summary(leave_df, leave_detail)
 
     period_working_days = count_working_days(start, end)
 
@@ -453,6 +707,14 @@ def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: fl
         "hours_violators": hours_violators,
         "hours_violator_count": len(hours_violators),
         "generated_at": pd.Timestamp.now().strftime("%Y-%m-%d %H:%M"),
+        # Month-end time off
+        "leave_enabled": leave_enabled,
+        "leave_detail": leave_detail,
+        "leave_pulled": leave_pulled,
+        "leave_rows": leave_rows,
+        "leave_count": len(leave_rows),
+        "leave_summary": leave_summary,
+        "leave_warnings": leave_warnings,
         # Threshold reference strip values
         "thresh_activity_red": f"< {ACTIVITY_RED:.0f}%",
         "thresh_activity_yellow": f"< {ACTIVITY_YELLOW:.0f}%",
@@ -483,12 +745,12 @@ def render_report(context: dict) -> str:
 # Output file management
 # ---------------------------------------------------------------------------
 
-def write_report(html: str, start: date, end: date) -> Path:
-    """Write report directly to /docs/. Returns docs_path."""
+def write_report(html: str, start: date, end: date, out_dir: Path = DOCS_DIR) -> Path:
+    """Write report to /docs/ (or out_dir for --dry-run). Returns the path."""
     folder_name = f"{start.isoformat()}_to_{end.isoformat()}"
-    DOCS_DIR.mkdir(parents=True, exist_ok=True)
+    out_dir.mkdir(parents=True, exist_ok=True)
     docs_filename = f"{folder_name}_biweekly_top_violators.html"
-    docs_path = DOCS_DIR / docs_filename
+    docs_path = out_dir / docs_filename
     docs_path.write_text(html, encoding="utf-8")
     return docs_path
 
@@ -514,6 +776,17 @@ def main():
         default="",
         help="Comma-separated member names to exclude (cycle-specific, e.g. new hires in grace period)",
     )
+    leave_group = parser.add_mutually_exclusive_group()
+    leave_group.add_argument("--leave", default=None,
+                             help="Time-off CSV from build_timeoff_csv.py (month-end reports)")
+    leave_group.add_argument("--no-leave", action="store_true",
+                             help="Explicitly skip time off on a full-month report")
+    parser.add_argument("--leave-detail", choices=["full", "category"], default="full",
+                        help="full = show exact Hubstaff policy names; category = Paid/Unpaid only")
+    parser.add_argument("--dry-run", action="store_true",
+                        help="Write HTML to a scratch folder; do not touch docs/ or docs/index.html")
+    parser.add_argument("--dry-run-dir", default=None,
+                        help="Scratch folder for --dry-run (default: system temp dir)")
     args = parser.parse_args()
 
     start = date.fromisoformat(args.start)
@@ -523,6 +796,29 @@ def main():
     if not csv_path.exists():
         print(f"ERROR: Input file not found: {csv_path}", file=sys.stderr)
         sys.exit(1)
+
+    # Month-end guard: a full calendar month must say whether time off is included
+    if is_full_month(start, end) and not args.leave and not args.no_leave:
+        print(f"ERROR: {start} to {end} is a full calendar month (month-end report).\n"
+              f"       Pass --leave data/input/timeoff/TO-{start}_to_{end}.csv "
+              f"(build it with scripts/build_timeoff_csv.py),\n"
+              f"       or --no-leave to generate it without the time-off breakdown.",
+              file=sys.stderr)
+        sys.exit(2)
+
+    leave_df = None
+    leave_pulled = ""
+    if args.leave:
+        leave_path = Path(args.leave)
+        if not leave_path.exists():
+            print(f"ERROR: Time-off CSV not found: {leave_path}", file=sys.stderr)
+            sys.exit(1)
+        leave_df, leave_pulled = load_leave(leave_path)
+        outside = leave_df[(leave_df["date"] < start) | (leave_df["date"] > end)]
+        if len(outside):
+            print(f"ERROR: {len(outside)} time-off row(s) fall outside {start} to {end} — "
+                  f"wrong TO CSV for this period?", file=sys.stderr)
+            sys.exit(1)
 
     # --- Step 1: Calculate prorated thresholds ---
     prorated_red, prorated_orange = calculate_prorated_thresholds(start, end)
@@ -543,7 +839,7 @@ def main():
     # Cycle-specific exclusions passed via --exclude
     cycle_exclusions = [n.strip() for n in args.exclude.split(",") if n.strip()]
 
-    all_exclusions = PERMANENT_EXCLUSIONS + FS_EXCLUSIONS + cycle_exclusions
+    all_exclusions = get_exclusions(start) + cycle_exclusions
     if all_exclusions:
         before = len(df)
         _excl_set = set(n.lower().strip() for n in all_exclusions)
@@ -552,15 +848,32 @@ def main():
         print(f"Excluded {excluded_count} employee(s): {', '.join(all_exclusions)}")
         print(f"Remaining: {len(df)} employees.")
 
+    if leave_df is not None:
+        leave_df = join_leave(leave_df, df, all_exclusions)
+
     # --- Step 3: Build report data ---
-    context = build_report_data(df, prorated_red, prorated_orange, start, end)
+    context = build_report_data(df, prorated_red, prorated_orange, start, end,
+                                leave_df=leave_df, leave_detail=args.leave_detail,
+                                leave_pulled=leave_pulled)
     print(f"Employees flagged: {context['total_flagged']} / {context['total_employees']}")
     print(f"Hours violators:   {context['hours_violator_count']}")
+    if context["leave_enabled"]:
+        print(f"Leave summary:     {context['leave_count']} member(s) with time off "
+              f"(as of {leave_pulled}, detail={args.leave_detail})")
+        for w in context["leave_warnings"]:
+            print(f"WARNING: {w} — contradicts 'Total includes approved time off'")
 
     # --- Step 4: Render HTML ---
     html = render_report(context)
 
     # --- Step 5: Write output files ---
+    if args.dry_run:
+        out_dir = Path(args.dry_run_dir) if args.dry_run_dir else Path(tempfile.gettempdir()) / "hubstaff-dryrun"
+        path = write_report(html, start, end, out_dir)
+        print(f"DRY RUN — report written to: {path}")
+        print("docs/ and docs/index.html NOT modified.")
+        return
+
     docs_path = write_report(html, start, end)
     print(f"Report written:    {docs_path}")
 

@@ -459,10 +459,116 @@
       .stats-row { grid-template-columns: 1fr 1fr; }
       .header-meta { gap: 16px; }
     }
-  </style>
+{% if leave_enabled %}
+    /* ------------------------------------------------------------------ */
+    /* Month-end time off — expandable rows                                 */
+    /* ------------------------------------------------------------------ */
+    .section-tools { margin-left: auto; }
+    .toggle-all-btn {
+      background: #fff; border: 1px solid #cbd5e1; color: #1d4ed8;
+      font-size: 0.74rem; font-weight: 700; padding: 4px 12px;
+      border-radius: 6px; cursor: pointer;
+    }
+    .toggle-all-btn:hover { background: #eff6ff; }
+    .toggle-all-btn:focus-visible, tr.expandable:focus-visible { outline: 2px solid #1d4ed8; outline-offset: -2px; }
+
+    tr.expandable { cursor: pointer; }
+    tr.expandable td.member-name::before {
+      content: '▸'; display: inline-block; width: 14px; color: #94a3b8;
+      transition: transform .15s;
+    }
+    tr.expandable[aria-expanded="true"] td.member-name::before { transform: rotate(90deg); }
+
+    tr.detail-row { background: #f8fafc !important; border-left: 3px solid #cbd5e1; }
+    tr.detail-row > td { padding: 14px 18px 18px 32px; white-space: normal; }
+
+    .leave-tag {
+      display: inline-block; background: #ecfeff; color: #0e7490;
+      font-size: 0.74rem; font-weight: 700; padding: 2px 9px; border-radius: 20px;
+    }
+    .leave-tag.unapproved-only { background: #f1f5f9; color: #475569; }
+
+    .figures { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+    .figure {
+      background: #fff; border: 1px solid #e2e8f0; border-radius: 8px;
+      padding: 8px 14px; min-width: 150px;
+    }
+    .figure .f-label { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #94a3b8; }
+    .figure .f-value { font-size: 1.05rem; font-weight: 800; color: #111827; }
+    .figure .f-sub { font-size: 0.7rem; color: #6b7280; }
+    .figure-op { align-self: center; font-weight: 800; color: #94a3b8; }
+    .figure.warn { border-color: #f59e0b; background: #fffbeb; }
+
+    table.leave-entries { background: transparent; font-size: 0.8rem; width: auto; min-width: 60%; }
+    table.leave-entries th { background: none; padding: 4px 12px 4px 0; font-size: 0.66rem; }
+    table.leave-entries td { padding: 4px 12px 4px 0; white-space: nowrap; border: none; }
+    table.leave-entries tr { border: none; }
+    .status-approved { color: #15803d; font-weight: 600; }
+    .status-unapproved { color: #64748b; font-style: italic; }
+    .no-leave { font-size: 0.8rem; color: #6b7280; }
+
+    .leave-strip {
+      background: #fff; border-radius: 10px; padding: 14px 20px; margin-bottom: 14px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      display: flex; flex-wrap: wrap; gap: 14px 36px;
+    }
+    .leave-strip .ls-block .ls-label { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #9ca3af; margin-bottom: 4px; }
+    .leave-strip .ls-cat { font-size: 0.82rem; margin-bottom: 2px; }
+    .leave-strip .ls-cat strong { display: inline-block; min-width: 112px; }
+    .leave-strip table { width: auto; background: transparent; font-size: 0.78rem; }
+    .leave-strip td { padding: 2px 14px 2px 0; border: none; white-space: nowrap; }
+    .leave-strip tr { border: none; }
+    .pulled-at { font-size: 0.74rem; color: #6b7280; font-weight: 600; }
+
+    @media print {
+      .back-nav, .toggle-all-btn { display: none !important; }
+      tr.detail-row[hidden] { display: table-row !important; }
+      tr.expandable td.member-name::before { content: ''; width: 0; }
+      .page-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+{% endif %}  </style>
 </head>
 <body>
-<div class="page-wrap">
+{% if leave_enabled %}{% macro leave_panel(l, detail) -%}
+<div class="figures">
+  <div class="figure{% if l.over_total %} warn{% endif %}">
+    <div class="f-label">Total Hours (Hubstaff)</div>
+    <div class="f-value">{% if l.over_total %}⚠️ {% endif %}{{ l.total_fmt }}</div>
+    <div class="f-sub">includes approved time off</div>
+  </div>
+  <span class="figure-op">=</span>
+  <div class="figure">
+    <div class="f-label">Hours Worked</div>
+    <div class="f-value">{{ l.worked_fmt }}</div>
+    <div class="f-sub">total − approved time off</div>
+  </div>
+  <span class="figure-op">+</span>
+  <div class="figure">
+    <div class="f-label">Time Off (approved)</div>
+    <div class="f-value">{{ l.approved_fmt }}</div>
+    <div class="f-sub">{% if l.unapproved %}+ {{ l.unapproved_fmt }} unapproved, not in total{% else %}&nbsp;{% endif %}</div>
+  </div>
+</div>
+{% if l.over_total %}<p class="no-leave" style="color:#b45309;">⚠️ Approved time off is larger than Total Hours — check this member's Hubstaff record.</p>{% endif %}
+{% if l.entries %}
+<table class="leave-entries">
+  <thead><tr><th>{% if detail == 'full' %}Policy{% else %}Type{% endif %}</th>{% if detail == 'full' %}<th>Category</th>{% endif %}<th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
+  <tbody>
+  {% for e in l.entries %}
+    <tr>
+      <td>{{ e.policy }}</td>{% if detail == 'full' %}<td>{{ e.category }}</td>{% endif %}
+      <td>{{ e.dates }}</td>
+      <td>{{ e.hours }}</td>
+      <td class="status-{{ e.status }}">{{ e.status_label }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="no-leave">No time off recorded in Hubstaff for this period.</p>
+{% endif %}
+{%- endmacro %}
+{% endif %}<div class="page-wrap">
 
   <div class="back-nav"><a href="index.html">&#8592; Performance Reports</a></div>
 
@@ -629,11 +735,12 @@
     <!-- ================================================================ -->
     <!-- Section 2 — Hours Violators                                       -->
     <!-- ================================================================ -->
-    <div class="section-block">
+    <div class="section-block"{% if leave_enabled %} id="s2"{% endif %}>
       <div class="section-title-row">
         <div class="section-num">2</div>
         <h2>Hours Violators</h2>
-        <span class="count-pill">{{ hours_violator_count }} employees</span>
+        <span class="count-pill">{{ hours_violator_count }} employees</span>{% if leave_enabled and hours_violators %}
+        <span class="section-tools"><button type="button" class="toggle-all-btn" data-section="s2">Expand all</button></span>{% endif %}
       </div>
       <p class="section-note">
         All employees below the prorated hours threshold. Sorted lowest hours first.
@@ -647,7 +754,39 @@
         </span>
       </div>
 
-      {% if hours_violators %}
+      {% if hours_violators %}{% if leave_enabled %}
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th>Team</th>
+              <th class="center">Total Hours</th>
+              <th class="center">Expected</th>
+              <th class="center">Shortfall</th>
+              <th class="center">Time Off</th>
+              <th class="center">Other Flags</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in hours_violators %}
+            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="hv-{{ loop.index }}">
+              <td class="member-name">{{ row.member }}</td>
+              <td class="team-name" title="{{ row.team }}">{{ row.team }}</td>
+              <td class="center">🔴 {{ row.hours_worked }}{% if row.leave.over_total %} ⚠️{% endif %}</td>
+              <td class="center" style="color:#6b7280;">{{ row.expected_hours }}</td>
+              <td class="shortfall">–{{ row.shortfall }}</td>
+              <td class="center">{% if row.time_off_tag %}<span class="leave-tag{% if not row.leave.approved %} unapproved-only{% endif %}">{{ row.time_off_tag }}</span>{% endif %}</td>
+              <td class="flags-cell">{{ row.other_flags }}</td>
+            </tr>
+            <tr class="detail-row" id="hv-{{ loop.index }}" hidden>
+              <td colspan="7">{{ leave_panel(row.leave, leave_detail) }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
       <div class="table-wrapper">
         <table>
           <thead>
@@ -674,14 +813,85 @@
           </tbody>
         </table>
       </div>
-      {% else %}
+{% endif %}      {% else %}
       <div class="empty-state">
         All employees met the {{ prorated_red }} threshold this period.
       </div>
       {% endif %}
     </div>
 
-  </div><!-- /content -->
+{% if leave_enabled %}
+    <!-- ================================================================ -->
+    <!-- Section 3 — Leave Summary                                         -->
+    <!-- ================================================================ -->
+    <div class="section-block" id="s3">
+      <div class="section-title-row">
+        <div class="section-num">3</div>
+        <h2>Leave Summary</h2>
+        <span class="count-pill">{{ leave_count }} employees</span>
+        <span class="pulled-at">Time off as of {{ leave_pulled }}</span>{% if leave_rows %}
+        <span class="section-tools"><button type="button" class="toggle-all-btn" data-section="s3">Expand all</button></span>{% endif %}
+      </div>
+      <p class="section-note">
+        Everyone with time off in Hubstaff this period, approved or unapproved. Sorted by total time off.
+        Total Hours already include approved time off; unapproved time off is shown but is not in the total.
+        Hours flags are unchanged.
+      </p>
+
+      <div class="leave-strip">
+        <div class="ls-block">
+          <div class="ls-label">Totals by category</div>
+          {% for c in leave_summary.categories %}
+          <div class="ls-cat"><strong>{{ c.name }}</strong> {{ c.approved }} approved · {{ c.unapproved }} unapproved</div>
+          {% endfor %}
+        </div>
+        {% if leave_summary.policies %}
+        <div class="ls-block">
+          <div class="ls-label">By Hubstaff policy</div>
+          <table>
+            <tbody>
+            {% for p in leave_summary.policies %}
+              <tr><td>{{ p.name }}</td><td style="color:#6b7280;">{{ p.category }}</td><td>{{ p.cell }}</td></tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% endif %}
+      </div>
+
+      {% if leave_rows %}
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th>Team</th>
+              <th class="center">Paid/Allocated</th>
+              <th class="center">Unpaid/Flex</th>
+              <th class="center">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in leave_rows %}
+            <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-{{ loop.index }}">
+              <td class="member-name">{{ row.member }}{% if row.leave.over_total %} ⚠️{% endif %}</td>
+              <td class="team-name" title="{{ row.team }}">{{ row.team }}</td>
+              <td class="center">{{ row.paid_cell }}</td>
+              <td class="center">{{ row.unpaid_cell }}</td>
+              <td class="center"><strong>{{ row.total_cell }}</strong></td>
+            </tr>
+            <tr class="detail-row" id="ls-{{ loop.index }}" hidden>
+              <td colspan="5">{{ leave_panel(row.leave, leave_detail) }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="empty-state">No time off recorded in Hubstaff for this period.</div>
+      {% endif %}
+    </div>
+{% endif %}  </div><!-- /content -->
 
   <!-- ================================================================== -->
   <!-- Footer                                                               -->
@@ -696,5 +906,41 @@
   </div>
 
 </div><!-- /page-wrap -->
-</body>
+{% if leave_enabled %}
+<script>
+(function () {
+  function setRow(tr, open) {
+    var d = document.getElementById(tr.getAttribute('aria-controls'));
+    if (!d) return;
+    d.hidden = !open;
+    tr.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  function syncButton(section) {
+    var btn = document.querySelector('.toggle-all-btn[data-section="' + section.id + '"]');
+    if (!btn) return;
+    var rows = section.querySelectorAll('tr.expandable');
+    var allOpen = rows.length && Array.prototype.every.call(rows, function (r) {
+      return r.getAttribute('aria-expanded') === 'true';
+    });
+    btn.textContent = allOpen ? 'Collapse all' : 'Expand all';
+  }
+  document.querySelectorAll('tr.expandable').forEach(function (tr) {
+    var section = tr.closest('.section-block');
+    function toggle() { setRow(tr, tr.getAttribute('aria-expanded') !== 'true'); syncButton(section); }
+    tr.addEventListener('click', toggle);
+    tr.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') { e.preventDefault(); toggle(); }
+    });
+  });
+  document.querySelectorAll('.toggle-all-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var section = document.getElementById(btn.getAttribute('data-section'));
+      var open = btn.textContent.trim() === 'Expand all';
+      section.querySelectorAll('tr.expandable').forEach(function (tr) { setRow(tr, open); });
+      syncButton(section);
+    });
+  });
+})();
+</script>
+{% endif %}</body>
 </html>

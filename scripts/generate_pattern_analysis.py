@@ -51,12 +51,12 @@ from utils import (
     ACTIVITY_RED, ACTIVITY_YELLOW,
     BREAK_RED, BREAK_YELLOW,
     DOCS_DIR,
-    FS_EXCLUSIONS,
     LOW20_RED, LOW20_YELLOW,
     LOW30_RED, LOW30_YELLOW,
     MANUAL_RED, MANUAL_YELLOW,
     PERMANENT_EXCLUSIONS,
     calculate_prorated_thresholds,
+    get_exclusions,
     load_master_table,
 )
 
@@ -225,13 +225,14 @@ def load_all_months(
     csv_paths: list[Path],
     labels: list[str],
     sample: bool,
+    quarter_start: date,
 ) -> tuple[dict, list[tuple[float, float]]]:
     """
     Returns:
         employee_month_data: {norm_name: {label: row_series, "display": name, "team": team}}
         thresholds: [(prorated_red, prorated_orange), ...]  per month
     """
-    all_exclusions = set(n.lower() for n in PERMANENT_EXCLUSIONS + FS_EXCLUSIONS)
+    all_exclusions = set(n.lower() for n in get_exclusions(quarter_start))
     sample_lower   = set(n.lower() for n in SAMPLE_EMPLOYEES) if sample else None
 
     employee_month_data: dict = {}
@@ -545,7 +546,7 @@ def main():
         print("MODE: Sample employees only")
     print("=" * 60)
 
-    employee_month_data, thresholds = load_all_months(csv_paths, args.labels, args.sample)
+    employee_month_data, thresholds = load_all_months(csv_paths, args.labels, args.sample, start)
     print(f"Employees loaded:  {len(employee_month_data)}")
     for label, (pr, po) in zip(args.labels, thresholds):
         print(f"  {label}: red < {pr}h | orange ≥ {po}h")

@@ -29,6 +29,9 @@ data/input/
   monthly/           Full calendar month CSVs      → HS-YYYY-MM-master.csv
   biweekly/          Partial/bi-weekly period CSVs → HS-YYYY-MM-DD_to_YYYY-MM-DD.csv
                                                      CE-YYYY-MM-DD_to_YYYY-MM-DD.csv
+  timeoff/           Month-end time off            → TO-YYYY-MM-DD_to_YYYY-MM-DD.csv (+ .meta.json)
+    raw/             Raw Hubstaff MCP JSON         → TO-RAW-YYYY-MM-DD_to_YYYY-MM-DD_<part>.json
+                     (gitignored — contains free-text leave reasons; never commit)
 data/personnel/      Personnel Index — authoritative role/team source
 data/reference/      SLA thresholds and violation legend
 scripts/             Python report generation scripts
@@ -46,6 +49,8 @@ AGENTS.md            This file
 | Hubstaff full month | `HS-YYYY-MM-master.csv` | `HS-2026-03-master.csv` |
 | Hubstaff bi-weekly | `HS-YYYY-MM-DD_to_YYYY-MM-DD.csv` | `HS-2026-03-01_to_2026-03-24.csv` |
 | Centrifuse Engineers (CE) — legacy TMetric, pre-Sep 2026 only | `CE-YYYY-MM-DD_to_YYYY-MM-DD.csv` | `CE-2026-05-01_to_2026-05-19.csv` |
+| Time off (per-day, built by script) | `timeoff/TO-YYYY-MM-DD_to_YYYY-MM-DD.csv` | `timeoff/TO-2026-09-01_to_2026-09-30.csv` |
+| Time off raw MCP pull | `timeoff/raw/TO-RAW-YYYY-MM-DD_to_YYYY-MM-DD_<part>.json` | `..._policies.json`, `..._requests_p1.json` |
 
 *HTML outputs (`docs/`):*
 | Type | Format | Example |
@@ -73,6 +78,30 @@ When asked to "generate the bi-weekly report for [date range]":
 5. Push to GitHub
 
 If any data anomaly is detected (unexpected columns, missing data, parse errors), flag it before finalising.
+
+---
+
+## Month-End Workflow (full calendar month, with time off)
+
+A full-month run (`--start` = 1st, `--end` = last day) **must** pass `--leave <TO CSV>` or an explicit `--no-leave` — the script exits otherwise.
+
+1. Confirm `data/input/monthly/HS-YYYY-MM-master.csv` exists.
+2. Pull time off from the Hubstaff MCP (`list_organizations` → org id, then `call_endpoint`):
+   - `get_organizations_organization_id_time_off_policies` → save as `data/input/timeoff/raw/TO-RAW-<start>_to_<end>_policies.json`
+   - `get_organizations_organization_id_time_off_requests` with `starts_at: {start: <start − 62 days>T00:00:00Z, stop: <end + 1 day>T00:00:00Z}`, `include: ["users","time_off_policies"]`, `page_limit: 500` → `..._requests_p1.json` (page with `page_start_id` if a `pagination` object comes back or exactly 500 rows return)
+   - Large responses spill to a tool-results file — `cp` it byte-for-byte. Never retype JSON.
+3. `python scripts/build_timeoff_csv.py --raw data/input/timeoff/raw/TO-RAW-<start>_to_<end>_*.json --start <start> --end <end> --out data/input/timeoff/TO-<start>_to_<end>.csv` — review every WARN/ERROR with Aaqib before going on.
+4. `python scripts/generate_biweekly_report.py --input data/input/monthly/HS-YYYY-MM-master.csv --start YYYY-MM-01 --end YYYY-MM-DD --leave data/input/timeoff/TO-YYYY-MM-01_to_YYYY-MM-DD.csv --dry-run` and check it.
+5. Re-run without `--dry-run`.
+6. Commit `Report: Bi-Weekly YYYY-MM-01 to YYYY-MM-DD` and push.
+
+**Time-off rules:**
+- Two categories from the **policy-level** `paid` flag (never the request-level one): Paid/Allocated and Unpaid/Flex. The exact Hubstaff policy name is always shown (unless `--leave-detail category`).
+- Unapproved (submitted) requests are shown and labelled `(unapproved)`; denied/cancelled are dropped.
+- `Total Worked Hours` already includes approved time off → **Hours Worked = Total − approved time off**. Unapproved is never subtracted. SLA flags are unchanged.
+- Leave messages/reasons are never written to the TO CSV, the report or any committed file.
+- Time-off names that are not excluded and not in the master CSV stop the run — flag them to Aaqib, don't guess.
+- `--leave-detail full|category` (default `full`; decided 2026-10-02 to publish exact policy names for now).
 
 ---
 
@@ -138,7 +167,7 @@ The personnel index (`data/personnel/personnel_index.md`) is used for:
 
 If a name in the CSV does not match anyone in the index, flag it to Aaqib before finalising — do not silently skip or guess.
 
-**Centrifuse Engineers (CE):** CE track in Hubstaff (moved from TMetric in mid-August 2026). For report periods starting 2026-09-01 or later, include CE in the whole Hubstaff report like any other team — only contractors and offboarded staff are excluded. Periods before September 2026 keep the old exclusion (`FS_EXCLUSIONS`) and are not regenerated. The separate CE report is retired from September 2026. Note: until `plans/month-end-leave-breakdown-plan.md` §6 is built, the code still applies `FS_EXCLUSIONS` to every period.
+**Centrifuse Engineers (CE):** CE track in Hubstaff (moved from TMetric in mid-August 2026). For report periods starting 2026-09-01 or later, include CE in the whole Hubstaff report like any other team — only contractors and offboarded staff are excluded. Periods before September 2026 keep the old exclusion (`FS_EXCLUSIONS`) and are not regenerated. The separate CE report is retired from September 2026. In code: `get_exclusions(start)` in `utils.py` returns `PERMANENT_EXCLUSIONS`, plus `FS_EXCLUSIONS` only when `start < CE_HUBSTAFF_START` (2026-09-01). All report scripts use it — never add `FS_EXCLUSIONS` directly.
 
 ---
 
@@ -161,7 +190,8 @@ If a name in the CSV does not match anyone in the index, flag it to Aaqib before
 
 **Permanent exclusions (always applied automatically by the script):**
 - **Contractors** — all personnel listed under the Contractors section of `data/personnel/personnel_index.md`
-- **Resigned personnel** — add to the `PERMANENT_EXCLUSIONS` list in `generate_biweekly_report.py` as they are confirmed offboarded
+- **Resigned personnel** — add to the `PERMANENT_EXCLUSIONS` list in `scripts/utils.py` as they are confirmed offboarded (offboarded CE go here too, not in `FS_EXCLUSIONS`)
+- **Centrifuse Engineers before 2026-09-01** — `FS_EXCLUSIONS`, applied by `get_exclusions(start)` only for periods starting before September 2026
 
 **Cycle-specific exclusions** (new hires in grace period, etc.) are passed via `--exclude "Name 1,Name 2"` after the initial report is generated.
 
@@ -205,7 +235,8 @@ Score = sum of (base × multiplier) across all flags
 | Script | Purpose |
 |--------|---------|
 | `scripts/utils.py` | Shared helpers — working-days, proration, SLA thresholds, flag evaluation, exclusion lists. Import from here, never duplicate. |
-| `scripts/generate_biweekly_report.py` | Hubstaff bi-weekly report generation |
+| `scripts/generate_biweekly_report.py` | Hubstaff bi-weekly + month-end report generation (`--leave`, `--no-leave`, `--leave-detail`, `--dry-run`) |
+| `scripts/build_timeoff_csv.py` | Raw Hubstaff time-off JSON → per-day TO CSV for the month-end report |
 | `scripts/generate_ce_report.py` | Legacy — Centrifuse Engineers TMetric report (periods before Sep 2026 only; retired) |
 | `scripts/generate_pattern_analysis.py` | Quarterly repeated pattern analysis — fully implemented |
 | `scripts/update_index.py` | Regenerate `docs/index.html` from all reports in `/docs/` |
@@ -223,6 +254,10 @@ Ranked by severity score. Columns: Rank, Member, Team, Activity %, Hours, Break 
 
 **Section 2 — Hours Violators**
 All employees below the prorated hours threshold. Sorted ascending (worst first). Columns: Member, Team, Hours Worked, Expected Hours, Shortfall, Other Flags.
+Month-end (`--leave`): the hours column becomes Total Hours, a Time Off tag column is added, and each row expands to show Total Hours (Hubstaff) = Hours Worked + Time Off (approved) plus the leave entries.
+
+**Section 3 — Leave Summary (month-end only, `--leave`)**
+Everyone with time off (approved or unapproved), sorted by total time off. Columns: Member, Team, Paid/Allocated, Unpaid/Flex, Total. Totals strip by category and by exact policy; header shows "Time off as of <pull timestamp>". Rows expand like Section 2; Expand all / Collapse all per section; print expands everything.
 
 ---
 
@@ -245,7 +280,7 @@ python scripts/generate_peer_comparison.py \
 > "Generate the peer comparison report for March 2026"
 
 **Peer Comparison — Key Rules:**
-- 17 hardcoded peer groups defined in `scripts/generate_peer_comparison.py` → `PEER_GROUPS`
+- 18 hardcoded peer groups defined in `scripts/generate_peer_comparison.py` → `PEER_GROUPS`
 - Groups are defined by role/function, NOT Hubstaff team labels
 - Manager listed first in each group table with blue `Manager` badge
 - Variance column = employee Activity % minus team average Activity %
@@ -253,7 +288,7 @@ python scripts/generate_peer_comparison.py \
 - New hires flagged with green `New Hire` badge (list in `NEW_HIRES` set in script)
 - Team Average row at bottom of each table — dark charcoal background for visibility
 - Pill-styled metric cells: red/orange/yellow filled for violations, gray for clean
-- CE members excluded (they have separate CE reports)
+- CE members: excluded before September 2026 (separate CE reports); from 2026-09-01 they get their own peer group (approved by Aaqib)
 - Contractors excluded (PERMANENT_EXCLUSIONS in utils.py)
 - **To update peer groups** (new hires, team changes, resignations): edit `PEER_GROUPS` list in `generate_peer_comparison.py`
 

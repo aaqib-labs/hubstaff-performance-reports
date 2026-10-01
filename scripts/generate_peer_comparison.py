@@ -76,12 +76,33 @@ PEER_GROUPS = [
             "Thushan Fernando",
             "Hasala Jayasuriya",
             "Upeksha Liyanage",
-            "Nishantha Hettiarachchi",
             "Muhammad Usman",
             "Chathuranga Weerakoon",
             "Kianna Xue",
+        ],
+    },
+    {
+        # CE tracked in Hubstaff from 2026-09-01 (moved off TMetric mid-Aug 2026).
+        # Group approved by Aaqib 2026-10-02. Matt Fuster is header label only —
+        # he logs little Hubstaff time, so he's kept out of the team averages.
+        "id":            "centrifuse_engineers",
+        "name":          "Centrifuse Engineers",
+        "team_code":     "FS-OPS",
+        "manager":       None,
+        "manager_label": "Matt Fuster",
+        "members": [
+            "Nishantha Hettiarachchi",
+            "Ashan Perera",
+            "Devanga Palliyaguru",
+            "Dhananjana Rathnayake",
+            "Dulan Jayawickrama",
+            "Gayan Keppetipola",
+            "Hasan Zarook",
+            "Isura Rajapakse",
+            "Pubudu Ekanayake",
             "Saumya Sewwandi",
             "Tharusha Kulasinghe",
+            "Yahal Yahampath",
         ],
     },
     {
@@ -128,7 +149,7 @@ PEER_GROUPS = [
         "manager_label": None,
         "members": [
             "Shannon Woods",
-            "Meredith Goostree",
+            "Meredith Sands",       # Hubstaff name changed from Meredith Goostree (Sep 2026)
             "Jesus Corral",
             "Monica Lopez",
         ],
@@ -239,7 +260,7 @@ PEER_GROUPS = [
         "manager_label": None,
         "members": [
             "Saduka Sachintha",
-            "Hafiz Mudasir",
+            "Mudasir Amjad",        # Hubstaff name changed from Hafiz Mudasir (Sep 2026)
             "shenali edirisinghe",
             "Prajwal Kumar",
             "Sasindee Wijeratne",

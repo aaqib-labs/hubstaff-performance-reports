@@ -14,3 +14,7 @@ __pycache__/
 
 # Local planning docs — contain staff names and leave data, never commit (public repo)
 plans/
+
+# Raw Hubstaff time-off pulls — contain free-text leave reasons (incl. medical). Never commit.
+data/input/timeoff/raw/
+data/input/**/*.json

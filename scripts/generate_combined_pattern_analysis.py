@@ -42,12 +42,12 @@ from utils import (
     ACTIVITY_RED, ACTIVITY_YELLOW,
     BREAK_RED, BREAK_YELLOW,
     DOCS_DIR,
-    FS_EXCLUSIONS,
     LOW20_RED, LOW20_YELLOW,
     LOW30_RED, LOW30_YELLOW,
     MANUAL_RED, MANUAL_YELLOW,
     PERMANENT_EXCLUSIONS,
     calculate_prorated_thresholds,
+    get_exclusions,
     load_master_table,
 )
 
@@ -176,8 +176,9 @@ def load_hs_months(
     labels: list[str],
     employee_data: dict,
     thresholds: list,
+    quarter_start: date,
 ) -> None:
-    all_exclusions = set(n.lower() for n in PERMANENT_EXCLUSIONS + FS_EXCLUSIONS)
+    all_exclusions = set(n.lower() for n in get_exclusions(quarter_start))
 
     for csv_path, label in zip(csv_paths, labels):
         month_start, month_end = _month_dates(csv_path)
@@ -532,7 +533,7 @@ def main():
         pr, po = calculate_prorated_thresholds(month_start, month_end)
         thresholds.append((pr, po))
 
-    load_hs_months(hs_paths, args.labels, employee_data, [])
+    load_hs_months(hs_paths, args.labels, employee_data, [], start)
     hs_count = len(employee_data)
     print(f"HS employees loaded:   {hs_count}")
 

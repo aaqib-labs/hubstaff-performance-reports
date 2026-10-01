@@ -74,9 +74,17 @@ PERMANENT_EXCLUSIONS = [
     "Umair Ali",           # Withdrawn 2026-07
     "Dewmi Hathurusingha", # Resigned 2026-07
     "Kristine Anne Dela Cruz", # Terminated 2026-08
+    "Richard Fernando",     # CE — terminated 2026-07
+    "Ruwanya Wijesuriya",   # CE — resigned 2026-07
+    "Thimal Caldera",       # CE — resigned (confirmed 2026-10-02)
+    "Suleman",              # CE — resigned (confirmed 2026-10-02)
+    "Suleman Khan",
 ]
 
-# Friday Solutions / Centrifuse Engineers tracked via TMetric — excluded from Hubstaff reports
+# Centrifuse Engineers (CE) — tracked via TMetric until mid-August 2026, so they
+# were kept out of Hubstaff reports. Applied ONLY to periods starting before
+# CE_HUBSTAFF_START (see get_exclusions) so older reports stay reproducible.
+# Offboarded CE live in PERMANENT_EXCLUSIONS so they stay excluded afterwards.
 FS_EXCLUSIONS = [
     "Ashan Perera",          # Sole-team CE, added 2026-08
     "Pubudu Ekanayake",      # Sole-team CE, added 2026-08
@@ -93,6 +101,20 @@ FS_EXCLUSIONS = [
     "Matt Fuster",
     "Matthew Fuster",
 ]
+
+# CE fully tracked in Hubstaff from this date — included in every report section.
+CE_HUBSTAFF_START = date(2026, 9, 1)
+
+
+def get_exclusions(start: date) -> list[str]:
+    """Standing exclusions for a report period starting on `start`.
+
+    PERMANENT_EXCLUSIONS always; FS_EXCLUSIONS only for periods that start
+    before CE_HUBSTAFF_START.
+    """
+    if start < CE_HUBSTAFF_START:
+        return PERMANENT_EXCLUSIONS + FS_EXCLUSIONS
+    return list(PERMANENT_EXCLUSIONS)
 
 
 # ---------------------------------------------------------------------------
