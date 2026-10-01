@@ -488,16 +488,8 @@
     }
     .leave-tag.unapproved-only { background: #f1f5f9; color: #475569; }
 
-    .figures { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
-    .figure {
-      background: #fff; border: 1px solid #e2e8f0; border-radius: 8px;
-      padding: 8px 14px; min-width: 150px;
-    }
-    .figure .f-label { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #94a3b8; }
-    .figure .f-value { font-size: 1.05rem; font-weight: 800; color: #111827; }
-    .figure .f-sub { font-size: 0.7rem; color: #6b7280; }
-    .figure-op { align-self: center; font-weight: 800; color: #94a3b8; }
-    .figure.warn { border-color: #f59e0b; background: #fffbeb; }
+    .leave-note { font-size: 0.82rem; color: #374151; margin-bottom: 10px; }
+    .leave-note.warn { color: #b45309; }
 
     table.leave-entries { background: transparent; font-size: 0.8rem; width: auto; min-width: 60%; }
     table.leave-entries th { background: none; padding: 4px 12px 4px 0; font-size: 0.66rem; }
@@ -530,27 +522,9 @@
 </head>
 <body>
 {% if leave_enabled %}{% macro leave_panel(l, detail) -%}
-<div class="figures">
-  <div class="figure{% if l.over_total %} warn{% endif %}">
-    <div class="f-label">Total Hours (Hubstaff)</div>
-    <div class="f-value">{% if l.over_total %}⚠️ {% endif %}{{ l.total_fmt }}</div>
-    <div class="f-sub">includes approved time off</div>
-  </div>
-  <span class="figure-op">=</span>
-  <div class="figure">
-    <div class="f-label">Hours Worked</div>
-    <div class="f-value">{{ l.worked_fmt }}</div>
-    <div class="f-sub">total − approved time off</div>
-  </div>
-  <span class="figure-op">+</span>
-  <div class="figure">
-    <div class="f-label">Time Off (approved)</div>
-    <div class="f-value">{{ l.approved_fmt }}</div>
-    <div class="f-sub">{% if l.unapproved %}+ {{ l.unapproved_fmt }} unapproved, not in total{% else %}&nbsp;{% endif %}</div>
-  </div>
-</div>
-{% if l.over_total %}<p class="no-leave" style="color:#b45309;">⚠️ Approved time off is larger than Total Hours — check this member's Hubstaff record.</p>{% endif %}
-{% if l.entries %}
+{% if l.over_total %}<p class="leave-note warn">⚠️ Approved time off ({{ l.approved_fmt }}) is more than Total Hours ({{ l.total_fmt }}) — check this member's Hubstaff record.</p>
+{% elif l.approved %}<p class="leave-note">{{ l.total_fmt }} total includes {{ l.approved_fmt }} approved time off → <strong>{{ l.worked_fmt }} actually worked</strong>.</p>
+{% endif %}{% if l.entries %}
 <table class="leave-entries">
   <thead><tr><th>{% if detail == 'full' %}Policy{% else %}Type{% endif %}</th>{% if detail == 'full' %}<th>Category</th>{% endif %}<th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
@@ -743,7 +717,8 @@
         <span class="section-tools"><button type="button" class="toggle-all-btn" data-section="s2">Expand all</button></span>{% endif %}
       </div>
       <p class="section-note">
-        All employees below the prorated hours threshold. Sorted lowest hours first.
+        All employees below the prorated hours threshold. Sorted lowest hours first.{% if leave_enabled %}
+        Click a name to see their time off. Unapproved requests are listed for reference only and are not counted in hours.{% endif %}
       </p>
 
       <div class="threshold-note">
@@ -834,8 +809,7 @@
       </div>
       <p class="section-note">
         Everyone with time off in Hubstaff this period, approved or unapproved. Sorted by total time off.
-        Total Hours already include approved time off; unapproved time off is shown but is not in the total.
-        Hours flags are unchanged.
+        Total Hours already include approved time off. Unapproved requests are listed for reference only and are not counted in anyone's hours.
       </p>
 
       <div class="leave-strip">

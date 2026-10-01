@@ -477,7 +477,7 @@ def build_leave_entries(rows: pd.DataFrame, detail: str) -> list[dict]:
                 "sort_key":    a,
                 "hours":       fmt_hd(hours),
                 "status":      status,
-                "status_label": "approved" if status == "approved" else "unapproved · not in total",
+                "status_label": "Approved" if status == "approved" else "Unapproved",
             })
     entries.sort(key=lambda e: (e["sort_key"], e["policy"]))
     return entries

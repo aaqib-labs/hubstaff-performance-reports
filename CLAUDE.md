@@ -254,7 +254,7 @@ Ranked by severity score. Columns: Rank, Member, Team, Activity %, Hours, Break 
 
 **Section 2 — Hours Violators**
 All employees below the prorated hours threshold. Sorted ascending (worst first). Columns: Member, Team, Hours Worked, Expected Hours, Shortfall, Other Flags.
-Month-end (`--leave`): the hours column becomes Total Hours, a Time Off tag column is added, and each row expands to show Total Hours (Hubstaff) = Hours Worked + Time Off (approved) plus the leave entries.
+Month-end (`--leave`): the hours column becomes Total Hours, a Time Off tag column is added, and each row expands to show the leave entries (policy · category · dates · hours · Approved/Unapproved). Only when there is approved leave, one line is added: "<total> total includes <approved> approved time off → <worked> actually worked". No repeated figure boxes (Aaqib, 2026-10-02).
 
 **Section 3 — Leave Summary (month-end only, `--leave`)**
 Everyone with time off (approved or unapproved), sorted by total time off. Columns: Member, Team, Paid/Allocated, Unpaid/Flex, Total. Totals strip by category and by exact policy; header shows "Time off as of <pull timestamp>". Rows expand like Section 2; Expand all / Collapse all per section; print expands everything.
