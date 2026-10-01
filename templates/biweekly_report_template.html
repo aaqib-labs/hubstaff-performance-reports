@@ -461,79 +461,167 @@
     }
 {% if leave_enabled %}
     /* ------------------------------------------------------------------ */
-    /* Month-end time off — expandable rows                                 */
+    /* Month-end time off                                                   */
     /* ------------------------------------------------------------------ */
-    .section-tools { margin-left: auto; }
-    .toggle-all-btn {
-      background: #fff; border: 1px solid #cbd5e1; color: #1d4ed8;
-      font-size: 0.74rem; font-weight: 700; padding: 4px 12px;
-      border-radius: 6px; cursor: pointer;
+    :root {
+      --paid: #0f766e; --paid-bg: #ccfbf1; --paid-bar: #14b8a6;
+      --unpaid: #6d28d9; --unpaid-bg: #ede9fe; --unpaid-bar: #8b5cf6;
+      --ok: #15803d; --ok-bg: #dcfce7;
+      --pend: #b45309; --pend-bg: #fffbeb;
     }
-    .toggle-all-btn:hover { background: #eff6ff; }
+    .section-tools { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+    .toggle-all-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #1d4ed8; border: none; color: #fff;
+      font-size: 0.74rem; font-weight: 700; padding: 6px 14px 6px 10px;
+      border-radius: 999px; cursor: pointer; box-shadow: 0 1px 2px rgba(29,78,216,.3);
+      transition: background .15s;
+    }
+    .toggle-all-btn:hover { background: #1e40af; }
+    .toggle-all-btn svg { transition: transform .2s; }
+    .toggle-all-btn[aria-pressed="true"] svg { transform: rotate(180deg); }
     .toggle-all-btn:focus-visible, tr.expandable:focus-visible { outline: 2px solid #1d4ed8; outline-offset: -2px; }
 
+    .pulled-at {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 0.72rem; color: #475569; font-weight: 600;
+      background: #f1f5f9; padding: 3px 10px; border-radius: 999px;
+    }
+
+    /* Expandable rows */
     tr.expandable { cursor: pointer; }
-    tr.expandable td.member-name::before {
-      content: '▸'; display: inline-block; width: 14px; color: #94a3b8;
-      transition: transform .15s;
+    tr.expandable:hover .chev { background: #dbeafe; }
+    .chev {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 20px; height: 20px; border-radius: 50%; margin-right: 8px;
+      background: #eff6ff; color: #1d4ed8; vertical-align: -4px;
+      transition: transform .2s, background .15s;
     }
-    tr.expandable[aria-expanded="true"] td.member-name::before { transform: rotate(90deg); }
+    tr.expandable[aria-expanded="true"] .chev { transform: rotate(90deg); background: #1d4ed8; color: #fff; }
+    .chev-spacer { display: inline-block; width: 28px; }
 
-    tr.detail-row { background: #f8fafc !important; border-left: 3px solid #cbd5e1; }
-    tr.detail-row > td { padding: 14px 18px 18px 32px; white-space: normal; }
+    tr.detail-row { background: #f8fafc !important; }
+    tr.detail-row > td { padding: 4px 18px 16px 46px; white-space: normal; }
 
-    .leave-tag {
-      display: inline-block; background: #ecfeff; color: #0e7490;
-      font-size: 0.74rem; font-weight: 700; padding: 2px 9px; border-radius: 20px;
+    /* Chips */
+    .chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 0.73rem; font-weight: 700; padding: 3px 10px;
+      border-radius: 999px; white-space: nowrap; line-height: 1.3;
+      border: 1.5px solid transparent;
     }
-    .leave-tag.unapproved-only { background: #f1f5f9; color: #475569; }
+    .chip .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .chip.off      { background: #e0f2fe; color: #0369a1; }
+    .chip.paid     { background: var(--paid-bg); color: var(--paid); }
+    .chip.unpaid   { background: var(--unpaid-bg); color: var(--unpaid); }
+    .chip.pending  { background: #fff; border-style: dashed; }
+    .chip.off.pending    { color: #64748b; border-color: #94a3b8; }
+    .chip.paid.pending   { border-color: var(--paid-bar); }
+    .chip.unpaid.pending { border-color: var(--unpaid-bar); }
+    .chip-stack { display: inline-flex; flex-wrap: wrap; gap: 4px; justify-content: center; }
 
-    .leave-note { font-size: 0.82rem; color: #374151; margin-bottom: 10px; }
-    .leave-note.warn { color: #b45309; }
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 0.72rem; font-weight: 700; padding: 2px 9px; border-radius: 6px;
+    }
+    .status-pill.approved   { background: var(--ok-bg); color: var(--ok); }
+    .status-pill.unapproved { background: var(--pend-bg); color: var(--pend); border: 1px dashed #f59e0b; }
 
-    table.leave-entries { background: transparent; font-size: 0.8rem; width: auto; min-width: 60%; }
-    table.leave-entries th { background: none; padding: 4px 12px 4px 0; font-size: 0.66rem; }
-    table.leave-entries td { padding: 4px 12px 4px 0; white-space: nowrap; border: none; }
-    table.leave-entries tr { border: none; }
-    .status-approved { color: #15803d; font-weight: 600; }
-    .status-unapproved { color: #64748b; font-style: italic; }
+    /* Detail card */
+    .leave-card {
+      background: #fff; border: 1px solid #e2e8f0; border-radius: 10px;
+      padding: 12px 16px; box-shadow: 0 1px 2px rgba(0,0,0,.04);
+    }
+    .leave-note {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.82rem; color: #0c4a6e; background: #f0f9ff;
+      border-left: 3px solid #0284c7; border-radius: 6px;
+      padding: 8px 12px; margin-bottom: 10px;
+    }
+    .leave-note strong { color: #0c4a6e; }
+    .leave-note.warn { color: #92400e; background: #fffbeb; border-left-color: #f59e0b; }
+    table.leave-entries { background: transparent; font-size: 0.8rem; width: 100%; }
+    table.leave-entries thead tr { background: none; border-bottom: 1px solid #f1f5f9; }
+    table.leave-entries th { padding: 4px 14px 6px 0; font-size: 0.64rem; color: #94a3b8; }
+    table.leave-entries td { padding: 7px 14px 7px 0; white-space: nowrap; }
+    table.leave-entries tbody tr { border-bottom: 1px solid #f8fafc; }
+    table.leave-entries tbody tr:hover { background: transparent !important; }
+    .entry-policy { font-weight: 600; color: #1f2937; }
+    .entry-date { color: #374151; font-variant-numeric: tabular-nums; }
+    .entry-hours strong { color: #111827; }
+    .entry-hours span { color: #94a3b8; margin-left: 4px; font-size: 0.74rem; }
     .no-leave { font-size: 0.8rem; color: #6b7280; }
 
-    .leave-strip {
-      background: #fff; border-radius: 10px; padding: 14px 20px; margin-bottom: 14px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-      display: flex; flex-wrap: wrap; gap: 14px 36px;
+    /* Section 3 totals */
+    .leave-overview { display: grid; grid-template-columns: 260px 1fr; gap: 14px; margin-bottom: 14px; }
+    .cat-cards { display: grid; gap: 12px; }
+    .cat-card {
+      background: #fff; border-radius: 10px; padding: 14px 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.06); border-top: 4px solid var(--c);
     }
-    .leave-strip .ls-block .ls-label { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #9ca3af; margin-bottom: 4px; }
-    .leave-strip .ls-cat { font-size: 0.82rem; margin-bottom: 2px; }
-    .leave-strip .ls-cat strong { display: inline-block; min-width: 112px; }
-    .leave-strip table { width: auto; background: transparent; font-size: 0.78rem; }
-    .leave-strip td { padding: 2px 14px 2px 0; border: none; white-space: nowrap; }
-    .leave-strip tr { border: none; }
-    .pulled-at { font-size: 0.74rem; color: #6b7280; font-weight: 600; }
+    .cat-card.paid   { --c: var(--paid-bar);   --ct: var(--paid); }
+    .cat-card.unpaid { --c: var(--unpaid-bar); --ct: var(--unpaid); }
+    .cat-card .cc-label { font-size: 0.66rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: var(--ct); }
+    .cat-card .cc-value { font-size: 1.6rem; font-weight: 800; letter-spacing: -.02em; color: #111827; line-height: 1.15; margin-top: 2px; }
+    .cat-card .cc-value small { font-size: 0.75rem; font-weight: 600; color: #6b7280; letter-spacing: 0; }
+    .cat-card .cc-sub { font-size: 0.74rem; color: #6b7280; margin: 2px 0 8px; }
+    .bar { display: flex; height: 8px; border-radius: 999px; background: #f1f5f9; overflow: hidden; }
+    .bar .seg-a { background: var(--c); }
+    .bar .seg-u { background: repeating-linear-gradient(45deg, var(--c) 0 3px, #fff 3px 6px); opacity: .75; }
+
+    .policy-card { background: #fff; border-radius: 10px; padding: 14px 18px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+    .policy-card .pc-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+    .policy-card .pc-title { font-size: 0.66rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: #9ca3af; }
+    .legend { display: flex; gap: 12px; font-size: 0.7rem; color: #6b7280; }
+    .legend i { display: inline-block; width: 14px; height: 8px; border-radius: 3px; margin-right: 4px; vertical-align: 0; background: #64748b; }
+    .legend i.u { background: repeating-linear-gradient(45deg, #64748b 0 3px, #fff 3px 6px); border: 1px solid #cbd5e1; }
+    .policy-row { display: grid; grid-template-columns: minmax(200px, 320px) 1fr auto; gap: 12px; align-items: center; padding: 5px 0; }
+    .policy-row.paid   { --c: var(--paid-bar); }
+    .policy-row.unpaid { --c: var(--unpaid-bar); }
+    .policy-row .pr-name { font-size: 0.78rem; color: #1f2937; display: flex; align-items: center; gap: 7px; min-width: 0; }
+    .policy-row .pr-name span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .policy-row .pr-name i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); flex-shrink: 0; }
+    .policy-row .bar { height: 10px; background: transparent; }
+    .policy-row .pr-val { font-size: 0.74rem; color: #374151; white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums; }
+    .policy-row .pr-val em { font-style: normal; color: var(--pend); }
+
+    td.total-cell strong { font-size: 0.9rem; }
+    td.total-cell .tot-u { display: block; font-size: 0.7rem; color: var(--pend); font-weight: 600; }
+    td.total-cell .tot-u.only { font-size: 0.8rem; }
+
+    @media (max-width: 900px) {
+      .leave-overview { grid-template-columns: 1fr; }
+      .cat-cards { grid-template-columns: 1fr 1fr; }
+      .policy-row { grid-template-columns: 1fr auto; }
+      .policy-row .bar { grid-column: 1 / -1; }
+    }
 
     @media print {
       .back-nav, .toggle-all-btn { display: none !important; }
       tr.detail-row[hidden] { display: table-row !important; }
-      tr.expandable td.member-name::before { content: ''; width: 0; }
-      .page-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .chev { display: none; }
+      .page-header, .chip, .status-pill, .bar, .bar *, .cat-card, .leave-note {
+        -webkit-print-color-adjust: exact; print-color-adjust: exact;
+      }
     }
 {% endif %}  </style>
 </head>
 <body>
 {% if leave_enabled %}{% macro leave_panel(l, detail) -%}
-{% if l.over_total %}<p class="leave-note warn">⚠️ Approved time off ({{ l.approved_fmt }}) is more than Total Hours ({{ l.total_fmt }}) — check this member's Hubstaff record.</p>
-{% elif l.approved %}<p class="leave-note">{{ l.total_fmt }} total includes {{ l.approved_fmt }} approved time off → <strong>{{ l.worked_fmt }} actually worked</strong>.</p>
+<div class="leave-card">
+{% if l.over_total %}<div class="leave-note warn">⚠️ <span>Approved time off ({{ l.approved_fmt }}) is more than Total Hours ({{ l.total_fmt }}) — check this member's Hubstaff record.</span></div>
+{% elif l.approved %}<div class="leave-note">🕒 <span>{{ l.total_fmt }} total includes {{ l.approved_fmt }} approved time off → <strong>{{ l.worked_fmt }} actually worked</strong>.</span></div>
 {% endif %}{% if l.entries %}
 <table class="leave-entries">
   <thead><tr><th>{% if detail == 'full' %}Policy{% else %}Type{% endif %}</th>{% if detail == 'full' %}<th>Category</th>{% endif %}<th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   {% for e in l.entries %}
     <tr>
-      <td>{{ e.policy }}</td>{% if detail == 'full' %}<td>{{ e.category }}</td>{% endif %}
-      <td>{{ e.dates }}</td>
-      <td>{{ e.hours }}</td>
-      <td class="status-{{ e.status }}">{{ e.status_label }}</td>
+      <td class="entry-policy">{% if detail == 'full' %}{{ e.policy }}{% else %}<span class="chip {{ 'paid' if e.category == 'Paid/Allocated' else 'unpaid' }}"><span class="dot"></span>{{ e.category }}</span>{% endif %}</td>{% if detail == 'full' %}
+      <td><span class="chip {{ 'paid' if e.category == 'Paid/Allocated' else 'unpaid' }}"><span class="dot"></span>{{ e.category }}</span></td>{% endif %}
+      <td class="entry-date">{{ e.dates }}</td>
+      <td class="entry-hours"><strong>{{ e.hours_h }}</strong><span>{{ e.hours_d }}</span></td>
+      <td>{% if e.status == 'approved' %}<span class="status-pill approved">✓ Approved</span>{% else %}<span class="status-pill unapproved">◷ Unapproved</span>{% endif %}</td>
     </tr>
   {% endfor %}
   </tbody>
@@ -541,6 +629,7 @@
 {% else %}
 <p class="no-leave">No time off recorded in Hubstaff for this period.</p>
 {% endif %}
+</div>
 {%- endmacro %}
 {% endif %}<div class="page-wrap">
 
@@ -714,7 +803,7 @@
         <div class="section-num">2</div>
         <h2>Hours Violators</h2>
         <span class="count-pill">{{ hours_violator_count }} employees</span>{% if leave_enabled and hours_violators %}
-        <span class="section-tools"><button type="button" class="toggle-all-btn" data-section="s2">Expand all</button></span>{% endif %}
+        <span class="section-tools"><button type="button" class="toggle-all-btn" data-section="s2" aria-pressed="false"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-label">Expand all</span></button></span>{% endif %}
       </div>
       <p class="section-note">
         All employees below the prorated hours threshold. Sorted lowest hours first.{% if leave_enabled %}
@@ -745,18 +834,21 @@
           </thead>
           <tbody>
             {% for row in hours_violators %}
-            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="hv-{{ loop.index }}">
-              <td class="member-name">{{ row.member }}</td>
+            {% set has_leave = row.leave.entries|length > 0 %}
+            <tr class="severity-critical{% if has_leave %} expandable{% endif %}"{% if has_leave %} tabindex="0" role="button" aria-expanded="false" aria-controls="hv-{{ loop.index }}"{% endif %}>
+              <td class="member-name">{% if has_leave %}<span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>{% else %}<span class="chev-spacer"></span>{% endif %}{{ row.member }}</td>
               <td class="team-name" title="{{ row.team }}">{{ row.team }}</td>
               <td class="center">🔴 {{ row.hours_worked }}{% if row.leave.over_total %} ⚠️{% endif %}</td>
               <td class="center" style="color:#6b7280;">{{ row.expected_hours }}</td>
               <td class="shortfall">–{{ row.shortfall }}</td>
-              <td class="center">{% if row.time_off_tag %}<span class="leave-tag{% if not row.leave.approved %} unapproved-only{% endif %}">{{ row.time_off_tag }}</span>{% endif %}</td>
+              <td class="center"><span class="chip-stack">{% if row.tag_a %}<span class="chip off"><span class="dot"></span>{{ row.tag_a }} off</span>{% endif %}{% if row.tag_u %}<span class="chip off pending">{{ row.tag_u }} unapproved</span>{% endif %}</span></td>
               <td class="flags-cell">{{ row.other_flags }}</td>
             </tr>
+            {% if has_leave %}
             <tr class="detail-row" id="hv-{{ loop.index }}" hidden>
               <td colspan="7">{{ leave_panel(row.leave, leave_detail) }}</td>
             </tr>
+            {% endif %}
             {% endfor %}
           </tbody>
         </table>
@@ -804,31 +896,40 @@
         <div class="section-num">3</div>
         <h2>Leave Summary</h2>
         <span class="count-pill">{{ leave_count }} employees</span>
-        <span class="pulled-at">Time off as of {{ leave_pulled }}</span>{% if leave_rows %}
-        <span class="section-tools"><button type="button" class="toggle-all-btn" data-section="s3">Expand all</button></span>{% endif %}
+        <span class="section-tools">
+          <span class="pulled-at">🕒 Time off as of {{ leave_pulled }}</span>{% if leave_rows %}
+          <button type="button" class="toggle-all-btn" data-section="s3" aria-pressed="false"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-label">Expand all</span></button>{% endif %}
+        </span>
       </div>
       <p class="section-note">
-        Everyone with time off in Hubstaff this period, approved or unapproved. Sorted by total time off.
-        Total Hours already include approved time off. Unapproved requests are listed for reference only and are not counted in anyone's hours.
+        Everyone with time off in Hubstaff this period, sorted by total time off. Click a name for the breakdown.
+        Total Hours already include approved time off. Unapproved requests (dashed) are listed for reference only and are not counted in anyone's hours.
       </p>
 
-      <div class="leave-strip">
-        <div class="ls-block">
-          <div class="ls-label">Totals by category</div>
+      <div class="leave-overview">
+        <div class="cat-cards">
           {% for c in leave_summary.categories %}
-          <div class="ls-cat"><strong>{{ c.name }}</strong> {{ c.approved }} approved · {{ c.unapproved }} unapproved</div>
+          <div class="cat-card {{ c.css }}">
+            <div class="cc-label">{{ c.name }}</div>
+            <div class="cc-value">{{ c.approved }} <small>approved</small></div>
+            <div class="cc-sub">{% if c.unapproved_raw %}+ {{ c.unapproved }} unapproved{% else %}no unapproved requests{% endif %}</div>
+            <div class="bar"><span class="seg-a" style="width:{{ c.a_pct }}%"></span><span class="seg-u" style="width:{{ c.u_pct }}%"></span></div>
+          </div>
           {% endfor %}
         </div>
         {% if leave_summary.policies %}
-        <div class="ls-block">
-          <div class="ls-label">By Hubstaff policy</div>
-          <table>
-            <tbody>
-            {% for p in leave_summary.policies %}
-              <tr><td>{{ p.name }}</td><td style="color:#6b7280;">{{ p.category }}</td><td>{{ p.cell }}</td></tr>
-            {% endfor %}
-            </tbody>
-          </table>
+        <div class="policy-card">
+          <div class="pc-head">
+            <span class="pc-title">By Hubstaff policy</span>
+            <span class="legend"><span><i></i>Approved</span><span><i class="u"></i>Unapproved</span></span>
+          </div>
+          {% for p in leave_summary.policies %}
+          <div class="policy-row {{ p.css }}">
+            <div class="pr-name" title="{{ p.name }} · {{ p.category }}"><i></i><span>{{ p.name }}</span></div>
+            <div class="bar"><span class="seg-a" style="width:{{ p.a_pct }}%"></span><span class="seg-u" style="width:{{ p.u_pct }}%"></span></div>
+            <div class="pr-val">{{ p.a_fmt }}{% if p.a_fmt and p.u_fmt %} · {% endif %}{% if p.u_fmt %}<em>{{ p.u_fmt }} unapproved</em>{% endif %}</div>
+          </div>
+          {% endfor %}
         </div>
         {% endif %}
       </div>
@@ -848,11 +949,11 @@
           <tbody>
             {% for row in leave_rows %}
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-{{ loop.index }}">
-              <td class="member-name">{{ row.member }}{% if row.leave.over_total %} ⚠️{% endif %}</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>{{ row.member }}{% if row.leave.over_total %} ⚠️{% endif %}</td>
               <td class="team-name" title="{{ row.team }}">{{ row.team }}</td>
-              <td class="center">{{ row.paid_cell }}</td>
-              <td class="center">{{ row.unpaid_cell }}</td>
-              <td class="center"><strong>{{ row.total_cell }}</strong></td>
+              <td class="center"><span class="chip-stack">{% if row.paid_a %}<span class="chip paid"><span class="dot"></span>{{ row.paid_a }}</span>{% endif %}{% if row.paid_u %}<span class="chip paid pending">{{ row.paid_u }} unapproved</span>{% endif %}</span></td>
+              <td class="center"><span class="chip-stack">{% if row.unpaid_a %}<span class="chip unpaid"><span class="dot"></span>{{ row.unpaid_a }}</span>{% endif %}{% if row.unpaid_u %}<span class="chip unpaid pending">{{ row.unpaid_u }} unapproved</span>{% endif %}</span></td>
+              <td class="center total-cell">{% if row.tot_a %}<strong>{{ row.tot_a }}</strong>{% if row.tot_u %}<span class="tot-u">+ {{ row.tot_u }} unapproved</span>{% endif %}{% else %}<span class="tot-u only">{{ row.tot_u }} unapproved</span>{% endif %}</td>
             </tr>
             <tr class="detail-row" id="ls-{{ loop.index }}" hidden>
               <td colspan="5">{{ leave_panel(row.leave, leave_detail) }}</td>
@@ -896,7 +997,8 @@
     var allOpen = rows.length && Array.prototype.every.call(rows, function (r) {
       return r.getAttribute('aria-expanded') === 'true';
     });
-    btn.textContent = allOpen ? 'Collapse all' : 'Expand all';
+    btn.querySelector('.btn-label').textContent = allOpen ? 'Collapse all' : 'Expand all';
+    btn.setAttribute('aria-pressed', allOpen ? 'true' : 'false');
   }
   document.querySelectorAll('tr.expandable').forEach(function (tr) {
     var section = tr.closest('.section-block');
@@ -909,7 +1011,7 @@
   document.querySelectorAll('.toggle-all-btn').forEach(function (btn) {
     btn.addEventListener('click', function () {
       var section = document.getElementById(btn.getAttribute('data-section'));
-      var open = btn.textContent.trim() === 'Expand all';
+      var open = btn.getAttribute('aria-pressed') !== 'true';
       section.querySelectorAll('tr.expandable').forEach(function (tr) { setRow(tr, open); });
       syncButton(section);
     });

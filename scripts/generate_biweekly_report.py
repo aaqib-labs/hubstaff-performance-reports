@@ -476,6 +476,8 @@ def build_leave_entries(rows: pd.DataFrame, detail: str) -> list[dict]:
                 "dates":       _fmt_range(a, b),
                 "sort_key":    a,
                 "hours":       fmt_hd(hours),
+                "hours_h":     fmt_h(hours),
+                "hours_d":     f"{hours / HOURS_PER_DAY:.1f}d",
                 "status":      status,
                 "status_label": "Approved" if status == "approved" else "Unapproved",
             })
@@ -555,19 +557,38 @@ def join_leave(leave_df: pd.DataFrame, df: pd.DataFrame, excluded: list[str]) ->
 
 
 def build_leave_summary(leave_df: pd.DataFrame, detail: str) -> dict:
-    """Totals strip above Section 3."""
-    def h(cat, status):
-        return float(leave_df[(leave_df["category"] == cat) & (leave_df["status"] == status)]["hours"].sum())
-    cats = [{"name": c, "approved": fmt_h(h(c, "approved")), "unapproved": fmt_h(h(c, "unapproved"))}
-            for c in (CATEGORY_PAID, CATEGORY_UNPAID)]
+    """Totals strip above Section 3 (raw numbers + bar widths for the template)."""
+    def h(df, status):
+        return float(df.loc[df["status"] == status, "hours"].sum())
+
+    cats = []
+    for c in (CATEGORY_PAID, CATEGORY_UNPAID):
+        sub = leave_df[leave_df["category"] == c]
+        a, u = h(sub, "approved"), h(sub, "unapproved")
+        tot = a + u
+        cats.append({
+            "name": c, "css": "paid" if c == CATEGORY_PAID else "unpaid",
+            "approved": fmt_h(a), "unapproved": fmt_h(u), "unapproved_raw": u,
+            "a_pct": round(100 * a / tot, 1) if tot else 0,
+            "u_pct": round(100 * u / tot, 1) if tot else 0,
+        })
+
     policies = []
     if detail == "full":
         for (pol, cat), grp in leave_df.groupby(["policy_name", "category"]):
-            a = float(grp.loc[grp["status"] == "approved", "hours"].sum())
-            u = float(grp.loc[grp["status"] == "unapproved", "hours"].sum())
-            policies.append({"name": pol, "category": cat, "cell": leave_cell(a, u), "total": a + u})
+            a, u = h(grp, "approved"), h(grp, "unapproved")
+            policies.append({"name": pol, "category": cat,
+                             "css": "paid" if cat == CATEGORY_PAID else "unpaid",
+                             "a": a, "u": u, "total": a + u,
+                             "a_fmt": fmt_h(a) if a else "", "u_fmt": fmt_h(u) if u else ""})
         policies.sort(key=lambda p: -p["total"])
-    return {"categories": cats, "policies": policies}
+        top = max((p["total"] for p in policies), default=0) or 1
+        for p in policies:
+            p["a_pct"] = round(100 * p["a"] / top, 1)
+            p["u_pct"] = round(100 * p["u"] / top, 1)
+    return {"categories": cats, "policies": policies,
+            "total_approved": fmt_h(h(leave_df, "approved")),
+            "total_unapproved": fmt_h(h(leave_df, "unapproved"))}
 
 
 # ---------------------------------------------------------------------------
@@ -665,6 +686,8 @@ def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: fl
                 fig = figures_for(r)
                 entry["leave"] = fig
                 entry["time_off_tag"] = leave_tag(fig["approved"], fig["unapproved"])
+                entry["tag_a"] = fmt_h(fig["approved"]) if fig["approved"] else ""
+                entry["tag_u"] = fmt_h(fig["unapproved"]) if fig["unapproved"] else ""
             hours_violators.append(entry)
     # Sort ascending by hours (worst = least hours first)
     hours_violators.sort(key=lambda x: x["hours_raw"])
@@ -686,6 +709,10 @@ def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: fl
                 "unpaid_cell": leave_cell(ua, uu),
                 "total_cell": leave_cell(fig["approved"], fig["unapproved"]),
                 "total_raw":  fig["approved"] + fig["unapproved"],
+                "paid_a":     fmt_h(pa) if pa else "", "paid_u":   fmt_h(pu) if pu else "",
+                "unpaid_a":   fmt_h(ua) if ua else "", "unpaid_u": fmt_h(uu) if uu else "",
+                "tot_a":      fmt_h(fig["approved"]) if fig["approved"] else "",
+                "tot_u":      fmt_h(fig["unapproved"]) if fig["unapproved"] else "",
                 "leave":      fig,
             })
         leave_rows.sort(key=lambda x: (-x["total_raw"], x["member"].lower()))

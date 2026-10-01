@@ -461,62 +461,148 @@
     }
 
     /* ------------------------------------------------------------------ */
-    /* Month-end time off — expandable rows                                 */
+    /* Month-end time off                                                   */
     /* ------------------------------------------------------------------ */
-    .section-tools { margin-left: auto; }
-    .toggle-all-btn {
-      background: #fff; border: 1px solid #cbd5e1; color: #1d4ed8;
-      font-size: 0.74rem; font-weight: 700; padding: 4px 12px;
-      border-radius: 6px; cursor: pointer;
+    :root {
+      --paid: #0f766e; --paid-bg: #ccfbf1; --paid-bar: #14b8a6;
+      --unpaid: #6d28d9; --unpaid-bg: #ede9fe; --unpaid-bar: #8b5cf6;
+      --ok: #15803d; --ok-bg: #dcfce7;
+      --pend: #b45309; --pend-bg: #fffbeb;
     }
-    .toggle-all-btn:hover { background: #eff6ff; }
+    .section-tools { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+    .toggle-all-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #1d4ed8; border: none; color: #fff;
+      font-size: 0.74rem; font-weight: 700; padding: 6px 14px 6px 10px;
+      border-radius: 999px; cursor: pointer; box-shadow: 0 1px 2px rgba(29,78,216,.3);
+      transition: background .15s;
+    }
+    .toggle-all-btn:hover { background: #1e40af; }
+    .toggle-all-btn svg { transition: transform .2s; }
+    .toggle-all-btn[aria-pressed="true"] svg { transform: rotate(180deg); }
     .toggle-all-btn:focus-visible, tr.expandable:focus-visible { outline: 2px solid #1d4ed8; outline-offset: -2px; }
 
+    .pulled-at {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 0.72rem; color: #475569; font-weight: 600;
+      background: #f1f5f9; padding: 3px 10px; border-radius: 999px;
+    }
+
+    /* Expandable rows */
     tr.expandable { cursor: pointer; }
-    tr.expandable td.member-name::before {
-      content: '▸'; display: inline-block; width: 14px; color: #94a3b8;
-      transition: transform .15s;
+    tr.expandable:hover .chev { background: #dbeafe; }
+    .chev {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 20px; height: 20px; border-radius: 50%; margin-right: 8px;
+      background: #eff6ff; color: #1d4ed8; vertical-align: -4px;
+      transition: transform .2s, background .15s;
     }
-    tr.expandable[aria-expanded="true"] td.member-name::before { transform: rotate(90deg); }
+    tr.expandable[aria-expanded="true"] .chev { transform: rotate(90deg); background: #1d4ed8; color: #fff; }
+    .chev-spacer { display: inline-block; width: 28px; }
 
-    tr.detail-row { background: #f8fafc !important; border-left: 3px solid #cbd5e1; }
-    tr.detail-row > td { padding: 14px 18px 18px 32px; white-space: normal; }
+    tr.detail-row { background: #f8fafc !important; }
+    tr.detail-row > td { padding: 4px 18px 16px 46px; white-space: normal; }
 
-    .leave-tag {
-      display: inline-block; background: #ecfeff; color: #0e7490;
-      font-size: 0.74rem; font-weight: 700; padding: 2px 9px; border-radius: 20px;
+    /* Chips */
+    .chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 0.73rem; font-weight: 700; padding: 3px 10px;
+      border-radius: 999px; white-space: nowrap; line-height: 1.3;
+      border: 1.5px solid transparent;
     }
-    .leave-tag.unapproved-only { background: #f1f5f9; color: #475569; }
+    .chip .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+    .chip.off      { background: #e0f2fe; color: #0369a1; }
+    .chip.paid     { background: var(--paid-bg); color: var(--paid); }
+    .chip.unpaid   { background: var(--unpaid-bg); color: var(--unpaid); }
+    .chip.pending  { background: #fff; border-style: dashed; }
+    .chip.off.pending    { color: #64748b; border-color: #94a3b8; }
+    .chip.paid.pending   { border-color: var(--paid-bar); }
+    .chip.unpaid.pending { border-color: var(--unpaid-bar); }
+    .chip-stack { display: inline-flex; flex-wrap: wrap; gap: 4px; justify-content: center; }
 
-    .leave-note { font-size: 0.82rem; color: #374151; margin-bottom: 10px; }
-    .leave-note.warn { color: #b45309; }
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 0.72rem; font-weight: 700; padding: 2px 9px; border-radius: 6px;
+    }
+    .status-pill.approved   { background: var(--ok-bg); color: var(--ok); }
+    .status-pill.unapproved { background: var(--pend-bg); color: var(--pend); border: 1px dashed #f59e0b; }
 
-    table.leave-entries { background: transparent; font-size: 0.8rem; width: auto; min-width: 60%; }
-    table.leave-entries th { background: none; padding: 4px 12px 4px 0; font-size: 0.66rem; }
-    table.leave-entries td { padding: 4px 12px 4px 0; white-space: nowrap; border: none; }
-    table.leave-entries tr { border: none; }
-    .status-approved { color: #15803d; font-weight: 600; }
-    .status-unapproved { color: #64748b; font-style: italic; }
+    /* Detail card */
+    .leave-card {
+      background: #fff; border: 1px solid #e2e8f0; border-radius: 10px;
+      padding: 12px 16px; box-shadow: 0 1px 2px rgba(0,0,0,.04);
+    }
+    .leave-note {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.82rem; color: #0c4a6e; background: #f0f9ff;
+      border-left: 3px solid #0284c7; border-radius: 6px;
+      padding: 8px 12px; margin-bottom: 10px;
+    }
+    .leave-note strong { color: #0c4a6e; }
+    .leave-note.warn { color: #92400e; background: #fffbeb; border-left-color: #f59e0b; }
+    table.leave-entries { background: transparent; font-size: 0.8rem; width: 100%; }
+    table.leave-entries thead tr { background: none; border-bottom: 1px solid #f1f5f9; }
+    table.leave-entries th { padding: 4px 14px 6px 0; font-size: 0.64rem; color: #94a3b8; }
+    table.leave-entries td { padding: 7px 14px 7px 0; white-space: nowrap; }
+    table.leave-entries tbody tr { border-bottom: 1px solid #f8fafc; }
+    table.leave-entries tbody tr:hover { background: transparent !important; }
+    .entry-policy { font-weight: 600; color: #1f2937; }
+    .entry-date { color: #374151; font-variant-numeric: tabular-nums; }
+    .entry-hours strong { color: #111827; }
+    .entry-hours span { color: #94a3b8; margin-left: 4px; font-size: 0.74rem; }
     .no-leave { font-size: 0.8rem; color: #6b7280; }
 
-    .leave-strip {
-      background: #fff; border-radius: 10px; padding: 14px 20px; margin-bottom: 14px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-      display: flex; flex-wrap: wrap; gap: 14px 36px;
+    /* Section 3 totals */
+    .leave-overview { display: grid; grid-template-columns: 260px 1fr; gap: 14px; margin-bottom: 14px; }
+    .cat-cards { display: grid; gap: 12px; }
+    .cat-card {
+      background: #fff; border-radius: 10px; padding: 14px 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.06); border-top: 4px solid var(--c);
     }
-    .leave-strip .ls-block .ls-label { font-size: 0.66rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #9ca3af; margin-bottom: 4px; }
-    .leave-strip .ls-cat { font-size: 0.82rem; margin-bottom: 2px; }
-    .leave-strip .ls-cat strong { display: inline-block; min-width: 112px; }
-    .leave-strip table { width: auto; background: transparent; font-size: 0.78rem; }
-    .leave-strip td { padding: 2px 14px 2px 0; border: none; white-space: nowrap; }
-    .leave-strip tr { border: none; }
-    .pulled-at { font-size: 0.74rem; color: #6b7280; font-weight: 600; }
+    .cat-card.paid   { --c: var(--paid-bar);   --ct: var(--paid); }
+    .cat-card.unpaid { --c: var(--unpaid-bar); --ct: var(--unpaid); }
+    .cat-card .cc-label { font-size: 0.66rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: var(--ct); }
+    .cat-card .cc-value { font-size: 1.6rem; font-weight: 800; letter-spacing: -.02em; color: #111827; line-height: 1.15; margin-top: 2px; }
+    .cat-card .cc-value small { font-size: 0.75rem; font-weight: 600; color: #6b7280; letter-spacing: 0; }
+    .cat-card .cc-sub { font-size: 0.74rem; color: #6b7280; margin: 2px 0 8px; }
+    .bar { display: flex; height: 8px; border-radius: 999px; background: #f1f5f9; overflow: hidden; }
+    .bar .seg-a { background: var(--c); }
+    .bar .seg-u { background: repeating-linear-gradient(45deg, var(--c) 0 3px, #fff 3px 6px); opacity: .75; }
+
+    .policy-card { background: #fff; border-radius: 10px; padding: 14px 18px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+    .policy-card .pc-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+    .policy-card .pc-title { font-size: 0.66rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: #9ca3af; }
+    .legend { display: flex; gap: 12px; font-size: 0.7rem; color: #6b7280; }
+    .legend i { display: inline-block; width: 14px; height: 8px; border-radius: 3px; margin-right: 4px; vertical-align: 0; background: #64748b; }
+    .legend i.u { background: repeating-linear-gradient(45deg, #64748b 0 3px, #fff 3px 6px); border: 1px solid #cbd5e1; }
+    .policy-row { display: grid; grid-template-columns: minmax(200px, 320px) 1fr auto; gap: 12px; align-items: center; padding: 5px 0; }
+    .policy-row.paid   { --c: var(--paid-bar); }
+    .policy-row.unpaid { --c: var(--unpaid-bar); }
+    .policy-row .pr-name { font-size: 0.78rem; color: #1f2937; display: flex; align-items: center; gap: 7px; min-width: 0; }
+    .policy-row .pr-name span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .policy-row .pr-name i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); flex-shrink: 0; }
+    .policy-row .bar { height: 10px; background: transparent; }
+    .policy-row .pr-val { font-size: 0.74rem; color: #374151; white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums; }
+    .policy-row .pr-val em { font-style: normal; color: var(--pend); }
+
+    td.total-cell strong { font-size: 0.9rem; }
+    td.total-cell .tot-u { display: block; font-size: 0.7rem; color: var(--pend); font-weight: 600; }
+    td.total-cell .tot-u.only { font-size: 0.8rem; }
+
+    @media (max-width: 900px) {
+      .leave-overview { grid-template-columns: 1fr; }
+      .cat-cards { grid-template-columns: 1fr 1fr; }
+      .policy-row { grid-template-columns: 1fr auto; }
+      .policy-row .bar { grid-column: 1 / -1; }
+    }
 
     @media print {
       .back-nav, .toggle-all-btn { display: none !important; }
       tr.detail-row[hidden] { display: table-row !important; }
-      tr.expandable td.member-name::before { content: ''; width: 0; }
-      .page-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .chev { display: none; }
+      .page-header, .chip, .status-pill, .bar, .bar *, .cat-card, .leave-note {
+        -webkit-print-color-adjust: exact; print-color-adjust: exact;
+      }
     }
   </style>
 </head>
@@ -552,7 +638,7 @@
       </div>
       <div class="header-meta-item">
         <div class="h-label">Generated</div>
-        <div class="h-value">2026-10-02 02:07</div>
+        <div class="h-value">2026-10-02 02:13</div>
       </div>
     </div>
   </div>
@@ -972,7 +1058,7 @@
         <div class="section-num">2</div>
         <h2>Hours Violators</h2>
         <span class="count-pill">13 employees</span>
-        <span class="section-tools"><button type="button" class="toggle-all-btn" data-section="s2">Expand all</button></span>
+        <span class="section-tools"><button type="button" class="toggle-all-btn" data-section="s2" aria-pressed="false"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-label">Expand all</span></button></span>
       </div>
       <p class="section-note">
         All employees below the prorated hours threshold. Sorted lowest hours first.
@@ -1003,249 +1089,246 @@
           </thead>
           <tbody>
             
-            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="hv-1">
-              <td class="member-name">Rishonath Siva</td>
+            
+            <tr class="severity-critical">
+              <td class="member-name"><span class="chev-spacer"></span>Rishonath Siva</td>
               <td class="team-name" title="Design, Labs - all, Marketing, Media, Rev Ops">Design, Labs - all, Marketing, Media, Rev Ops</td>
               <td class="center">🔴 18.8h</td>
               <td class="center" style="color:#6b7280;">160.0h</td>
               <td class="shortfall">–141.2h</td>
-              <td class="center"></td>
+              <td class="center"><span class="chip-stack"></span></td>
               <td class="flags-cell">🔴 4</td>
             </tr>
-            <tr class="detail-row" id="hv-1" hidden>
-              <td colspan="7">
-<p class="no-leave">No time off recorded in Hubstaff for this period.</p>
-</td>
-            </tr>
             
-            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="hv-2">
-              <td class="member-name">Ramez Sedra</td>
+            
+            
+            <tr class="severity-critical">
+              <td class="member-name"><span class="chev-spacer"></span>Ramez Sedra</td>
               <td class="team-name" title="Content_catalog_platform, Digital Product, SEO Team, Site Content">Content_catalog_platform, Digital Product, SEO Team, Site Content</td>
               <td class="center">🔴 27.0h</td>
               <td class="center" style="color:#6b7280;">160.0h</td>
               <td class="shortfall">–133.0h</td>
-              <td class="center"></td>
+              <td class="center"><span class="chip-stack"></span></td>
               <td class="flags-cell">🔴 1</td>
             </tr>
-            <tr class="detail-row" id="hv-2" hidden>
-              <td colspan="7">
-<p class="no-leave">No time off recorded in Hubstaff for this period.</p>
-</td>
-            </tr>
             
-            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="hv-3">
-              <td class="member-name">Samiha Anzary</td>
+            
+            
+            <tr class="severity-critical">
+              <td class="member-name"><span class="chev-spacer"></span>Samiha Anzary</td>
               <td class="team-name" title="—">—</td>
               <td class="center">🔴 31.0h</td>
               <td class="center" style="color:#6b7280;">160.0h</td>
               <td class="shortfall">–129.0h</td>
-              <td class="center"></td>
+              <td class="center"><span class="chip-stack"></span></td>
               <td class="flags-cell">🔴 4</td>
             </tr>
-            <tr class="detail-row" id="hv-3" hidden>
-              <td colspan="7">
-<p class="no-leave">No time off recorded in Hubstaff for this period.</p>
-</td>
-            </tr>
             
-            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="hv-4">
-              <td class="member-name">Anuj Bansal</td>
+            
+            
+            <tr class="severity-critical">
+              <td class="member-name"><span class="chev-spacer"></span>Anuj Bansal</td>
               <td class="team-name" title="Accounting, FP&amp;A">Accounting, FP&amp;A</td>
               <td class="center">🔴 85.0h</td>
               <td class="center" style="color:#6b7280;">160.0h</td>
               <td class="shortfall">–75.0h</td>
-              <td class="center"></td>
+              <td class="center"><span class="chip-stack"></span></td>
               <td class="flags-cell">🔴 3 ⚠️ 1</td>
             </tr>
-            <tr class="detail-row" id="hv-4" hidden>
-              <td colspan="7">
-<p class="no-leave">No time off recorded in Hubstaff for this period.</p>
-</td>
-            </tr>
             
-            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="hv-5">
-              <td class="member-name">jorn wossner</td>
+            
+            
+            <tr class="severity-critical">
+              <td class="member-name"><span class="chev-spacer"></span>jorn wossner</td>
               <td class="team-name" title="Leadership">Leadership</td>
               <td class="center">🔴 88.0h</td>
               <td class="center" style="color:#6b7280;">160.0h</td>
               <td class="shortfall">–72.0h</td>
-              <td class="center"></td>
+              <td class="center"><span class="chip-stack"></span></td>
               <td class="flags-cell">🔴 4</td>
             </tr>
-            <tr class="detail-row" id="hv-5" hidden>
-              <td colspan="7">
-<p class="no-leave">No time off recorded in Hubstaff for this period.</p>
-</td>
-            </tr>
+            
+            
             
             <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="hv-6">
-              <td class="member-name">Shaarukshan Seralathan</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Shaarukshan Seralathan</td>
               <td class="team-name" title="AIT - Product, allintalent, Labs - all">AIT - Product, allintalent, Labs - all</td>
               <td class="center">🔴 92.0h</td>
               <td class="center" style="color:#6b7280;">160.0h</td>
               <td class="shortfall">–68.0h</td>
-              <td class="center"><span class="leave-tag unapproved-only">8.0h unapproved</span></td>
+              <td class="center"><span class="chip-stack"><span class="chip off pending">8.0h unapproved</span></span></td>
               <td class="flags-cell">🔴 1</td>
             </tr>
+            
             <tr class="detail-row" id="hv-6" hidden>
-              <td colspan="7">
-<table class="leave-entries">
-  <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
-  <tbody>
-  
-    <tr>
-      <td>Annual Allocated Leave</td><td>Paid/Allocated</td>
-      <td>Sep 11–14</td>
-      <td>8.0h (1.0d)</td>
-      <td class="status-unapproved">Unapproved</td>
-    </tr>
-  
-  </tbody>
-</table>
-</td>
-            </tr>
-            
-            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="hv-7">
-              <td class="member-name">Jason Diaz</td>
-              <td class="team-name" title="Task Agency">Task Agency</td>
-              <td class="center">🔴 94.1h</td>
-              <td class="center" style="color:#6b7280;">160.0h</td>
-              <td class="shortfall">–65.9h</td>
-              <td class="center"></td>
-              <td class="flags-cell">🔴 1 ⚠️ 2</td>
-            </tr>
-            <tr class="detail-row" id="hv-7" hidden>
-              <td colspan="7">
-<p class="no-leave">No time off recorded in Hubstaff for this period.</p>
-</td>
-            </tr>
-            
-            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="hv-8">
-              <td class="member-name">Dharshika Perera</td>
-              <td class="team-name" title="Accounting, Labs - all">Accounting, Labs - all</td>
-              <td class="center">🔴 142.0h</td>
-              <td class="center" style="color:#6b7280;">160.0h</td>
-              <td class="shortfall">–18.0h</td>
-              <td class="center"></td>
-              <td class="flags-cell">🔴 1</td>
-            </tr>
-            <tr class="detail-row" id="hv-8" hidden>
-              <td colspan="7">
-<p class="no-leave">No time off recorded in Hubstaff for this period.</p>
-</td>
-            </tr>
-            
-            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="hv-9">
-              <td class="member-name">Sara Higgason</td>
-              <td class="team-name" title="VP - Customer Ops - Leads, VP - Customer Ops - Support Team">VP - Customer Ops - Leads, VP - Customer Ops - Support Team</td>
-              <td class="center">🔴 143.9h</td>
-              <td class="center" style="color:#6b7280;">160.0h</td>
-              <td class="shortfall">–16.1h</td>
-              <td class="center"><span class="leave-tag unapproved-only">8.0h unapproved</span></td>
-              <td class="flags-cell">🔴 1</td>
-            </tr>
-            <tr class="detail-row" id="hv-9" hidden>
-              <td colspan="7">
-<table class="leave-entries">
-  <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
-  <tbody>
-  
-    <tr>
-      <td>Annual Allocated Leave</td><td>Paid/Allocated</td>
-      <td>Sep 30</td>
-      <td>8.0h (1.0d)</td>
-      <td class="status-unapproved">Unapproved</td>
-    </tr>
-  
-  </tbody>
-</table>
-</td>
-            </tr>
-            
-            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="hv-10">
-              <td class="member-name">Anna May Rubia</td>
-              <td class="team-name" title="Marketing, Media, Rev Ops">Marketing, Media, Rev Ops</td>
-              <td class="center">🔴 153.8h</td>
-              <td class="center" style="color:#6b7280;">160.0h</td>
-              <td class="shortfall">–6.2h</td>
-              <td class="center"></td>
-              <td class="flags-cell">🔴 2 ⚠️ 2</td>
-            </tr>
-            <tr class="detail-row" id="hv-10" hidden>
-              <td colspan="7">
-<p class="no-leave">No time off recorded in Hubstaff for this period.</p>
-</td>
-            </tr>
-            
-            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="hv-11">
-              <td class="member-name">Mudasir Amjad</td>
-              <td class="team-name" title="Amazon, International Team, Marketing, Marketing- Labs, Team Lucas">Amazon, International Team, Marketing, Marketing- Labs, Team Lucas</td>
-              <td class="center">🔴 158.4h</td>
-              <td class="center" style="color:#6b7280;">160.0h</td>
-              <td class="shortfall">–1.6h</td>
-              <td class="center"><span class="leave-tag">16.0h</span></td>
-              <td class="flags-cell">🔴 1 ⚠️ 1</td>
-            </tr>
-            <tr class="detail-row" id="hv-11" hidden>
-              <td colspan="7"><p class="leave-note">158.4h total includes 16.0h (2.0d) approved time off → <strong>142.4h actually worked</strong>.</p>
+              <td colspan="7"><div class="leave-card">
 
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>International - Unpaid Medical/Vacation Leave</td><td>Unpaid/Flex</td>
-      <td>Sep 14–15</td>
-      <td>16.0h (2.0d)</td>
-      <td class="status-approved">Approved</td>
+      <td class="entry-policy">Annual Allocated Leave</td>
+      <td><span class="chip paid"><span class="dot"></span>Paid/Allocated</span></td>
+      <td class="entry-date">Sep 11–14</td>
+      <td class="entry-hours"><strong>8.0h</strong><span>1.0d</span></td>
+      <td><span class="status-pill unapproved">◷ Unapproved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
             
-            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="hv-12">
-              <td class="member-name">Laci Burton</td>
-              <td class="team-name" title="Accounting, Leadership">Accounting, Leadership</td>
-              <td class="center">🔴 159.1h</td>
+            
+            
+            <tr class="severity-critical">
+              <td class="member-name"><span class="chev-spacer"></span>Jason Diaz</td>
+              <td class="team-name" title="Task Agency">Task Agency</td>
+              <td class="center">🔴 94.1h</td>
               <td class="center" style="color:#6b7280;">160.0h</td>
-              <td class="shortfall">–0.9h</td>
-              <td class="center"></td>
-              <td class="flags-cell">🔴 1 ⚠️ 1</td>
-            </tr>
-            <tr class="detail-row" id="hv-12" hidden>
-              <td colspan="7">
-<p class="no-leave">No time off recorded in Hubstaff for this period.</p>
-</td>
+              <td class="shortfall">–65.9h</td>
+              <td class="center"><span class="chip-stack"></span></td>
+              <td class="flags-cell">🔴 1 ⚠️ 2</td>
             </tr>
             
-            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="hv-13">
-              <td class="member-name">Natalia Jayasundera</td>
-              <td class="team-name" title="allintalent, HR, Labs - all">allintalent, HR, Labs - all</td>
-              <td class="center">🔴 159.9h</td>
+            
+            
+            <tr class="severity-critical">
+              <td class="member-name"><span class="chev-spacer"></span>Dharshika Perera</td>
+              <td class="team-name" title="Accounting, Labs - all">Accounting, Labs - all</td>
+              <td class="center">🔴 142.0h</td>
               <td class="center" style="color:#6b7280;">160.0h</td>
-              <td class="shortfall">–0.1h</td>
-              <td class="center"><span class="leave-tag unapproved-only">16.0h unapproved</span></td>
-              <td class="flags-cell">🔴 3 ⚠️ 1</td>
+              <td class="shortfall">–18.0h</td>
+              <td class="center"><span class="chip-stack"></span></td>
+              <td class="flags-cell">🔴 1</td>
             </tr>
-            <tr class="detail-row" id="hv-13" hidden>
-              <td colspan="7">
+            
+            
+            
+            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="hv-9">
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Sara Higgason</td>
+              <td class="team-name" title="VP - Customer Ops - Leads, VP - Customer Ops - Support Team">VP - Customer Ops - Leads, VP - Customer Ops - Support Team</td>
+              <td class="center">🔴 143.9h</td>
+              <td class="center" style="color:#6b7280;">160.0h</td>
+              <td class="shortfall">–16.1h</td>
+              <td class="center"><span class="chip-stack"><span class="chip off pending">8.0h unapproved</span></span></td>
+              <td class="flags-cell">🔴 1</td>
+            </tr>
+            
+            <tr class="detail-row" id="hv-9" hidden>
+              <td colspan="7"><div class="leave-card">
+
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>Labs - Unpaid Medical/Vacation Leave</td><td>Unpaid/Flex</td>
-      <td>Sep 18</td>
-      <td>16.0h (2.0d)</td>
-      <td class="status-unapproved">Unapproved</td>
+      <td class="entry-policy">Annual Allocated Leave</td>
+      <td><span class="chip paid"><span class="dot"></span>Paid/Allocated</span></td>
+      <td class="entry-date">Sep 30</td>
+      <td class="entry-hours"><strong>8.0h</strong><span>1.0d</span></td>
+      <td><span class="status-pill unapproved">◷ Unapproved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
+            
+            
+            
+            <tr class="severity-critical">
+              <td class="member-name"><span class="chev-spacer"></span>Anna May Rubia</td>
+              <td class="team-name" title="Marketing, Media, Rev Ops">Marketing, Media, Rev Ops</td>
+              <td class="center">🔴 153.8h</td>
+              <td class="center" style="color:#6b7280;">160.0h</td>
+              <td class="shortfall">–6.2h</td>
+              <td class="center"><span class="chip-stack"></span></td>
+              <td class="flags-cell">🔴 2 ⚠️ 2</td>
+            </tr>
+            
+            
+            
+            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="hv-11">
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Mudasir Amjad</td>
+              <td class="team-name" title="Amazon, International Team, Marketing, Marketing- Labs, Team Lucas">Amazon, International Team, Marketing, Marketing- Labs, Team Lucas</td>
+              <td class="center">🔴 158.4h</td>
+              <td class="center" style="color:#6b7280;">160.0h</td>
+              <td class="shortfall">–1.6h</td>
+              <td class="center"><span class="chip-stack"><span class="chip off"><span class="dot"></span>16.0h off</span></span></td>
+              <td class="flags-cell">🔴 1 ⚠️ 1</td>
+            </tr>
+            
+            <tr class="detail-row" id="hv-11" hidden>
+              <td colspan="7"><div class="leave-card">
+<div class="leave-note">🕒 <span>158.4h total includes 16.0h (2.0d) approved time off → <strong>142.4h actually worked</strong>.</span></div>
+
+<table class="leave-entries">
+  <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
+  <tbody>
+  
+    <tr>
+      <td class="entry-policy">International - Unpaid Medical/Vacation Leave</td>
+      <td><span class="chip unpaid"><span class="dot"></span>Unpaid/Flex</span></td>
+      <td class="entry-date">Sep 14–15</td>
+      <td class="entry-hours"><strong>16.0h</strong><span>2.0d</span></td>
+      <td><span class="status-pill approved">✓ Approved</span></td>
+    </tr>
+  
+  </tbody>
+</table>
+
+</div></td>
+            </tr>
+            
+            
+            
+            <tr class="severity-critical">
+              <td class="member-name"><span class="chev-spacer"></span>Laci Burton</td>
+              <td class="team-name" title="Accounting, Leadership">Accounting, Leadership</td>
+              <td class="center">🔴 159.1h</td>
+              <td class="center" style="color:#6b7280;">160.0h</td>
+              <td class="shortfall">–0.9h</td>
+              <td class="center"><span class="chip-stack"></span></td>
+              <td class="flags-cell">🔴 1 ⚠️ 1</td>
+            </tr>
+            
+            
+            
+            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="hv-13">
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Natalia Jayasundera</td>
+              <td class="team-name" title="allintalent, HR, Labs - all">allintalent, HR, Labs - all</td>
+              <td class="center">🔴 159.9h</td>
+              <td class="center" style="color:#6b7280;">160.0h</td>
+              <td class="shortfall">–0.1h</td>
+              <td class="center"><span class="chip-stack"><span class="chip off pending">16.0h unapproved</span></span></td>
+              <td class="flags-cell">🔴 3 ⚠️ 1</td>
+            </tr>
+            
+            <tr class="detail-row" id="hv-13" hidden>
+              <td colspan="7"><div class="leave-card">
+
+<table class="leave-entries">
+  <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
+  <tbody>
+  
+    <tr>
+      <td class="entry-policy">Labs - Unpaid Medical/Vacation Leave</td>
+      <td><span class="chip unpaid"><span class="dot"></span>Unpaid/Flex</span></td>
+      <td class="entry-date">Sep 18</td>
+      <td class="entry-hours"><strong>16.0h</strong><span>2.0d</span></td>
+      <td><span class="status-pill unapproved">◷ Unapproved</span></td>
+    </tr>
+  
+  </tbody>
+</table>
+
+</div></td>
+            </tr>
+            
             
           </tbody>
         </table>
@@ -1262,49 +1345,95 @@
         <div class="section-num">3</div>
         <h2>Leave Summary</h2>
         <span class="count-pill">26 employees</span>
-        <span class="pulled-at">Time off as of 2026-10-01 20:13 UTC</span>
-        <span class="section-tools"><button type="button" class="toggle-all-btn" data-section="s3">Expand all</button></span>
+        <span class="section-tools">
+          <span class="pulled-at">🕒 Time off as of 2026-10-01 20:13 UTC</span>
+          <button type="button" class="toggle-all-btn" data-section="s3" aria-pressed="false"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-label">Expand all</span></button>
+        </span>
       </div>
       <p class="section-note">
-        Everyone with time off in Hubstaff this period, approved or unapproved. Sorted by total time off.
-        Total Hours already include approved time off. Unapproved requests are listed for reference only and are not counted in anyone's hours.
+        Everyone with time off in Hubstaff this period, sorted by total time off. Click a name for the breakdown.
+        Total Hours already include approved time off. Unapproved requests (dashed) are listed for reference only and are not counted in anyone's hours.
       </p>
 
-      <div class="leave-strip">
-        <div class="ls-block">
-          <div class="ls-label">Totals by category</div>
+      <div class="leave-overview">
+        <div class="cat-cards">
           
-          <div class="ls-cat"><strong>Paid/Allocated</strong> 63.0h approved · 40.0h unapproved</div>
+          <div class="cat-card paid">
+            <div class="cc-label">Paid/Allocated</div>
+            <div class="cc-value">63.0h <small>approved</small></div>
+            <div class="cc-sub">+ 40.0h unapproved</div>
+            <div class="bar"><span class="seg-a" style="width:61.2%"></span><span class="seg-u" style="width:38.8%"></span></div>
+          </div>
           
-          <div class="ls-cat"><strong>Unpaid/Flex</strong> 102.6h approved · 48.0h unapproved</div>
+          <div class="cat-card unpaid">
+            <div class="cc-label">Unpaid/Flex</div>
+            <div class="cc-value">102.6h <small>approved</small></div>
+            <div class="cc-sub">+ 48.0h unapproved</div>
+            <div class="bar"><span class="seg-a" style="width:68.1%"></span><span class="seg-u" style="width:31.9%"></span></div>
+          </div>
           
         </div>
         
-        <div class="ls-block">
-          <div class="ls-label">By Hubstaff policy</div>
-          <table>
-            <tbody>
-            
-              <tr><td>Labs - Unpaid Medical/Vacation Leave</td><td style="color:#6b7280;">Unpaid/Flex</td><td>43.0h (approved) · 24.0h (unapproved)</td></tr>
-            
-              <tr><td>Annual Allocated Leave</td><td style="color:#6b7280;">Paid/Allocated</td><td>20.0h (approved) · 32.0h (unapproved)</td></tr>
-            
-              <tr><td>VP - International Unpaid Leave</td><td style="color:#6b7280;">Unpaid/Flex</td><td>35.6h (approved) · 8.0h (unapproved)</td></tr>
-            
-              <tr><td>Labs - Paid Vacation Leave</td><td style="color:#6b7280;">Paid/Allocated</td><td>32.0h (approved)</td></tr>
-            
-              <tr><td>Annual Flex Leave</td><td style="color:#6b7280;">Unpaid/Flex</td><td>16.0h (unapproved)</td></tr>
-            
-              <tr><td>International - Unpaid Medical/Vacation Leave</td><td style="color:#6b7280;">Unpaid/Flex</td><td>16.0h (approved)</td></tr>
-            
-              <tr><td>Labs - Paid Medical Leave</td><td style="color:#6b7280;">Paid/Allocated</td><td>3.0h (approved) · 8.0h (unapproved)</td></tr>
-            
-              <tr><td>International - Paid Medical Leave</td><td style="color:#6b7280;">Paid/Allocated</td><td>8.0h (approved)</td></tr>
-            
-              <tr><td>Unpaid Medical/Vacation Leave (US)</td><td style="color:#6b7280;">Unpaid/Flex</td><td>8.0h (approved)</td></tr>
-            
-            </tbody>
-          </table>
+        <div class="policy-card">
+          <div class="pc-head">
+            <span class="pc-title">By Hubstaff policy</span>
+            <span class="legend"><span><i></i>Approved</span><span><i class="u"></i>Unapproved</span></span>
+          </div>
+          
+          <div class="policy-row unpaid">
+            <div class="pr-name" title="Labs - Unpaid Medical/Vacation Leave · Unpaid/Flex"><i></i><span>Labs - Unpaid Medical/Vacation Leave</span></div>
+            <div class="bar"><span class="seg-a" style="width:64.2%"></span><span class="seg-u" style="width:35.8%"></span></div>
+            <div class="pr-val">43.0h · <em>24.0h unapproved</em></div>
+          </div>
+          
+          <div class="policy-row paid">
+            <div class="pr-name" title="Annual Allocated Leave · Paid/Allocated"><i></i><span>Annual Allocated Leave</span></div>
+            <div class="bar"><span class="seg-a" style="width:29.9%"></span><span class="seg-u" style="width:47.8%"></span></div>
+            <div class="pr-val">20.0h · <em>32.0h unapproved</em></div>
+          </div>
+          
+          <div class="policy-row unpaid">
+            <div class="pr-name" title="VP - International Unpaid Leave · Unpaid/Flex"><i></i><span>VP - International Unpaid Leave</span></div>
+            <div class="bar"><span class="seg-a" style="width:53.1%"></span><span class="seg-u" style="width:11.9%"></span></div>
+            <div class="pr-val">35.6h · <em>8.0h unapproved</em></div>
+          </div>
+          
+          <div class="policy-row paid">
+            <div class="pr-name" title="Labs - Paid Vacation Leave · Paid/Allocated"><i></i><span>Labs - Paid Vacation Leave</span></div>
+            <div class="bar"><span class="seg-a" style="width:47.8%"></span><span class="seg-u" style="width:0.0%"></span></div>
+            <div class="pr-val">32.0h</div>
+          </div>
+          
+          <div class="policy-row unpaid">
+            <div class="pr-name" title="Annual Flex Leave · Unpaid/Flex"><i></i><span>Annual Flex Leave</span></div>
+            <div class="bar"><span class="seg-a" style="width:0.0%"></span><span class="seg-u" style="width:23.9%"></span></div>
+            <div class="pr-val"><em>16.0h unapproved</em></div>
+          </div>
+          
+          <div class="policy-row unpaid">
+            <div class="pr-name" title="International - Unpaid Medical/Vacation Leave · Unpaid/Flex"><i></i><span>International - Unpaid Medical/Vacation Leave</span></div>
+            <div class="bar"><span class="seg-a" style="width:23.9%"></span><span class="seg-u" style="width:0.0%"></span></div>
+            <div class="pr-val">16.0h</div>
+          </div>
+          
+          <div class="policy-row paid">
+            <div class="pr-name" title="Labs - Paid Medical Leave · Paid/Allocated"><i></i><span>Labs - Paid Medical Leave</span></div>
+            <div class="bar"><span class="seg-a" style="width:4.5%"></span><span class="seg-u" style="width:11.9%"></span></div>
+            <div class="pr-val">3.0h · <em>8.0h unapproved</em></div>
+          </div>
+          
+          <div class="policy-row paid">
+            <div class="pr-name" title="International - Paid Medical Leave · Paid/Allocated"><i></i><span>International - Paid Medical Leave</span></div>
+            <div class="bar"><span class="seg-a" style="width:11.9%"></span><span class="seg-u" style="width:0.0%"></span></div>
+            <div class="pr-val">8.0h</div>
+          </div>
+          
+          <div class="policy-row unpaid">
+            <div class="pr-name" title="Unpaid Medical/Vacation Leave (US) · Unpaid/Flex"><i></i><span>Unpaid Medical/Vacation Leave (US)</span></div>
+            <div class="bar"><span class="seg-a" style="width:11.9%"></span><span class="seg-u" style="width:0.0%"></span></div>
+            <div class="pr-val">8.0h</div>
+          </div>
+          
         </div>
         
       </div>
@@ -1324,713 +1453,797 @@
           <tbody>
             
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-1">
-              <td class="member-name">Darren Karunaratne</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Darren Karunaratne</td>
               <td class="team-name" title="Labs - all, Venia Products  - All, VP - Customer Ops - Customer Relations">Labs - all, Venia Products  - All, VP - Customer Ops - Customer Relations</td>
-              <td class="center">8.0h (unapproved)</td>
-              <td class="center">8.0h (unapproved)</td>
-              <td class="center"><strong>16.0h (unapproved)</strong></td>
+              <td class="center"><span class="chip-stack"><span class="chip paid pending">8.0h unapproved</span></span></td>
+              <td class="center"><span class="chip-stack"><span class="chip unpaid pending">8.0h unapproved</span></span></td>
+              <td class="center total-cell"><span class="tot-u only">16.0h unapproved</span></td>
             </tr>
             <tr class="detail-row" id="ls-1" hidden>
-              <td colspan="5">
+              <td colspan="5"><div class="leave-card">
+
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>VP - International Unpaid Leave</td><td>Unpaid/Flex</td>
-      <td>Sep 8</td>
-      <td>8.0h (1.0d)</td>
-      <td class="status-unapproved">Unapproved</td>
+      <td class="entry-policy">VP - International Unpaid Leave</td>
+      <td><span class="chip unpaid"><span class="dot"></span>Unpaid/Flex</span></td>
+      <td class="entry-date">Sep 8</td>
+      <td class="entry-hours"><strong>8.0h</strong><span>1.0d</span></td>
+      <td><span class="status-pill unapproved">◷ Unapproved</span></td>
     </tr>
   
     <tr>
-      <td>Labs - Paid Medical Leave</td><td>Paid/Allocated</td>
-      <td>Sep 18</td>
-      <td>8.0h (1.0d)</td>
-      <td class="status-unapproved">Unapproved</td>
+      <td class="entry-policy">Labs - Paid Medical Leave</td>
+      <td><span class="chip paid"><span class="dot"></span>Paid/Allocated</span></td>
+      <td class="entry-date">Sep 18</td>
+      <td class="entry-hours"><strong>8.0h</strong><span>1.0d</span></td>
+      <td><span class="status-pill unapproved">◷ Unapproved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
             
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-2">
-              <td class="member-name">Farhanah Junainah Umpar</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Farhanah Junainah Umpar</td>
               <td class="team-name" title="Venia Products  - All, VP - Customer Ops - SDR">Venia Products  - All, VP - Customer Ops - SDR</td>
-              <td class="center"></td>
-              <td class="center">16.0h (approved)</td>
-              <td class="center"><strong>16.0h (approved)</strong></td>
+              <td class="center"><span class="chip-stack"></span></td>
+              <td class="center"><span class="chip-stack"><span class="chip unpaid"><span class="dot"></span>16.0h</span></span></td>
+              <td class="center total-cell"><strong>16.0h</strong></td>
             </tr>
             <tr class="detail-row" id="ls-2" hidden>
-              <td colspan="5"><p class="leave-note">160.5h total includes 16.0h (2.0d) approved time off → <strong>144.5h actually worked</strong>.</p>
+              <td colspan="5"><div class="leave-card">
+<div class="leave-note">🕒 <span>160.5h total includes 16.0h (2.0d) approved time off → <strong>144.5h actually worked</strong>.</span></div>
 
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>VP - International Unpaid Leave</td><td>Unpaid/Flex</td>
-      <td>Sep 9</td>
-      <td>8.0h (1.0d)</td>
-      <td class="status-approved">Approved</td>
+      <td class="entry-policy">VP - International Unpaid Leave</td>
+      <td><span class="chip unpaid"><span class="dot"></span>Unpaid/Flex</span></td>
+      <td class="entry-date">Sep 9</td>
+      <td class="entry-hours"><strong>8.0h</strong><span>1.0d</span></td>
+      <td><span class="status-pill approved">✓ Approved</span></td>
     </tr>
   
     <tr>
-      <td>VP - International Unpaid Leave</td><td>Unpaid/Flex</td>
-      <td>Sep 11</td>
-      <td>8.0h (1.0d)</td>
-      <td class="status-approved">Approved</td>
+      <td class="entry-policy">VP - International Unpaid Leave</td>
+      <td><span class="chip unpaid"><span class="dot"></span>Unpaid/Flex</span></td>
+      <td class="entry-date">Sep 11</td>
+      <td class="entry-hours"><strong>8.0h</strong><span>1.0d</span></td>
+      <td><span class="status-pill approved">✓ Approved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
             
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-3">
-              <td class="member-name">Farshad Ramsee</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Farshad Ramsee</td>
               <td class="team-name" title="Labs - all, Marketing, Media, Rev Ops">Labs - all, Marketing, Media, Rev Ops</td>
-              <td class="center">16.0h (approved)</td>
-              <td class="center"></td>
-              <td class="center"><strong>16.0h (approved)</strong></td>
+              <td class="center"><span class="chip-stack"><span class="chip paid"><span class="dot"></span>16.0h</span></span></td>
+              <td class="center"><span class="chip-stack"></span></td>
+              <td class="center total-cell"><strong>16.0h</strong></td>
             </tr>
             <tr class="detail-row" id="ls-3" hidden>
-              <td colspan="5"><p class="leave-note">173.0h total includes 16.0h (2.0d) approved time off → <strong>157.0h actually worked</strong>.</p>
+              <td colspan="5"><div class="leave-card">
+<div class="leave-note">🕒 <span>173.0h total includes 16.0h (2.0d) approved time off → <strong>157.0h actually worked</strong>.</span></div>
 
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>Labs - Paid Vacation Leave</td><td>Paid/Allocated</td>
-      <td>Sep 29–30</td>
-      <td>16.0h (2.0d)</td>
-      <td class="status-approved">Approved</td>
+      <td class="entry-policy">Labs - Paid Vacation Leave</td>
+      <td><span class="chip paid"><span class="dot"></span>Paid/Allocated</span></td>
+      <td class="entry-date">Sep 29–30</td>
+      <td class="entry-hours"><strong>16.0h</strong><span>2.0d</span></td>
+      <td><span class="status-pill approved">✓ Approved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
             
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-4">
-              <td class="member-name">Mary Anne Soriano</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Mary Anne Soriano</td>
               <td class="team-name" title="Venia Products  - All, VP - Customer Ops - CAM, VP - Customer Ops - Support Team, WeAssist">Venia Products  - All, VP - Customer Ops - CAM, VP - Customer Ops - Support Team, WeAssist</td>
-              <td class="center">16.0h (approved)</td>
-              <td class="center"></td>
-              <td class="center"><strong>16.0h (approved)</strong></td>
+              <td class="center"><span class="chip-stack"><span class="chip paid"><span class="dot"></span>16.0h</span></span></td>
+              <td class="center"><span class="chip-stack"></span></td>
+              <td class="center total-cell"><strong>16.0h</strong></td>
             </tr>
             <tr class="detail-row" id="ls-4" hidden>
-              <td colspan="5"><p class="leave-note">180.3h total includes 16.0h (2.0d) approved time off → <strong>164.3h actually worked</strong>.</p>
+              <td colspan="5"><div class="leave-card">
+<div class="leave-note">🕒 <span>180.3h total includes 16.0h (2.0d) approved time off → <strong>164.3h actually worked</strong>.</span></div>
 
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>Annual Allocated Leave</td><td>Paid/Allocated</td>
-      <td>Sep 3–4</td>
-      <td>16.0h (2.0d)</td>
-      <td class="status-approved">Approved</td>
+      <td class="entry-policy">Annual Allocated Leave</td>
+      <td><span class="chip paid"><span class="dot"></span>Paid/Allocated</span></td>
+      <td class="entry-date">Sep 3–4</td>
+      <td class="entry-hours"><strong>16.0h</strong><span>2.0d</span></td>
+      <td><span class="status-pill approved">✓ Approved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
             
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-5">
-              <td class="member-name">Mudasir Amjad</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Mudasir Amjad</td>
               <td class="team-name" title="Amazon, International Team, Marketing, Marketing- Labs, Team Lucas">Amazon, International Team, Marketing, Marketing- Labs, Team Lucas</td>
-              <td class="center"></td>
-              <td class="center">16.0h (approved)</td>
-              <td class="center"><strong>16.0h (approved)</strong></td>
+              <td class="center"><span class="chip-stack"></span></td>
+              <td class="center"><span class="chip-stack"><span class="chip unpaid"><span class="dot"></span>16.0h</span></span></td>
+              <td class="center total-cell"><strong>16.0h</strong></td>
             </tr>
             <tr class="detail-row" id="ls-5" hidden>
-              <td colspan="5"><p class="leave-note">158.4h total includes 16.0h (2.0d) approved time off → <strong>142.4h actually worked</strong>.</p>
+              <td colspan="5"><div class="leave-card">
+<div class="leave-note">🕒 <span>158.4h total includes 16.0h (2.0d) approved time off → <strong>142.4h actually worked</strong>.</span></div>
 
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>International - Unpaid Medical/Vacation Leave</td><td>Unpaid/Flex</td>
-      <td>Sep 14–15</td>
-      <td>16.0h (2.0d)</td>
-      <td class="status-approved">Approved</td>
+      <td class="entry-policy">International - Unpaid Medical/Vacation Leave</td>
+      <td><span class="chip unpaid"><span class="dot"></span>Unpaid/Flex</span></td>
+      <td class="entry-date">Sep 14–15</td>
+      <td class="entry-hours"><strong>16.0h</strong><span>2.0d</span></td>
+      <td><span class="status-pill approved">✓ Approved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
             
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-6">
-              <td class="member-name">Natalia Jayasundera</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Natalia Jayasundera</td>
               <td class="team-name" title="allintalent, HR, Labs - all">allintalent, HR, Labs - all</td>
-              <td class="center"></td>
-              <td class="center">16.0h (unapproved)</td>
-              <td class="center"><strong>16.0h (unapproved)</strong></td>
+              <td class="center"><span class="chip-stack"></span></td>
+              <td class="center"><span class="chip-stack"><span class="chip unpaid pending">16.0h unapproved</span></span></td>
+              <td class="center total-cell"><span class="tot-u only">16.0h unapproved</span></td>
             </tr>
             <tr class="detail-row" id="ls-6" hidden>
-              <td colspan="5">
+              <td colspan="5"><div class="leave-card">
+
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>Labs - Unpaid Medical/Vacation Leave</td><td>Unpaid/Flex</td>
-      <td>Sep 18</td>
-      <td>16.0h (2.0d)</td>
-      <td class="status-unapproved">Unapproved</td>
+      <td class="entry-policy">Labs - Unpaid Medical/Vacation Leave</td>
+      <td><span class="chip unpaid"><span class="dot"></span>Unpaid/Flex</span></td>
+      <td class="entry-date">Sep 18</td>
+      <td class="entry-hours"><strong>16.0h</strong><span>2.0d</span></td>
+      <td><span class="status-pill unapproved">◷ Unapproved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
             
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-7">
-              <td class="member-name">Shannon Woods</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Shannon Woods</td>
               <td class="team-name" title="Venia Products  - All, VP - Customer Ops - CAM, VP - Customer Ops - Leads">Venia Products  - All, VP - Customer Ops - CAM, VP - Customer Ops - Leads</td>
-              <td class="center">16.0h (unapproved)</td>
-              <td class="center"></td>
-              <td class="center"><strong>16.0h (unapproved)</strong></td>
+              <td class="center"><span class="chip-stack"><span class="chip paid pending">16.0h unapproved</span></span></td>
+              <td class="center"><span class="chip-stack"></span></td>
+              <td class="center total-cell"><span class="tot-u only">16.0h unapproved</span></td>
             </tr>
             <tr class="detail-row" id="ls-7" hidden>
-              <td colspan="5">
+              <td colspan="5"><div class="leave-card">
+
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>Annual Allocated Leave</td><td>Paid/Allocated</td>
-      <td>Sep 25–28</td>
-      <td>16.0h (2.0d)</td>
-      <td class="status-unapproved">Unapproved</td>
+      <td class="entry-policy">Annual Allocated Leave</td>
+      <td><span class="chip paid"><span class="dot"></span>Paid/Allocated</span></td>
+      <td class="entry-date">Sep 25–28</td>
+      <td class="entry-hours"><strong>16.0h</strong><span>2.0d</span></td>
+      <td><span class="status-pill unapproved">◷ Unapproved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
             
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-8">
-              <td class="member-name">Chathuranga Weerakoon</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Chathuranga Weerakoon</td>
               <td class="team-name" title="CRM, Digital Product, Labs - all">CRM, Digital Product, Labs - all</td>
-              <td class="center">12.0h (approved)</td>
-              <td class="center"></td>
-              <td class="center"><strong>12.0h (approved)</strong></td>
+              <td class="center"><span class="chip-stack"><span class="chip paid"><span class="dot"></span>12.0h</span></span></td>
+              <td class="center"><span class="chip-stack"></span></td>
+              <td class="center total-cell"><strong>12.0h</strong></td>
             </tr>
             <tr class="detail-row" id="ls-8" hidden>
-              <td colspan="5"><p class="leave-note">175.7h total includes 12.0h (1.5d) approved time off → <strong>163.7h actually worked</strong>.</p>
+              <td colspan="5"><div class="leave-card">
+<div class="leave-note">🕒 <span>175.7h total includes 12.0h (1.5d) approved time off → <strong>163.7h actually worked</strong>.</span></div>
 
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>Labs - Paid Vacation Leave</td><td>Paid/Allocated</td>
-      <td>Sep 21</td>
-      <td>8.0h (1.0d)</td>
-      <td class="status-approved">Approved</td>
+      <td class="entry-policy">Labs - Paid Vacation Leave</td>
+      <td><span class="chip paid"><span class="dot"></span>Paid/Allocated</span></td>
+      <td class="entry-date">Sep 21</td>
+      <td class="entry-hours"><strong>8.0h</strong><span>1.0d</span></td>
+      <td><span class="status-pill approved">✓ Approved</span></td>
     </tr>
   
     <tr>
-      <td>Labs - Paid Vacation Leave</td><td>Paid/Allocated</td>
-      <td>Sep 25</td>
-      <td>4.0h (0.5d)</td>
-      <td class="status-approved">Approved</td>
+      <td class="entry-policy">Labs - Paid Vacation Leave</td>
+      <td><span class="chip paid"><span class="dot"></span>Paid/Allocated</span></td>
+      <td class="entry-date">Sep 25</td>
+      <td class="entry-hours"><strong>4.0h</strong><span>0.5d</span></td>
+      <td><span class="status-pill approved">✓ Approved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
             
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-9">
-              <td class="member-name">Shehara Meadows</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Shehara Meadows</td>
               <td class="team-name" title="Content_catalog_platform, Digital Product, Labs - all, Site Content">Content_catalog_platform, Digital Product, Labs - all, Site Content</td>
-              <td class="center">4.0h (approved)</td>
-              <td class="center">8.0h (approved)</td>
-              <td class="center"><strong>12.0h (approved)</strong></td>
+              <td class="center"><span class="chip-stack"><span class="chip paid"><span class="dot"></span>4.0h</span></span></td>
+              <td class="center"><span class="chip-stack"><span class="chip unpaid"><span class="dot"></span>8.0h</span></span></td>
+              <td class="center total-cell"><strong>12.0h</strong></td>
             </tr>
             <tr class="detail-row" id="ls-9" hidden>
-              <td colspan="5"><p class="leave-note">161.9h total includes 12.0h (1.5d) approved time off → <strong>149.9h actually worked</strong>.</p>
+              <td colspan="5"><div class="leave-card">
+<div class="leave-note">🕒 <span>161.9h total includes 12.0h (1.5d) approved time off → <strong>149.9h actually worked</strong>.</span></div>
 
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>Labs - Paid Vacation Leave</td><td>Paid/Allocated</td>
-      <td>Sep 16</td>
-      <td>4.0h (0.5d)</td>
-      <td class="status-approved">Approved</td>
+      <td class="entry-policy">Labs - Paid Vacation Leave</td>
+      <td><span class="chip paid"><span class="dot"></span>Paid/Allocated</span></td>
+      <td class="entry-date">Sep 16</td>
+      <td class="entry-hours"><strong>4.0h</strong><span>0.5d</span></td>
+      <td><span class="status-pill approved">✓ Approved</span></td>
     </tr>
   
     <tr>
-      <td>Labs - Unpaid Medical/Vacation Leave</td><td>Unpaid/Flex</td>
-      <td>Sep 21</td>
-      <td>8.0h (1.0d)</td>
-      <td class="status-approved">Approved</td>
+      <td class="entry-policy">Labs - Unpaid Medical/Vacation Leave</td>
+      <td><span class="chip unpaid"><span class="dot"></span>Unpaid/Flex</span></td>
+      <td class="entry-date">Sep 21</td>
+      <td class="entry-hours"><strong>8.0h</strong><span>1.0d</span></td>
+      <td><span class="status-pill approved">✓ Approved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
             
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-10">
-              <td class="member-name">Bihani Madushika</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Bihani Madushika</td>
               <td class="team-name" title="BI and Data Team, Digital Product, Labs - all">BI and Data Team, Digital Product, Labs - all</td>
-              <td class="center"></td>
-              <td class="center">11.0h (approved)</td>
-              <td class="center"><strong>11.0h (approved)</strong></td>
+              <td class="center"><span class="chip-stack"></span></td>
+              <td class="center"><span class="chip-stack"><span class="chip unpaid"><span class="dot"></span>11.0h</span></span></td>
+              <td class="center total-cell"><strong>11.0h</strong></td>
             </tr>
             <tr class="detail-row" id="ls-10" hidden>
-              <td colspan="5"><p class="leave-note">187.6h total includes 11.0h (1.4d) approved time off → <strong>176.6h actually worked</strong>.</p>
+              <td colspan="5"><div class="leave-card">
+<div class="leave-note">🕒 <span>187.6h total includes 11.0h (1.4d) approved time off → <strong>176.6h actually worked</strong>.</span></div>
 
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>Labs - Unpaid Medical/Vacation Leave</td><td>Unpaid/Flex</td>
-      <td>Sep 11</td>
-      <td>5.0h (0.6d)</td>
-      <td class="status-approved">Approved</td>
+      <td class="entry-policy">Labs - Unpaid Medical/Vacation Leave</td>
+      <td><span class="chip unpaid"><span class="dot"></span>Unpaid/Flex</span></td>
+      <td class="entry-date">Sep 11</td>
+      <td class="entry-hours"><strong>5.0h</strong><span>0.6d</span></td>
+      <td><span class="status-pill approved">✓ Approved</span></td>
     </tr>
   
     <tr>
-      <td>Labs - Unpaid Medical/Vacation Leave</td><td>Unpaid/Flex</td>
-      <td>Sep 16</td>
-      <td>6.0h (0.8d)</td>
-      <td class="status-approved">Approved</td>
+      <td class="entry-policy">Labs - Unpaid Medical/Vacation Leave</td>
+      <td><span class="chip unpaid"><span class="dot"></span>Unpaid/Flex</span></td>
+      <td class="entry-date">Sep 16</td>
+      <td class="entry-hours"><strong>6.0h</strong><span>0.8d</span></td>
+      <td><span class="status-pill approved">✓ Approved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
             
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-11">
-              <td class="member-name">Jebby Rochelle</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Jebby Rochelle</td>
               <td class="team-name" title="Framework Friday, Labs - all, Marketing, Media, Rev Ops">Framework Friday, Labs - all, Marketing, Media, Rev Ops</td>
-              <td class="center">3.0h (approved)</td>
-              <td class="center">8.0h (approved)</td>
-              <td class="center"><strong>11.0h (approved)</strong></td>
+              <td class="center"><span class="chip-stack"><span class="chip paid"><span class="dot"></span>3.0h</span></span></td>
+              <td class="center"><span class="chip-stack"><span class="chip unpaid"><span class="dot"></span>8.0h</span></span></td>
+              <td class="center total-cell"><strong>11.0h</strong></td>
             </tr>
             <tr class="detail-row" id="ls-11" hidden>
-              <td colspan="5"><p class="leave-note">168.4h total includes 11.0h (1.4d) approved time off → <strong>157.4h actually worked</strong>.</p>
+              <td colspan="5"><div class="leave-card">
+<div class="leave-note">🕒 <span>168.4h total includes 11.0h (1.4d) approved time off → <strong>157.4h actually worked</strong>.</span></div>
 
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>Labs - Unpaid Medical/Vacation Leave</td><td>Unpaid/Flex</td>
-      <td>Sep 4</td>
-      <td>8.0h (1.0d)</td>
-      <td class="status-approved">Approved</td>
+      <td class="entry-policy">Labs - Unpaid Medical/Vacation Leave</td>
+      <td><span class="chip unpaid"><span class="dot"></span>Unpaid/Flex</span></td>
+      <td class="entry-date">Sep 4</td>
+      <td class="entry-hours"><strong>8.0h</strong><span>1.0d</span></td>
+      <td><span class="status-pill approved">✓ Approved</span></td>
     </tr>
   
     <tr>
-      <td>Labs - Paid Medical Leave</td><td>Paid/Allocated</td>
-      <td>Sep 25</td>
-      <td>3.0h (0.4d)</td>
-      <td class="status-approved">Approved</td>
+      <td class="entry-policy">Labs - Paid Medical Leave</td>
+      <td><span class="chip paid"><span class="dot"></span>Paid/Allocated</span></td>
+      <td class="entry-date">Sep 25</td>
+      <td class="entry-hours"><strong>3.0h</strong><span>0.4d</span></td>
+      <td><span class="status-pill approved">✓ Approved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
             
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-12">
-              <td class="member-name">Caryl Agamao</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Caryl Agamao</td>
               <td class="team-name" title="Venia Products  - All, VP - Customer Ops - SDR">Venia Products  - All, VP - Customer Ops - SDR</td>
-              <td class="center">8.0h (approved)</td>
-              <td class="center"></td>
-              <td class="center"><strong>8.0h (approved)</strong></td>
+              <td class="center"><span class="chip-stack"><span class="chip paid"><span class="dot"></span>8.0h</span></span></td>
+              <td class="center"><span class="chip-stack"></span></td>
+              <td class="center total-cell"><strong>8.0h</strong></td>
             </tr>
             <tr class="detail-row" id="ls-12" hidden>
-              <td colspan="5"><p class="leave-note">183.2h total includes 8.0h (1.0d) approved time off → <strong>175.2h actually worked</strong>.</p>
+              <td colspan="5"><div class="leave-card">
+<div class="leave-note">🕒 <span>183.2h total includes 8.0h (1.0d) approved time off → <strong>175.2h actually worked</strong>.</span></div>
 
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>International - Paid Medical Leave</td><td>Paid/Allocated</td>
-      <td>Sep 25</td>
-      <td>8.0h (1.0d)</td>
-      <td class="status-approved">Approved</td>
+      <td class="entry-policy">International - Paid Medical Leave</td>
+      <td><span class="chip paid"><span class="dot"></span>Paid/Allocated</span></td>
+      <td class="entry-date">Sep 25</td>
+      <td class="entry-hours"><strong>8.0h</strong><span>1.0d</span></td>
+      <td><span class="status-pill approved">✓ Approved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
             
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-13">
-              <td class="member-name">Dulan Jayawickrama</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Dulan Jayawickrama</td>
               <td class="team-name" title="Centrifuse Engineers">Centrifuse Engineers</td>
-              <td class="center"></td>
-              <td class="center">8.0h (unapproved)</td>
-              <td class="center"><strong>8.0h (unapproved)</strong></td>
+              <td class="center"><span class="chip-stack"></span></td>
+              <td class="center"><span class="chip-stack"><span class="chip unpaid pending">8.0h unapproved</span></span></td>
+              <td class="center total-cell"><span class="tot-u only">8.0h unapproved</span></td>
             </tr>
             <tr class="detail-row" id="ls-13" hidden>
-              <td colspan="5">
+              <td colspan="5"><div class="leave-card">
+
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>Annual Flex Leave</td><td>Unpaid/Flex</td>
-      <td>Sep 14</td>
-      <td>8.0h (1.0d)</td>
-      <td class="status-unapproved">Unapproved</td>
+      <td class="entry-policy">Annual Flex Leave</td>
+      <td><span class="chip unpaid"><span class="dot"></span>Unpaid/Flex</span></td>
+      <td class="entry-date">Sep 14</td>
+      <td class="entry-hours"><strong>8.0h</strong><span>1.0d</span></td>
+      <td><span class="status-pill unapproved">◷ Unapproved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
             
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-14">
-              <td class="member-name">Ibrahim Adeeb</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Ibrahim Adeeb</td>
               <td class="team-name" title="Accounting, FP&amp;A">Accounting, FP&amp;A</td>
-              <td class="center"></td>
-              <td class="center">8.0h (unapproved)</td>
-              <td class="center"><strong>8.0h (unapproved)</strong></td>
+              <td class="center"><span class="chip-stack"></span></td>
+              <td class="center"><span class="chip-stack"><span class="chip unpaid pending">8.0h unapproved</span></span></td>
+              <td class="center total-cell"><span class="tot-u only">8.0h unapproved</span></td>
             </tr>
             <tr class="detail-row" id="ls-14" hidden>
-              <td colspan="5">
+              <td colspan="5"><div class="leave-card">
+
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>Annual Flex Leave</td><td>Unpaid/Flex</td>
-      <td>Sep 14</td>
-      <td>8.0h (1.0d)</td>
-      <td class="status-unapproved">Unapproved</td>
+      <td class="entry-policy">Annual Flex Leave</td>
+      <td><span class="chip unpaid"><span class="dot"></span>Unpaid/Flex</span></td>
+      <td class="entry-date">Sep 14</td>
+      <td class="entry-hours"><strong>8.0h</strong><span>1.0d</span></td>
+      <td><span class="status-pill unapproved">◷ Unapproved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
             
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-15">
-              <td class="member-name">leora megan</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>leora megan</td>
               <td class="team-name" title="Labs - all, VP - Customer Ops - Customer Relations">Labs - all, VP - Customer Ops - Customer Relations</td>
-              <td class="center"></td>
-              <td class="center">8.0h (approved)</td>
-              <td class="center"><strong>8.0h (approved)</strong></td>
+              <td class="center"><span class="chip-stack"></span></td>
+              <td class="center"><span class="chip-stack"><span class="chip unpaid"><span class="dot"></span>8.0h</span></span></td>
+              <td class="center total-cell"><strong>8.0h</strong></td>
             </tr>
             <tr class="detail-row" id="ls-15" hidden>
-              <td colspan="5"><p class="leave-note">169.3h total includes 8.0h (1.0d) approved time off → <strong>161.3h actually worked</strong>.</p>
+              <td colspan="5"><div class="leave-card">
+<div class="leave-note">🕒 <span>169.3h total includes 8.0h (1.0d) approved time off → <strong>161.3h actually worked</strong>.</span></div>
 
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>VP - International Unpaid Leave</td><td>Unpaid/Flex</td>
-      <td>Sep 9</td>
-      <td>8.0h (1.0d)</td>
-      <td class="status-approved">Approved</td>
+      <td class="entry-policy">VP - International Unpaid Leave</td>
+      <td><span class="chip unpaid"><span class="dot"></span>Unpaid/Flex</span></td>
+      <td class="entry-date">Sep 9</td>
+      <td class="entry-hours"><strong>8.0h</strong><span>1.0d</span></td>
+      <td><span class="status-pill approved">✓ Approved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
             
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-16">
-              <td class="member-name">Modhuka Paranagama</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Modhuka Paranagama</td>
               <td class="team-name" title="BI and Data Team, Digital Product, Labs - all">BI and Data Team, Digital Product, Labs - all</td>
-              <td class="center"></td>
-              <td class="center">8.0h (approved)</td>
-              <td class="center"><strong>8.0h (approved)</strong></td>
+              <td class="center"><span class="chip-stack"></span></td>
+              <td class="center"><span class="chip-stack"><span class="chip unpaid"><span class="dot"></span>8.0h</span></span></td>
+              <td class="center total-cell"><strong>8.0h</strong></td>
             </tr>
             <tr class="detail-row" id="ls-16" hidden>
-              <td colspan="5"><p class="leave-note">166.4h total includes 8.0h (1.0d) approved time off → <strong>158.4h actually worked</strong>.</p>
+              <td colspan="5"><div class="leave-card">
+<div class="leave-note">🕒 <span>166.4h total includes 8.0h (1.0d) approved time off → <strong>158.4h actually worked</strong>.</span></div>
 
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>Labs - Unpaid Medical/Vacation Leave</td><td>Unpaid/Flex</td>
-      <td>Sep 10</td>
-      <td>8.0h (1.0d)</td>
-      <td class="status-approved">Approved</td>
+      <td class="entry-policy">Labs - Unpaid Medical/Vacation Leave</td>
+      <td><span class="chip unpaid"><span class="dot"></span>Unpaid/Flex</span></td>
+      <td class="entry-date">Sep 10</td>
+      <td class="entry-hours"><strong>8.0h</strong><span>1.0d</span></td>
+      <td><span class="status-pill approved">✓ Approved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
             
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-17">
-              <td class="member-name">Sara Higgason</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Sara Higgason</td>
               <td class="team-name" title="VP - Customer Ops - Leads, VP - Customer Ops - Support Team">VP - Customer Ops - Leads, VP - Customer Ops - Support Team</td>
-              <td class="center">8.0h (unapproved)</td>
-              <td class="center"></td>
-              <td class="center"><strong>8.0h (unapproved)</strong></td>
+              <td class="center"><span class="chip-stack"><span class="chip paid pending">8.0h unapproved</span></span></td>
+              <td class="center"><span class="chip-stack"></span></td>
+              <td class="center total-cell"><span class="tot-u only">8.0h unapproved</span></td>
             </tr>
             <tr class="detail-row" id="ls-17" hidden>
-              <td colspan="5">
+              <td colspan="5"><div class="leave-card">
+
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>Annual Allocated Leave</td><td>Paid/Allocated</td>
-      <td>Sep 30</td>
-      <td>8.0h (1.0d)</td>
-      <td class="status-unapproved">Unapproved</td>
+      <td class="entry-policy">Annual Allocated Leave</td>
+      <td><span class="chip paid"><span class="dot"></span>Paid/Allocated</span></td>
+      <td class="entry-date">Sep 30</td>
+      <td class="entry-hours"><strong>8.0h</strong><span>1.0d</span></td>
+      <td><span class="status-pill unapproved">◷ Unapproved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
             
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-18">
-              <td class="member-name">Sean Dehoedt</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Sean Dehoedt</td>
               <td class="team-name" title="—">—</td>
-              <td class="center"></td>
-              <td class="center">8.0h (unapproved)</td>
-              <td class="center"><strong>8.0h (unapproved)</strong></td>
+              <td class="center"><span class="chip-stack"></span></td>
+              <td class="center"><span class="chip-stack"><span class="chip unpaid pending">8.0h unapproved</span></span></td>
+              <td class="center total-cell"><span class="tot-u only">8.0h unapproved</span></td>
             </tr>
             <tr class="detail-row" id="ls-18" hidden>
-              <td colspan="5">
+              <td colspan="5"><div class="leave-card">
+
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>Labs - Unpaid Medical/Vacation Leave</td><td>Unpaid/Flex</td>
-      <td>Sep 11</td>
-      <td>8.0h (1.0d)</td>
-      <td class="status-unapproved">Unapproved</td>
+      <td class="entry-policy">Labs - Unpaid Medical/Vacation Leave</td>
+      <td><span class="chip unpaid"><span class="dot"></span>Unpaid/Flex</span></td>
+      <td class="entry-date">Sep 11</td>
+      <td class="entry-hours"><strong>8.0h</strong><span>1.0d</span></td>
+      <td><span class="status-pill unapproved">◷ Unapproved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
             
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-19">
-              <td class="member-name">Shaarukshan Seralathan</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Shaarukshan Seralathan</td>
               <td class="team-name" title="AIT - Product, allintalent, Labs - all">AIT - Product, allintalent, Labs - all</td>
-              <td class="center">8.0h (unapproved)</td>
-              <td class="center"></td>
-              <td class="center"><strong>8.0h (unapproved)</strong></td>
+              <td class="center"><span class="chip-stack"><span class="chip paid pending">8.0h unapproved</span></span></td>
+              <td class="center"><span class="chip-stack"></span></td>
+              <td class="center total-cell"><span class="tot-u only">8.0h unapproved</span></td>
             </tr>
             <tr class="detail-row" id="ls-19" hidden>
-              <td colspan="5">
+              <td colspan="5"><div class="leave-card">
+
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>Annual Allocated Leave</td><td>Paid/Allocated</td>
-      <td>Sep 11–14</td>
-      <td>8.0h (1.0d)</td>
-      <td class="status-unapproved">Unapproved</td>
+      <td class="entry-policy">Annual Allocated Leave</td>
+      <td><span class="chip paid"><span class="dot"></span>Paid/Allocated</span></td>
+      <td class="entry-date">Sep 11–14</td>
+      <td class="entry-hours"><strong>8.0h</strong><span>1.0d</span></td>
+      <td><span class="status-pill unapproved">◷ Unapproved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
             
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-20">
-              <td class="member-name">shenali edirisinghe</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>shenali edirisinghe</td>
               <td class="team-name" title="Amazon, Labs - all, Marketing, Marketing- Labs, Team Lucas">Amazon, Labs - all, Marketing, Marketing- Labs, Team Lucas</td>
-              <td class="center"></td>
-              <td class="center">8.0h (approved)</td>
-              <td class="center"><strong>8.0h (approved)</strong></td>
+              <td class="center"><span class="chip-stack"></span></td>
+              <td class="center"><span class="chip-stack"><span class="chip unpaid"><span class="dot"></span>8.0h</span></span></td>
+              <td class="center total-cell"><strong>8.0h</strong></td>
             </tr>
             <tr class="detail-row" id="ls-20" hidden>
-              <td colspan="5"><p class="leave-note">163.4h total includes 8.0h (1.0d) approved time off → <strong>155.4h actually worked</strong>.</p>
+              <td colspan="5"><div class="leave-card">
+<div class="leave-note">🕒 <span>163.4h total includes 8.0h (1.0d) approved time off → <strong>155.4h actually worked</strong>.</span></div>
 
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>Labs - Unpaid Medical/Vacation Leave</td><td>Unpaid/Flex</td>
-      <td>Sep 28</td>
-      <td>8.0h (1.0d)</td>
-      <td class="status-approved">Approved</td>
+      <td class="entry-policy">Labs - Unpaid Medical/Vacation Leave</td>
+      <td><span class="chip unpaid"><span class="dot"></span>Unpaid/Flex</span></td>
+      <td class="entry-date">Sep 28</td>
+      <td class="entry-hours"><strong>8.0h</strong><span>1.0d</span></td>
+      <td><span class="status-pill approved">✓ Approved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
             
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-21">
-              <td class="member-name">Joan Lopez</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Joan Lopez</td>
               <td class="team-name" title="Venia Products  - All, VP - Customer Ops - Support Team">Venia Products  - All, VP - Customer Ops - Support Team</td>
-              <td class="center"></td>
-              <td class="center">5.6h (approved)</td>
-              <td class="center"><strong>5.6h (approved)</strong></td>
+              <td class="center"><span class="chip-stack"></span></td>
+              <td class="center"><span class="chip-stack"><span class="chip unpaid"><span class="dot"></span>5.6h</span></span></td>
+              <td class="center total-cell"><strong>5.6h</strong></td>
             </tr>
             <tr class="detail-row" id="ls-21" hidden>
-              <td colspan="5"><p class="leave-note">180.9h total includes 5.6h (0.7d) approved time off → <strong>175.3h actually worked</strong>.</p>
+              <td colspan="5"><div class="leave-card">
+<div class="leave-note">🕒 <span>180.9h total includes 5.6h (0.7d) approved time off → <strong>175.3h actually worked</strong>.</span></div>
 
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>VP - International Unpaid Leave</td><td>Unpaid/Flex</td>
-      <td>Sep 9</td>
-      <td>5.6h (0.7d)</td>
-      <td class="status-approved">Approved</td>
+      <td class="entry-policy">VP - International Unpaid Leave</td>
+      <td><span class="chip unpaid"><span class="dot"></span>Unpaid/Flex</span></td>
+      <td class="entry-date">Sep 9</td>
+      <td class="entry-hours"><strong>5.6h</strong><span>0.7d</span></td>
+      <td><span class="status-pill approved">✓ Approved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
             
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-22">
-              <td class="member-name">Jesus Corral</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Jesus Corral</td>
               <td class="team-name" title="Venia Products  - All, VP - Customer Ops - CAM">Venia Products  - All, VP - Customer Ops - CAM</td>
-              <td class="center"></td>
-              <td class="center">5.0h (approved)</td>
-              <td class="center"><strong>5.0h (approved)</strong></td>
+              <td class="center"><span class="chip-stack"></span></td>
+              <td class="center"><span class="chip-stack"><span class="chip unpaid"><span class="dot"></span>5.0h</span></span></td>
+              <td class="center total-cell"><strong>5.0h</strong></td>
             </tr>
             <tr class="detail-row" id="ls-22" hidden>
-              <td colspan="5"><p class="leave-note">165.4h total includes 5.0h (0.6d) approved time off → <strong>160.4h actually worked</strong>.</p>
+              <td colspan="5"><div class="leave-card">
+<div class="leave-note">🕒 <span>165.4h total includes 5.0h (0.6d) approved time off → <strong>160.4h actually worked</strong>.</span></div>
 
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>Unpaid Medical/Vacation Leave (US)</td><td>Unpaid/Flex</td>
-      <td>Sep 11</td>
-      <td>5.0h (0.6d)</td>
-      <td class="status-approved">Approved</td>
+      <td class="entry-policy">Unpaid Medical/Vacation Leave (US)</td>
+      <td><span class="chip unpaid"><span class="dot"></span>Unpaid/Flex</span></td>
+      <td class="entry-date">Sep 11</td>
+      <td class="entry-hours"><strong>5.0h</strong><span>0.6d</span></td>
+      <td><span class="status-pill approved">✓ Approved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
             
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-23">
-              <td class="member-name">Monica Lopez</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Monica Lopez</td>
               <td class="team-name" title="Venia Products  - All, VP - Customer Ops - CAM">Venia Products  - All, VP - Customer Ops - CAM</td>
-              <td class="center">4.0h (approved)</td>
-              <td class="center"></td>
-              <td class="center"><strong>4.0h (approved)</strong></td>
+              <td class="center"><span class="chip-stack"><span class="chip paid"><span class="dot"></span>4.0h</span></span></td>
+              <td class="center"><span class="chip-stack"></span></td>
+              <td class="center total-cell"><strong>4.0h</strong></td>
             </tr>
             <tr class="detail-row" id="ls-23" hidden>
-              <td colspan="5"><p class="leave-note">176.8h total includes 4.0h (0.5d) approved time off → <strong>172.8h actually worked</strong>.</p>
+              <td colspan="5"><div class="leave-card">
+<div class="leave-note">🕒 <span>176.8h total includes 4.0h (0.5d) approved time off → <strong>172.8h actually worked</strong>.</span></div>
 
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>Annual Allocated Leave</td><td>Paid/Allocated</td>
-      <td>Sep 18</td>
-      <td>4.0h (0.5d)</td>
-      <td class="status-approved">Approved</td>
+      <td class="entry-policy">Annual Allocated Leave</td>
+      <td><span class="chip paid"><span class="dot"></span>Paid/Allocated</span></td>
+      <td class="entry-date">Sep 18</td>
+      <td class="entry-hours"><strong>4.0h</strong><span>0.5d</span></td>
+      <td><span class="status-pill approved">✓ Approved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
             
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-24">
-              <td class="member-name">Sarah Madoro</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Sarah Madoro</td>
               <td class="team-name" title="Venia Products  - All, VP - Customer Ops - SDR">Venia Products  - All, VP - Customer Ops - SDR</td>
-              <td class="center"></td>
-              <td class="center">4.0h (approved)</td>
-              <td class="center"><strong>4.0h (approved)</strong></td>
+              <td class="center"><span class="chip-stack"></span></td>
+              <td class="center"><span class="chip-stack"><span class="chip unpaid"><span class="dot"></span>4.0h</span></span></td>
+              <td class="center total-cell"><strong>4.0h</strong></td>
             </tr>
             <tr class="detail-row" id="ls-24" hidden>
-              <td colspan="5"><p class="leave-note">180.9h total includes 4.0h (0.5d) approved time off → <strong>176.9h actually worked</strong>.</p>
+              <td colspan="5"><div class="leave-card">
+<div class="leave-note">🕒 <span>180.9h total includes 4.0h (0.5d) approved time off → <strong>176.9h actually worked</strong>.</span></div>
 
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>VP - International Unpaid Leave</td><td>Unpaid/Flex</td>
-      <td>Sep 30</td>
-      <td>4.0h (0.5d)</td>
-      <td class="status-approved">Approved</td>
+      <td class="entry-policy">VP - International Unpaid Leave</td>
+      <td><span class="chip unpaid"><span class="dot"></span>Unpaid/Flex</span></td>
+      <td class="entry-date">Sep 30</td>
+      <td class="entry-hours"><strong>4.0h</strong><span>0.5d</span></td>
+      <td><span class="status-pill approved">✓ Approved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
             
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-25">
-              <td class="member-name">Meredith Sands</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Meredith Sands</td>
               <td class="team-name" title="Venia Products  - All, VP - Customer Ops - CAM">Venia Products  - All, VP - Customer Ops - CAM</td>
-              <td class="center"></td>
-              <td class="center">3.0h (approved)</td>
-              <td class="center"><strong>3.0h (approved)</strong></td>
+              <td class="center"><span class="chip-stack"></span></td>
+              <td class="center"><span class="chip-stack"><span class="chip unpaid"><span class="dot"></span>3.0h</span></span></td>
+              <td class="center total-cell"><strong>3.0h</strong></td>
             </tr>
             <tr class="detail-row" id="ls-25" hidden>
-              <td colspan="5"><p class="leave-note">166.1h total includes 3.0h (0.4d) approved time off → <strong>163.1h actually worked</strong>.</p>
+              <td colspan="5"><div class="leave-card">
+<div class="leave-note">🕒 <span>166.1h total includes 3.0h (0.4d) approved time off → <strong>163.1h actually worked</strong>.</span></div>
 
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>Unpaid Medical/Vacation Leave (US)</td><td>Unpaid/Flex</td>
-      <td>Sep 1</td>
-      <td>3.0h (0.4d)</td>
-      <td class="status-approved">Approved</td>
+      <td class="entry-policy">Unpaid Medical/Vacation Leave (US)</td>
+      <td><span class="chip unpaid"><span class="dot"></span>Unpaid/Flex</span></td>
+      <td class="entry-date">Sep 1</td>
+      <td class="entry-hours"><strong>3.0h</strong><span>0.4d</span></td>
+      <td><span class="status-pill approved">✓ Approved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
             
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-26">
-              <td class="member-name">Ma Aubrey Sustento</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Ma Aubrey Sustento</td>
               <td class="team-name" title="Venia Products  - All, VP - Customer Ops - Support Team">Venia Products  - All, VP - Customer Ops - Support Team</td>
-              <td class="center"></td>
-              <td class="center">2.0h (approved)</td>
-              <td class="center"><strong>2.0h (approved)</strong></td>
+              <td class="center"><span class="chip-stack"></span></td>
+              <td class="center"><span class="chip-stack"><span class="chip unpaid"><span class="dot"></span>2.0h</span></span></td>
+              <td class="center total-cell"><strong>2.0h</strong></td>
             </tr>
             <tr class="detail-row" id="ls-26" hidden>
-              <td colspan="5"><p class="leave-note">174.4h total includes 2.0h (0.2d) approved time off → <strong>172.4h actually worked</strong>.</p>
+              <td colspan="5"><div class="leave-card">
+<div class="leave-note">🕒 <span>174.4h total includes 2.0h (0.2d) approved time off → <strong>172.4h actually worked</strong>.</span></div>
 
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
   <tbody>
   
     <tr>
-      <td>VP - International Unpaid Leave</td><td>Unpaid/Flex</td>
-      <td>Sep 16</td>
-      <td>2.0h (0.2d)</td>
-      <td class="status-approved">Approved</td>
+      <td class="entry-policy">VP - International Unpaid Leave</td>
+      <td><span class="chip unpaid"><span class="dot"></span>Unpaid/Flex</span></td>
+      <td class="entry-date">Sep 16</td>
+      <td class="entry-hours"><strong>2.0h</strong><span>0.2d</span></td>
+      <td><span class="status-pill approved">✓ Approved</span></td>
     </tr>
   
   </tbody>
 </table>
-</td>
+
+</div></td>
             </tr>
             
           </tbody>
@@ -2046,7 +2259,7 @@
   <div class="page-footer">
     <span>WebLife Ventures Performance Reporting System</span>
     <span>
-      Generated 2026-10-02 02:07
+      Generated 2026-10-02 02:13
       <span class="footer-dot"> &nbsp;·&nbsp; </span>
       Internal use only — do not distribute
     </span>
@@ -2069,7 +2282,8 @@
     var allOpen = rows.length && Array.prototype.every.call(rows, function (r) {
       return r.getAttribute('aria-expanded') === 'true';
     });
-    btn.textContent = allOpen ? 'Collapse all' : 'Expand all';
+    btn.querySelector('.btn-label').textContent = allOpen ? 'Collapse all' : 'Expand all';
+    btn.setAttribute('aria-pressed', allOpen ? 'true' : 'false');
   }
   document.querySelectorAll('tr.expandable').forEach(function (tr) {
     var section = tr.closest('.section-block');
@@ -2082,7 +2296,7 @@
   document.querySelectorAll('.toggle-all-btn').forEach(function (btn) {
     btn.addEventListener('click', function () {
       var section = document.getElementById(btn.getAttribute('data-section'));
-      var open = btn.textContent.trim() === 'Expand all';
+      var open = btn.getAttribute('aria-pressed') !== 'true';
       section.querySelectorAll('tr.expandable').forEach(function (tr) { setRow(tr, open); });
       syncButton(section);
     });
