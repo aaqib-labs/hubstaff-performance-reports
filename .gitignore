@@ -11,3 +11,6 @@ data/personnel/personnel_index.md
 __pycache__/
 *.pyc
 .DS_Store
+
+# Local planning docs — contain staff names and leave data, never commit (public repo)
+plans/
