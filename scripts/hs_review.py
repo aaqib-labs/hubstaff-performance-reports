@@ -19,6 +19,7 @@ Usage:
         --salaried "Name One,Name Two" \
         [--skip "Offboarded One,Offboarded Two"] \
         [--leave data/input/timeoff/TO-2026-09-01_to_2026-09-30.csv ...] \
+        [--partial data/input/biweekly/HS-2026-10-01_to_2026-10-20.csv] \
         [--unusual data/input/hs_mcp/raw/UA-....json --members data/input/hs_mcp/raw/MEMBERS.json] \
         [--section salaried|patterns|peers|unusual|leave]
 """
@@ -37,7 +38,8 @@ from pathlib import Path
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).parent))
-from utils import HOURS_BASE, HOURS_OVERWORK_BASE, evaluate_flags, get_exclusions, load_master_table  # noqa: E402
+from utils import (HOURS_BASE, HOURS_OVERWORK_BASE, count_working_days, evaluate_flags,  # noqa: E402
+                   get_exclusions, get_month_working_days, load_master_table)
 from generate_peer_comparison import PEER_GROUPS  # noqa: E402
 
 # ---------------------------------------------------------------------------
@@ -106,6 +108,18 @@ def load_months(paths: list[Path], skip: set) -> list[dict]:
     return months
 
 
+def load_partial(csv_path: Path, skip: set) -> dict:
+    """Month-to-date CSV (HS-YYYY-MM-DD_to_YYYY-MM-DD.csv) for the info-only
+    column. Pace = salaried target prorated by Mon–Fri working days."""
+    s, e = (date.fromisoformat(d) for d in re.findall(r"\d{4}-\d{2}-\d{2}", csv_path.name)[:2])
+    df = load_master_table(csv_path)
+    excl = {norm(n) for n in get_exclusions(s)} | skip
+    df = df[~df["member"].apply(norm).isin(excl)]
+    days, month_days = count_working_days(s, e), get_month_working_days(s)
+    return {"start": s, "end": e, "label": f"{s:%b} {s.day}–{e.day}", "days": days, "month_days": month_days,
+            "pace": SALARIED_TARGET * days / month_days, "rows": {r["member"]: r for _, r in df.iterrows()}}
+
+
 def load_unpaid_leave(paths: list[Path]) -> dict:
     """{(YYYY-MM, member): approved Unpaid/Flex hours}. Total Worked Hours
     already includes approved time off, so salaried hours = total − unpaid."""
@@ -130,9 +144,19 @@ def table(headers: list[str], rows: list[list]) -> list[str]:
 # Sections — each returns (detail lines, [(priority, icon, name, area, why), ...])
 # ---------------------------------------------------------------------------
 
-def section_salaried(months, mapping: dict, unmatched: list, unpaid: dict, leave_months: set):
+def section_salaried(months, mapping: dict, unmatched: list, unpaid: dict, leave_months: set,
+                     partial: dict | None = None, partial_map: dict | None = None):
     serious, alert, aside, top = [], [], [], []
     fmt = lambda h: "—" if h is None else (f"**{h:.0f}h**" if h < SALARIED_FLOOR else f"{h:.0f}h")  # noqa: E731
+
+    def to_date(sal_name):
+        """Month-to-date hours: shown for information, never flagged."""
+        row = partial["rows"].get((partial_map or {}).get(sal_name))
+        if row is None or pd.isna(row["total_hours"]):
+            return "—"
+        return f"{row['total_hours'] - unpaid.get((partial['start'].strftime('%Y-%m'), row['member']), 0.0):.0f}h"
+
+    extra = (lambda n: [to_date(n)]) if partial else (lambda n: [])  # noqa: E731
     for sal_name, csv_name in mapping.items():
         hours, under = [], 0
         for mo in months:
@@ -146,7 +170,7 @@ def section_salaried(months, mapping: dict, unmatched: list, unpaid: dict, leave
         latest = hours[-1]
         if latest is None:
             continue
-        cells = [fmt(h) for h in hours]
+        cells = [fmt(h) for h in hours] + extra(sal_name)
         trail = " / ".join(f"{h:.0f}" if h is not None else "—" for h in hours) + "h"
         if norm(csv_name) in LEADERSHIP:
             aside.append([sal_name, *cells, "Leadership"])
@@ -167,6 +191,8 @@ def section_salaried(months, mapping: dict, unmatched: list, unpaid: dict, leave
                         f"First month under {SALARIED_FLOOR:.0f}h ({latest:.0f}h in {months[-1]['label']})"))
 
     labels = [mo["label"] for mo in months]
+    if partial:
+        labels.append(f"{partial['label']} (pace {partial['pace']:.0f}h)")
     out = [f"## Salaried hours (target {SALARIED_TARGET:.0f}h, flag under {SALARIED_FLOOR:.0f}h)", ""]
     if not serious and not alert:
         out.append(f"No salaried staff under {SALARIED_FLOOR:.0f}h in {months[-1]['label']}.")
@@ -175,6 +201,9 @@ def section_salaried(months, mapping: dict, unmatched: list, unpaid: dict, leave
                 + [r for _, r in sorted(alert, key=lambda x: -x[0])])
         out += table(["Name", *labels, f"Under {SALARIED_FLOOR:.0f}h", f"Avg short of {SALARIED_TARGET:.0f}h", "Status"], rows)
         out.append(f"\n_Bold = under {SALARIED_FLOOR:.0f}h._")
+    if partial:
+        out.append(f"\n_{partial['label']} is month to date, for information only (not flagged). Pace = "
+                   f"{SALARIED_TARGET:.0f}h × {partial['days']} of {partial['month_days']} working days._")
     if aside:
         out += ["", "**Not ranked**", ""] + table(["Name", *labels, "Why"], sorted(aside, key=lambda r: (r[-1], r[0])))
     no_leave = [mo["label"] for mo in months if mo["start"].strftime("%Y-%m") not in leave_months]
@@ -317,6 +346,7 @@ def main():
     ap.add_argument("--salaried", default="", help="Comma-separated salaried names from ClickUp HR profiles")
     ap.add_argument("--skip", default="", help="Comma-separated offboarded/terminated names from ClickUp")
     ap.add_argument("--leave", nargs="*", default=[], help="TO-*.csv files for any of the months")
+    ap.add_argument("--partial", help="Month-to-date HS-*_to_*.csv: adds an info-only column to the salaried table")
     ap.add_argument("--unusual", nargs="*", default=[], help="Raw MCP unusual-activities JSON pages")
     ap.add_argument("--members", help="Raw MCP members JSON (for unusual-activity names)")
     ap.add_argument("--section", choices=["salaried", "patterns", "peers", "unusual", "leave"])
@@ -331,6 +361,8 @@ def main():
     leave_months = {re.search(r"TO-(\d{4}-\d{2})", p.name).group(1) for p in leave_paths}
     current = sorted({m for mo in months for m in mo["rows"]})
     sal_map, sal_unmatched = match_names(split(args.salaried), current)
+    partial = load_partial(Path(args.partial), skip) if args.partial else None
+    partial_map = match_names(list(sal_map), sorted(partial["rows"]))[0] if partial else None
 
     want = args.section
     detail, top = [], []
@@ -342,7 +374,7 @@ def main():
 
     if want in (None, "salaried"):
         if sal_map:
-            add(section_salaried(months, sal_map, sal_unmatched, unpaid, leave_months))
+            add(section_salaried(months, sal_map, sal_unmatched, unpaid, leave_months, partial, partial_map))
         else:
             detail.extend(["## Salaried hours", "", "_No salaried list passed — pull it from the ClickUp HR profiles._", ""])
     if want in (None, "patterns"):

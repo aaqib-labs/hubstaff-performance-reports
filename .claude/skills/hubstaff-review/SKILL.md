@@ -34,6 +34,11 @@ Note which `data/input/timeoff/TO-YYYY-MM-01_to_YYYY-MM-DD.csv` files exist for
 those months. They let the script take approved unpaid leave out of the salaried
 hours (Rasma's rule: count worked hours plus paid leave only).
 
+Also look for the latest `data/input/biweekly/HS-<current month>-01_to_YYYY-MM-DD.csv`
+(month to date). If there is one, pass it as `--partial`: the salaried table gets
+an info-only column with hours so far against a pace of 180h prorated by working
+days. It is never flagged and never counts toward the 3 months.
+
 ## 2. Pull names from the ClickUp HR profiles
 
 List `901812760745` (People Ops_all_teams). Use `clickup_filter_tasks` with
@@ -52,7 +57,8 @@ python scripts/hs_review.py \
   --months data/input/monthly/HS-<m1>-master.csv data/input/monthly/HS-<m2>-master.csv data/input/monthly/HS-<m3>-master.csv \
   --salaried "<comma-separated salaried names>" \
   --skip "<comma-separated offboarded names>" \
-  --leave <every TO csv that exists for those months>
+  --leave <every TO csv that exists for those months> \
+  --partial data/input/biweekly/HS-<month to date>.csv   # only if one exists
 ```
 
 One section only: add `--section salaried|patterns|peers|leave|unusual`.
