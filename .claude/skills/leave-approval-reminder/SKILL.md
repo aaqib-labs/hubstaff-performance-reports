@@ -7,8 +7,9 @@ description: >
   one ClickUp DM per approver. Nothing is sent until the user says "go". Triggers on
   "@leave-reminder", "/leave-approval-reminder", "remind managers to approve leave",
   "who hasn't approved leave", "chase leave approvals", or the hubstaff-review brief's
-  "reminders ready to send" line. Agreed at People Ops on 2 Oct 2026: run before month
-  end so People Ops can check outstanding approvals by the 2nd.
+  "reminders ready to send" line. Agreed at People Ops on 2 Oct 2026: send on the
+  27th or 28th so approvers act before month end, and People Ops checks what's still
+  outstanding on the 2nd.
 ---
 
 # Leave approval reminder (@leave-reminder)
@@ -37,8 +38,9 @@ python scripts/build_timeoff_csv.py --raw data/input/timeoff/raw/TO-RAW-<start>_
   --start <start> --end <end> --out data/input/timeoff/TO-<start>_to_<end>.csv
 ```
 
-Mid-month runs use the 1st to today. Rows with `status` other than `approved` are
-the ones to chase. If there are none, say so and stop.
+Run it on the 27th or 28th. Always use the whole month (the 1st to the last day),
+so leave booked for the last few days is chased too. Rows with `status` other than
+`approved` are the ones to chase. If there are none, say so and stop.
 
 ## 2. Find each person's approver
 
@@ -60,10 +62,11 @@ Group the rows by approver. Draft a short message, for example:
 > Hi <first name>, quick People Ops check before month end. These time-off requests
 > in Hubstaff are still waiting for your approval:
 > - <Member> — <policy name>, <dates>, <hours>h
-> Could you approve or decline them by <the 2nd of next month>? Unapproved requests
-> can't be counted in the month-end hours. Thanks!
+> Could you approve or decline them before month end (<last day of the month, e.g. 31 Oct>)?
+> You can do it here: https://app.hubstaff.com/organizations/572470/time_off_requests
+> Unapproved requests can't be counted in the month-end hours. Thanks!
 
-Put dates as ranges (e.g. "14–15 Oct"). Don't comment on whether the leave is
+Always give the month-end date, never "the 2nd". Put dates as ranges (e.g. "14–15 Oct"). Don't comment on whether the leave is
 reasonable. The approver decides that.
 
 ## 4. Preview, then send only on "go"
