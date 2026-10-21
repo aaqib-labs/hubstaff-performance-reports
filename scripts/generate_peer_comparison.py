@@ -61,7 +61,6 @@ PEER_GROUPS = [
             "Adam Burdeshaw",
             "Eden Schweyer",
             "Fred Butson",
-            "Saduka Sachintha",
         ],
     },
     {

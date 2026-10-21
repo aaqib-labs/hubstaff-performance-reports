@@ -65,8 +65,9 @@ LEADERSHIP = {norm(n) for g in PEER_GROUPS if g["id"] == "leadership" for n in g
 
 
 def match_names(wanted: list[str], available: list[str]) -> tuple[dict, list]:
-    """Map each wanted (ClickUp) name to a CSV member name: exact, first+last
-    token, token subset, then close spelling. Returns (mapping, unmatched)."""
+    """Map each wanted (ClickUp) name to a CSV member name: exact, same last
+    name with one first name a short form of the other (Fred / Frederick),
+    token subset, then close spelling. Returns (mapping, unmatched)."""
     by_norm = {norm(a): a for a in available}
     mapping, unmatched = {}, []
     for w in wanted:
@@ -75,7 +76,8 @@ def match_names(wanted: list[str], available: list[str]) -> tuple[dict, list]:
         if n in by_norm:
             mapping[w] = by_norm[n]
             continue
-        cands = [a for k, a in by_norm.items() if k.split()[0] == wt[0] and k.split()[-1] == wt[-1]]
+        cands = [a for k, a in by_norm.items() if k.split()[-1] == wt[-1] and len(k.split()) >= 2
+                 and (k.split()[0].startswith(wt[0]) or wt[0].startswith(k.split()[0]))]
         if not cands:
             cands = [a for k, a in by_norm.items() if len(k.split()) >= 2 and set(k.split()) <= set(wt)]
         if not cands:
@@ -117,12 +119,20 @@ def load_unpaid_leave(paths: list[Path]) -> dict:
     return out
 
 
+def table(headers: list[str], rows: list[list]) -> list[str]:
+    """Markdown table lines. Pipes inside cells are escaped."""
+    cell = lambda v: "" if v is None else str(v).replace("|", "\\|")  # noqa: E731
+    return (["| " + " | ".join(headers) + " |", "|" + "|".join("---" for _ in headers) + "|"]
+            + ["| " + " | ".join(cell(v) for v in r) + " |" for r in rows])
+
+
 # ---------------------------------------------------------------------------
-# Sections — each returns (detail lines, [(priority, top bullet), ...])
+# Sections — each returns (detail lines, [(priority, icon, name, area, why), ...])
 # ---------------------------------------------------------------------------
 
 def section_salaried(months, mapping: dict, unmatched: list, unpaid: dict, leave_months: set):
-    serious, alert, new, lead, top = [], [], [], [], []
+    serious, alert, aside, top = [], [], [], []
+    fmt = lambda h: "—" if h is None else (f"**{h:.0f}h**" if h < SALARIED_FLOOR else f"{h:.0f}h")  # noqa: E731
     for sal_name, csv_name in mapping.items():
         hours, under = [], 0
         for mo in months:
@@ -136,36 +146,37 @@ def section_salaried(months, mapping: dict, unmatched: list, unpaid: dict, leave
         latest = hours[-1]
         if latest is None:
             continue
-        trail = " / ".join(f"{mo['label']} {h:.0f}h" if h is not None else f"{mo['label']} —"
-                           for mo, h in zip(months, hours))
-        if norm(sal_name) in LEADERSHIP:
-            lead.append(f"{sal_name} ({trail})")
+        cells = [fmt(h) for h in hours]
+        trail = " / ".join(f"{h:.0f}" if h is not None else "—" for h in hours) + "h"
+        if norm(csv_name) in LEADERSHIP:
+            aside.append([sal_name, *cells, "Leadership"])
             continue
         if all(h is None for h in hours[:-1]):
             if latest < SALARIED_FLOOR:
-                new.append(f"{sal_name} ({months[-1]['label']} {latest:.0f}h)")
+                aside.append([sal_name, *cells, "New joiner, partial first month"])
             continue
         gaps = [SALARIED_TARGET - h for h in hours if h is not None and h < SALARIED_FLOOR]
         avg_gap = sum(gaps) / len(gaps) if gaps else 0
         if under >= 2:
-            serious.append((under, avg_gap, f"**{sal_name}** — {trail}. Under {SALARIED_FLOOR:.0f}h in {under} of "
-                                            f"{len(months)} months, about {avg_gap:.0f}h short of {SALARIED_TARGET:.0f}h on average."))
-            top.append((10 + under, f"🔴 **{sal_name}** (salaried) — under {SALARIED_FLOOR:.0f}h in {under} of "
-                                    f"{len(months)} months: {trail}"))
+            serious.append((under, avg_gap, [sal_name, *cells, f"{under} of {len(months)}", f"{avg_gap:.0f}h", "🔴 Serious"]))
+            top.append((10 + under, "🔴", sal_name, "Salaried hours",
+                        f"Under {SALARIED_FLOOR:.0f}h in {under} of {len(months)} months ({trail})"))
         elif latest < SALARIED_FLOOR:
-            alert.append((avg_gap, f"**{sal_name}** — {trail}. First month under {SALARIED_FLOOR:.0f}h "
-                                   f"({SALARIED_TARGET - latest:.0f}h short of {SALARIED_TARGET:.0f}h)."))
-            top.append((5, f"⚠️ **{sal_name}** (salaried) — first month under {SALARIED_FLOOR:.0f}h: {trail}"))
+            alert.append((avg_gap, [sal_name, *cells, f"1 of {len(months)}", f"{avg_gap:.0f}h", "⚠️ Alert"]))
+            top.append((5, "⚠️", sal_name, "Salaried hours",
+                        f"First month under {SALARIED_FLOOR:.0f}h ({latest:.0f}h in {months[-1]['label']})"))
 
+    labels = [mo["label"] for mo in months]
     out = [f"## Salaried hours (target {SALARIED_TARGET:.0f}h, flag under {SALARIED_FLOOR:.0f}h)", ""]
     if not serious and not alert:
         out.append(f"No salaried staff under {SALARIED_FLOOR:.0f}h in {months[-1]['label']}.")
-    out += [f"- 🔴 Serious: {l}" for _, _, l in sorted(serious, key=lambda x: (-x[0], -x[1]))]
-    out += [f"- ⚠️ Alert: {l}" for _, l in sorted(alert, key=lambda x: -x[0])]
-    if new:
-        out.append(f"\n_New this period, first month is partial (not flagged): {', '.join(new)}._")
-    if lead:
-        out.append(f"\n_Leadership, not ranked: {'; '.join(lead)}._")
+    else:
+        rows = ([r for _, _, r in sorted(serious, key=lambda x: (-x[0], -x[1]))]
+                + [r for _, r in sorted(alert, key=lambda x: -x[0])])
+        out += table(["Name", *labels, f"Under {SALARIED_FLOOR:.0f}h", f"Avg short of {SALARIED_TARGET:.0f}h", "Status"], rows)
+        out.append(f"\n_Bold = under {SALARIED_FLOOR:.0f}h._")
+    if aside:
+        out += ["", "**Not ranked**", ""] + table(["Name", *labels, "Why"], sorted(aside, key=lambda r: (r[-1], r[0])))
     no_leave = [mo["label"] for mo in months if mo["start"].strftime("%Y-%m") not in leave_months]
     if no_leave:
         out.append(f"\n_No time-off file for {', '.join(no_leave)}: those totals still include approved unpaid leave._")
@@ -196,18 +207,22 @@ def section_patterns(months, salaried_csv: set):
         if norm(name) in LEADERSHIP:
             lead.append(name)
             continue
-        team = latest_rows[name]["team"]
-        parts = [f"{PATTERN_METRICS[k]} {c}/{len(months)}" + ("" if latest_flags.get(k) == "red" else " (ok last month)")
-                 for k, c in sorted(repeat.items(), key=lambda x: -x[1])]
-        hits.append((max(repeat.values()), len(repeat), f"**{name}** ({team}) — red on {', '.join(parts)}"))
+        cells = {k: f"{c}/{len(months)}" + ("" if latest_flags.get(k) == "red" else f" (ok {months[-1]['label']})")
+                 for k, c in repeat.items()}
+        hits.append((max(repeat.values()), len(repeat), name, latest_rows[name]["team"], cells))
         full = [k for k, c in repeat.items() if c == len(months) and latest_flags.get(k) == "red"]
         if full:
-            top.append((8 + len(full), f"🔴 **{name}** — red every month on "
-                                       f"{', '.join(PATTERN_METRICS[k] for k in full)}"))
+            top.append((8 + len(full), "🔴", name, "SLA pattern",
+                        f"Red every month: {', '.join(PATTERN_METRICS[k] for k in full)}"))
     out = [f"## Repeat SLA patterns (red in 2+ of the last {len(months)} months)", ""]
     if not hits:
         out.append("None.")
-    out += [f"- {l}" for _, _, l in sorted(hits, key=lambda x: (-x[0], -x[1]))]
+    else:
+        used = [k for k in PATTERN_METRICS if any(k in h[4] for h in hits)]
+        rows = [[name, team, *(cells.get(k, "") for k in used)]
+                for _, _, name, team, cells in sorted(hits, key=lambda x: (-x[0], -x[1]))]
+        out += table(["Name", "Team", *(PATTERN_METRICS[k].capitalize() for k in used)], rows)
+        out.append(f"\n_Cells show months red out of {len(months)}._")
     if lead:
         out.append(f"\n_Leadership, not ranked: {', '.join(lead)}._")
     return out, top
@@ -234,15 +249,19 @@ def section_peers(months):
             if not latest:
                 continue
             _, act, avg = latest[0]
-            hits.append((len(entries), f"**{n}** ({g['name']}) — {act:.0f}% vs group average {avg:.0f}% "
-                                       f"in {months[-1]['label']}; below peers {len(entries)} of {len(months)} months"))
+            hits.append((len(entries), act - avg, [n, g["name"], f"{act:.0f}%", f"{avg:.0f}%", f"{act - avg:.0f} pts",
+                                                   f"{len(entries)} of {len(months)}"]))
             if len(entries) >= 2:
-                top.append((4 + len(entries), f"👥 **{n}** — {act:.0f}% activity vs {avg:.0f}% for "
-                                              f"{g['name']}, below peers {len(entries)} of {len(months)} months"))
-    out = [f"## Peer outliers (more than {PEER_GAP_PP:.0f} points below their group, {months[-1]['label']})", ""]
+                top.append((4 + len(entries), "👥", n, "Peer outlier",
+                            f"{act:.0f}% activity vs {avg:.0f}% for {g['name']}, "
+                            f"below peers {len(entries)} of {len(months)} months"))
+    label = months[-1]["label"]
+    out = [f"## Peer outliers (more than {PEER_GAP_PP:.0f} points below their group, {label})", ""]
     if not hits:
         out.append("None.")
-    out += [f"- {l}" for _, l in sorted(hits, key=lambda x: -x[0])]
+    else:
+        out += table(["Name", "Peer group", f"{label} activity", "Group avg", "Gap", "Months below"],
+                     [r for _, _, r in sorted(hits, key=lambda x: (-x[0], x[1]))])
     return out, top
 
 
@@ -263,15 +282,13 @@ def section_unusual(paths: list[Path], members_path: Path | None):
         a["high"] += ua.get("confidence_level") == "high"
         a["days"].add(ua["date"])
     out = ["## Unusual activity (medium/high confidence — review signals, not findings)", ""]
-    top = []
-    if not agg:
-        out.append("No alerts in this window.")
+    top, rows = [], []
     for (uid, typ), a in sorted(agg.items(), key=lambda x: (-x[1]["high"], -x[1]["n"])):
         who = names.get(uid, uid)
-        out.append(f"- **{who}** — {typ.replace('_', ' ')}: {a['n']} alerts on {len(a['days'])} days, "
-                   f"{a['high']} high confidence")
+        rows.append([who, typ.replace("_", " "), a["n"], len(a["days"]), a["high"]])
         if a["high"] >= 3:
-            top.append((3, f"🔎 **{who}** — {a['high']} high-confidence {typ.replace('_', ' ')} alerts"))
+            top.append((3, "🔎", who, "Unusual activity", f"{a['high']} high-confidence {typ.replace('_', ' ')} alerts"))
+    out += table(["Name", "Alert type", "Alerts", "Days", "High confidence"], rows) if rows else ["No alerts in this window."]
     return out, top[:3]
 
 
@@ -285,11 +302,13 @@ def section_leave(paths: list[Path]):
     if sub.empty:
         return out + ["Every time-off request in this month is approved."], []
     sub = sub.assign(hours=sub["hours"].astype(float))
-    for (member, policy), g in sub.groupby(["member", "policy_name"]):
-        out.append(f"- **{member}** — {policy}: {g['hours'].sum():.1f}h over {len(g)} days, still {g['status'].iloc[0]}")
+    rows = [[member, policy, f"{g['hours'].sum():.1f}h", len(g), g["status"].iloc[0]]
+            for (member, policy), g in sub.groupby(["member", "policy_name"])]
+    out += table(["Name", "Policy", "Hours", "Days", "Status"], rows)
     out.append("\n_Run the leave-approval-reminder skill to nudge approvers._")
     people = sub["member"].nunique()
-    return out, [(2, f"📝 {people} people have unapproved leave ({sub['hours'].sum():.0f}h) — reminders ready to send")]
+    return out, [(2, "📝", f"{people} people", "Unapproved leave",
+                  f"{sub['hours'].sum():.0f}h waiting for approval, reminders ready to send")]
 
 
 def main():
@@ -338,8 +357,18 @@ def main():
     span = f"{months[0]['start']:%b} – {months[-1]['start']:%b %Y}"
     out = [f"# Hubstaff review — {span}", ""]
     if want is None:
-        ranked = sorted(top, key=lambda x: -x[0])
-        out += ["## Discuss today", ""] + [f"{i}. {t}" for i, (_, t) in enumerate(ranked[:TOP_LIMIT], 1)]
+        # One row per person: highest priority wins the icon and rank, reasons are combined.
+        people = {}
+        for prio, icon, name, area, why in sorted(top, key=lambda x: -x[0]):
+            p = people.setdefault(name, {"prio": prio, "icon": icon, "areas": [], "why": []})
+            if p["areas"]:
+                p["prio"] += 1   # flagged in more than one area: nudge up
+            p["areas"].append(area)
+            p["why"].append(why)
+        ranked = sorted(people.items(), key=lambda x: -x[1]["prio"])
+        rows = [[i, p["icon"], name, " + ".join(p["areas"]), "; ".join(p["why"])]
+                for i, (name, p) in enumerate(ranked[:TOP_LIMIT], 1)]
+        out += ["## Discuss today", ""] + table(["#", "", "Name", "Area", "Why"], rows)
         if len(ranked) > TOP_LIMIT:
             out.append(f"\n_{len(ranked) - TOP_LIMIT} more in the detail below._")
         out += ["", "---", ""]
