@@ -72,10 +72,11 @@ Note: HTML outputs use date-range prefix + report-type suffix. No `HS-`/`CE-` pr
 When asked to "generate the bi-weekly report for [date range]":
 
 1. Find the master table CSV in `data/input/biweekly/`
-2. Run `python scripts/generate_biweekly_report.py --input data/input/biweekly/[FILE].csv --start YYYY-MM-DD --end YYYY-MM-DD`
-3. Script writes HTML directly to `docs/[start]_to_[end]_biweekly_top_violators.html` and updates `docs/index.html`
-4. Commit with message: `Report: Bi-Weekly [start] to [end]`
-5. Push to GitHub
+2. Pull time off and build the TO CSV for the same period — steps 2–3 of the Month-End Workflow, with the bi-weekly `<start>`/`<end>`. **Always include time off in bi-weekly reports too** (Aaqib, 2026-10-22); the script only enforces it for full months, so don't rely on the guard.
+3. Run `python scripts/generate_biweekly_report.py --input data/input/biweekly/[FILE].csv --start YYYY-MM-DD --end YYYY-MM-DD --leave data/input/timeoff/TO-[start]_to_[end].csv`
+4. Script writes HTML directly to `docs/[start]_to_[end]_biweekly_top_violators.html` and updates `docs/index.html`
+5. Commit with message: `Report: Bi-Weekly [start] to [end]`
+6. Push to GitHub
 
 If any data anomaly is detected (unexpected columns, missing data, parse errors), flag it before finalising.
 
@@ -254,9 +255,9 @@ Ranked by severity score. Columns: Rank, Member, Team, Activity %, Hours, Break 
 
 **Section 2 — Hours Violators**
 All employees below the prorated hours threshold. Sorted ascending (worst first). Columns: Member, Team, Hours Worked, Expected Hours, Shortfall, Other Flags.
-Month-end (`--leave`): the hours column becomes Total Hours, a Time Off tag column is added, and each row expands to show the leave entries (policy · category · dates · hours · Approved/Unapproved). Only when there is approved leave, one line is added: "<total> total includes <approved> approved time off → <worked> actually worked". No repeated figure boxes (Aaqib, 2026-10-02).
+With time off (`--leave`, month-end and bi-weekly): the hours column becomes Total Hours, a Time Off tag column is added, and each row expands to show the leave entries (policy · category · dates · hours · Approved/Unapproved). Only when there is approved leave, one line is added: "<total> total includes <approved> approved time off → <worked> actually worked". No repeated figure boxes (Aaqib, 2026-10-02).
 
-**Section 3 — Leave Summary (month-end only, `--leave`)**
+**Section 3 — Leave Summary (whenever `--leave` is passed — month-end and bi-weekly)**
 Everyone with time off (approved or unapproved), sorted by total time off. Columns: Member, Team, Paid/Allocated, Unpaid/Flex, Total. Totals strip by category and by exact policy; header shows "Time off as of <pull timestamp>". Rows expand like Section 2; Expand all / Collapse all per section; print expands everything.
 
 ---
