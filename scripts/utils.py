@@ -83,6 +83,8 @@ PERMANENT_EXCLUSIONS = [
     "Janaka Ediriweera",    # Terminated (confirmed 2026-11-18)
     "Leora Megan",          # Terminated (confirmed 2026-11-18); Hubstaff name "leora megan"
     "Schezarnie Racip",     # Terminated (confirmed 2026-11-18)
+    "Jason Diaz",           # Resigned (confirmed 2026-11-18)
+    "Rishonath Siva",       # Resigned (confirmed 2026-11-18)
 ]
 
 # Centrifuse Engineers (CE) — tracked via TMetric until mid-August 2026, so they

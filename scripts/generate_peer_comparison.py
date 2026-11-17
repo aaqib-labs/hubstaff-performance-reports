@@ -220,7 +220,7 @@ PEER_GROUPS = [
         "manager_label": None,
         "members": [
             "Sean Dehoedt",
-            "Jason Diaz",
+            # "Jason Diaz" — resigned, confirmed 2026-11-18
             "Aaqib Hafeel",
             "Nawodya De Silva",
             "Staffey Murugadas",
@@ -249,7 +249,7 @@ PEER_GROUPS = [
         "manager":       None,
         "manager_label": "Rannie Belen",
         "members": [
-            "Rishonath Siva",
+            # "Rishonath Siva" — resigned, confirmed 2026-11-18
             "Kawya Samarasinghe",
             "sanjula paulis",
             "Farshad Ramsee",
@@ -300,6 +300,9 @@ PEER_GROUPS = [
             "Natalia Jayasundera",
             "Rasma Rizwan",
             "Ali Asghar",
+            "Abeerah Khalid",           # added from Nov 2026 report on
+            "Muhammad Hamza Bin Umar",  # added from Nov 2026 report on
+            "Iqra Baig",                # added from Nov 2026 report on
         ],
     },
     {
