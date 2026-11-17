@@ -138,6 +138,7 @@ PEER_GROUPS = [
         "members": [
             "Bihani Madushika",
             "Modhuka Paranagama",
+            "Antik Mandal",
         ],
     },
     {
@@ -223,6 +224,7 @@ PEER_GROUPS = [
             "Aaqib Hafeel",
             "Nawodya De Silva",
             "Staffey Murugadas",
+            "Atul Joshi",
             "Shen Perera",
         ],
     },
@@ -278,6 +280,7 @@ PEER_GROUPS = [
             "Irene Padilla",
             "Dharshika Perera",
             "Ibrahim Adeeb",
+            "Anuj Bansal",
             "Nitika Bansal",
         ],
     },
