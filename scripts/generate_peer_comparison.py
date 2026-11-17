@@ -162,7 +162,7 @@ PEER_GROUPS = [
         "members": [
             "Darren Karunaratne",
             "Ounvin Ranaweera",
-            "leora megan",
+            # "leora megan" — terminated, confirmed 2026-11-18
         ],
     },
     {

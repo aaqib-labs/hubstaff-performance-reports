@@ -79,6 +79,8 @@ PERMANENT_EXCLUSIONS = [
     "Thimal Caldera",       # CE — resigned (confirmed 2026-10-02)
     "Suleman",              # CE — resigned (confirmed 2026-10-02)
     "Suleman Khan",
+    "Janaka Ediriweera",    # Terminated (confirmed 2026-11-18)
+    "Leora Megan",          # Terminated (confirmed 2026-11-18); Hubstaff name "leora megan"
 ]
 
 # Centrifuse Engineers (CE) — tracked via TMetric until mid-August 2026, so they
