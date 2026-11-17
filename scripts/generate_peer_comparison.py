@@ -225,6 +225,8 @@ PEER_GROUPS = [
             "Nawodya De Silva",
             "Staffey Murugadas",
             "Atul Joshi",
+            "Sandarenu Dassanayaka",  # added from Nov 2026 report on
+            "Senitha Lanerolle",      # added from Nov 2026 report on
             "Shen Perera",
         ],
     },
