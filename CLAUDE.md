@@ -34,6 +34,8 @@ data/input/
                      (gitignored — contains free-text leave reasons; never commit)
   salaried/          salaried_status.csv: who moved to salaried, when, on what target
                      (+ hours_refresh.csv) — gitignored, public repo
+  hubstaff_pulls/    Raw Hubstaff MCP pulls per report month (timesheets, members,
+    YYYY-MM/         targeted daily activities) for verify_hours.py — gitignored
 data/personnel/      Personnel Index — authoritative role/team source
 data/reference/      SLA thresholds and violation legend
 scripts/             Python report generation scripts
@@ -85,6 +87,8 @@ If any data anomaly is detected (unexpected columns, missing data, parse errors)
 ---
 
 ## Month-End Workflow (full calendar month, with time off)
+
+**Run it with the `month-end-report` skill (`.claude/skills/month-end-report/SKILL.md`, "@month-end").** It has the full ordered procedure: Hubstaff MCP pulls, time off for all three months, pay types, salaried status check, dry run, `verify_hours.py` cross-check, HR notes with a second-pass check, one review pack for Aaqib, publish. The steps below are the rules it follows.
 
 A full-month run (`--start` = 1st, `--end` = last day) **must** pass `--leave <TO CSV>` or an explicit `--no-leave`, and with `--leave` also `--salaried`/`--hourly` or an explicit `--no-pay-type`. The script exits otherwise.
 
@@ -253,7 +257,8 @@ Score = sum of (base × multiplier) across all flags
 |--------|---------|
 | `scripts/utils.py` | Shared helpers — working-days, proration, SLA thresholds, flag evaluation, exclusion lists. Import from here, never duplicate. |
 | `scripts/generate_biweekly_report.py` | Hubstaff bi-weekly + month-end report generation (`--leave`, `--no-leave`, `--leave-detail`, `--salaried`, `--hourly`, `--no-pay-type`, `--salaried-status`, `--no-salaried-status`, `--csv-exported`, `--hr-context`, `--dry-run`). Page title is "Hubstaff Performance Report" (no longer "Bi-Weekly"); output file names are unchanged |
-| `scripts/build_timeoff_csv.py` | Raw Hubstaff time-off JSON → per-day TO CSV for the month-end report |
+| `scripts/build_timeoff_csv.py` | Raw Hubstaff time-off JSON → per-day TO CSV for the month-end report (now with `approved_at`) |
+| `scripts/verify_hours.py` | Cross-checks every hours figure in the report (report month + the 2 months Section 3 shows) against saved Hubstaff pulls; `--write-refresh` writes earlier-month corrections to `hours_refresh.csv` |
 | `scripts/generate_ce_report.py` | Legacy — Centrifuse Engineers TMetric report (periods before Sep 2026 only; retired) |
 | `scripts/generate_pattern_analysis.py` | Quarterly repeated pattern analysis — fully implemented |
 | `scripts/update_index.py` | Regenerate `docs/index.html` from all reports in `/docs/` |

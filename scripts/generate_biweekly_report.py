@@ -491,7 +491,8 @@ def load_leave(path: Path) -> tuple[pd.DataFrame, str]:
     if "approved_at" in df.columns:
         df["approved_at"] = pd.to_datetime(df["approved_at"], utc=True, errors="coerce")
     else:
-        df["approved_at"] = pd.NaT
+        # Older TO CSVs have no approval time: treat every approval as before the export
+        df["approved_at"] = pd.Series(pd.NaT, index=df.index, dtype="datetime64[ns, UTC]")
 
     pulled_at = None
     meta = Path(str(path) + ".meta.json")
@@ -743,7 +744,8 @@ def load_month_leave(month: date) -> dict:
     exported = (pd.Timestamp(datetime.utcfromtimestamp(csv_path.stat().st_mtime), tz="UTC")
                 if csv_path.exists() else None)
     approved_at = (pd.to_datetime(ldf["approved_at"], utc=True, errors="coerce")
-                   if "approved_at" in ldf.columns else pd.Series(pd.NaT, index=ldf.index))
+                   if "approved_at" in ldf.columns
+                   else pd.Series(pd.NaT, index=ldf.index, dtype="datetime64[ns, UTC]"))
     ldf["late"] = (approved_at > exported) if exported is not None else False
     out = {}
     for name, g in ldf.groupby(ldf["member"].apply(norm_name)):
@@ -1113,6 +1115,19 @@ def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: fl
                           for r in rows_scored if not pd.isna(r["total_hours"])}
         salaried = build_salaried_section(rows_scored, start, end, pay_of, status or {}, hr_of,
                                           current_totals)
+        # Earlier months' time off must come from the same (latest) pull, or late
+        # approvals are missed (Rasma's August, Nov 2026)
+        for m in month_starts_back(start, 3)[:-1]:
+            last = date(m.year + (m.month == 12), m.month % 12 + 1, 1) - timedelta(days=1)
+            meta = REPO_ROOT / "data" / "input" / "timeoff" / f"TO-{m:%Y-%m-%d}_to_{last:%Y-%m-%d}.csv.meta.json"
+            if not meta.exists():
+                print(f"WARNING: no time-off file for {m:%b %Y}; Section 3 shows no leave for that month. "
+                      f"Build it from the latest raw pull (build_timeoff_csv.py --start {m} --end {last}).")
+                continue
+            pulled = json.loads(meta.read_text(encoding="utf-8")).get("pulled_at", "")
+            if leave_pulled and pulled and pulled[:10] < leave_pulled[:10]:
+                print(f"WARNING: {m:%b %Y} time off was pulled {pulled[:10]}, before this month's pull "
+                      f"({leave_pulled[:10]}). Rebuild it from the latest raw pull so late approvals count.")
 
     period_working_days = count_working_days(start, end)
     period_kind = "Month-end" if is_full_month(start, end) else "Mid-month"
