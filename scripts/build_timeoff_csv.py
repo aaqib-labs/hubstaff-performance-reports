@@ -14,7 +14,7 @@ Usage:
 
 Output columns (one row per request per day):
     member, hubstaff_user_id, request_id, policy_id, policy_name,
-    category, status, date, hours
+    category, status, date, hours, approved_at
 
 Rules (see plans/month-end-leave-breakdown-plan.md §4):
     - category comes from the POLICY-level `paid` flag, never the request-level one
@@ -48,7 +48,7 @@ MAX_DAY_HOURS = 8.0
 
 OUT_COLUMNS = [
     "member", "hubstaff_user_id", "request_id", "policy_id", "policy_name",
-    "category", "status", "date", "hours",
+    "category", "status", "date", "hours", "approved_at",
 ]
 
 
@@ -131,6 +131,9 @@ def build_rows(requests: dict, users: dict, policies: dict,
                 "status":           status,
                 "date":             day["date"],
                 "hours":            round(amount / 3600, 2),
+                # When it was approved: leave approved after the master CSV was
+                # exported is not in that CSV's Total Worked Hours
+                "approved_at":      req.get("approved_at") or "",
             })
         if kept_any:
             stats["status_counts"][status] += 1

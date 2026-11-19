@@ -65,6 +65,29 @@ counted as salaried.
     Shortfall = prorated 160h threshold − Counted (none when Counted reaches it)
 A full-month run with --leave must pass --salaried/--hourly or --no-pay-type.
 
+Salaried hours, last 3 months (Section 3, month-end only)
+---------------------------------------------------------
+Every salaried team member's Hubstaff total for this month and the two before
+(from data/input/monthly/HS-YYYY-MM-master.csv), split into two tables:
+    Moved from hourly to salaried: each person's target from the salaried
+        status file (180h only where it was agreed, flagged under 170h; 160h
+        otherwise), from the first full month after the move. Months before
+        that count against 160h.
+    Hired as salaried: target 160h.
+Serious = under in 2+ of the 3 months; Alert = under in the latest month only.
+Hours are the Hubstaff total (worked + approved paid leave); unpaid leave does
+not count.
+
+Salaried status file (--salaried-status, default data/input/salaried/salaried_status.csv,
+gitignored): one row per person whose pay type is known from the HR profiles and
+transition letters, until the People Ops tracker is in. Columns: member (Hubstaff
+name), clickup_name, change, effective_date, target_hours, target_basis, evidence, notes.
+    change = moved           Salaried from effective_date (Hourly before it)
+             hired_salaried  Salaried, even if the ClickUp field is blank
+             hourly          Hourly, even if the ClickUp field says Salaried
+             agency          pay tag as ClickUp says; left out of Section 3
+The file overrides the ClickUp Salary Type field everywhere in the report.
+
 HR profile context (--hr-context)
 ---------------------------------
 A local JSON (data/input/hr_context/HRC-<start>_to_<end>.json, gitignored) with
@@ -97,6 +120,9 @@ from utils import (
     DOCS_DIR,
     get_exclusions,
     match_names,
+    MOVED_TARGET, MOVED_FLOOR, HIRED_TARGET, HIRED_FLOOR, first_full_month, floor_for,
+    salaried_status,
+    FS_EXCLUSIONS, CE_HUBSTAFF_START,
 )
 
 # ---------------------------------------------------------------------------
@@ -462,6 +488,10 @@ def load_leave(path: Path) -> tuple[pd.DataFrame, str]:
     df["date"] = df["date"].apply(date.fromisoformat)
     df["hours"] = df["hours"].astype(float)
     df["norm"] = df["member"].apply(norm_name)
+    if "approved_at" in df.columns:
+        df["approved_at"] = pd.to_datetime(df["approved_at"], utc=True, errors="coerce")
+    else:
+        df["approved_at"] = pd.NaT
 
     pulled_at = None
     meta = Path(str(path) + ".meta.json")
@@ -503,6 +533,7 @@ def build_leave_entries(rows: pd.DataFrame, detail: str) -> list[dict]:
     entries = []
     for (req_id, status), grp in rows.groupby(["request_id", "status"], sort=False):
         first = grp.iloc[0]
+        late = bool(first.get("late", False))
         for a, b in _date_ranges(list(grp["date"])):
             in_run = grp[(grp["date"] >= a) & (grp["date"] <= b)]
             hours = float(in_run["hours"].sum())
@@ -515,7 +546,8 @@ def build_leave_entries(rows: pd.DataFrame, detail: str) -> list[dict]:
                 "hours_h":     fmt_h(hours),
                 "hours_d":     f"{hours / HOURS_PER_DAY:.1f}d",
                 "status":      status,
-                "status_label": "Approved" if status == "approved" else "Unapproved",
+                "status_label": ("Approved after the Hubstaff export" if late else "Approved")
+                                if status == "approved" else "Unapproved",
             })
     entries.sort(key=lambda e: (e["sort_key"], e["policy"]))
     return entries
@@ -534,15 +566,20 @@ def member_leave_figures(rows: pd.DataFrame, total_hours: float, detail: str,
         by_cat[cat] = (float(c.loc[c["status"] == "approved", "hours"].sum()),
                        float(c.loc[c["status"] == "unapproved", "hours"].sum()))
     paid_appr, unpaid_appr = by_cat[CATEGORY_PAID][0], by_cat[CATEGORY_UNPAID][0]
+    # Paid leave approved after the master CSV was exported is not in its Total
+    late = rows["late"] if "late" in rows.columns else pd.Series(False, index=rows.index)
+    late_paid = float(rows.loc[late & (rows["status"] == "approved")
+                               & (rows["category"] == CATEGORY_PAID), "hours"].sum())
     has_total = not pd.isna(total_hours)
-    worked = total_hours - paid_appr if has_total else float("nan")
+    worked = total_hours - (paid_appr - late_paid) if has_total else float("nan")
     unpaid_counted = unpaid_appr if pay == PAY_HOURLY else 0.0
-    counted = total_hours + unpaid_counted if has_total else float("nan")
+    counted = total_hours + late_paid + unpaid_counted if has_total else float("nan")
     return {
         "approved":       approved,
         "unapproved":     unapproved,
         "by_cat":         by_cat,
         "paid_approved":  paid_appr,
+        "late_paid":      late_paid,
         "worked":         worked,
         "counted":        counted,
         "total_fmt":      fmt_h(total_hours) if has_total else "—",
@@ -552,7 +589,7 @@ def member_leave_figures(rows: pd.DataFrame, total_hours: float, detail: str,
         "unpaid_counted_fmt": fmt_hd(unpaid_counted) if unpaid_counted else "",
         "approved_fmt":   fmt_hd(approved),
         "unapproved_fmt": fmt_hd(unapproved) if unapproved else "",
-        "over_total":     has_total and paid_appr > total_hours + 1e-9,
+        "over_total":     has_total and paid_appr - late_paid > total_hours + 1e-9,
         "entries":        build_leave_entries(rows, detail) if len(rows) else [],
     }
 
@@ -664,6 +701,164 @@ def load_hr_context(path: Path, df: pd.DataFrame) -> dict:
     return out
 
 
+LEADERSHIP_NAMES = {"lucas robinson", "jorn wossner", "adam burdeshaw", "eden schweyer",
+                    "fred butson", "frederick butson"}
+MONTHLY_DIR = REPO_ROOT / "data" / "input" / "monthly"
+
+
+def month_starts_back(start: date, n: int = 3) -> list[date]:
+    """The month of `start` and the n-1 months before it, oldest first."""
+    out, y, m = [], start.year, start.month
+    for _ in range(n):
+        out.append(date(y, m, 1))
+        y, m = (y - 1, 12) if m == 1 else (y, m - 1)
+    return out[::-1]
+
+
+SALARIED_DIR = REPO_ROOT / "data" / "input" / "salaried"
+
+
+def load_hours_refresh() -> dict:
+    """{(norm member, 'YYYY-MM'): (hours, csv_hours)} from hours_refresh.csv: earlier months'
+    totals re-read from Hubstaff where time was edited after that month's CSV export."""
+    path = SALARIED_DIR / "hours_refresh.csv"
+    if not path.exists():
+        return {}
+    rdf = pd.read_csv(path, dtype=str).fillna("")
+    return {(norm_name(r["member"]), r["month"]): (float(r["hours"]), r["csv_hours"])
+            for _, r in rdf.iterrows()}
+
+
+def load_month_totals(month: date) -> dict | None:
+    """{norm member: Total Worked Hours} from HS-YYYY-MM-master.csv, or None if missing."""
+    path = MONTHLY_DIR / f"HS-{month:%Y-%m}-master.csv"
+    if not path.exists():
+        return None
+    mdf = load_master_table(path)
+    return {norm_name(r["member"]): r["total_hours"] for _, r in mdf.iterrows()
+            if not pd.isna(r["total_hours"])}
+
+
+def load_salaried_status(path: Path, members: list) -> tuple[dict, list]:
+    """{norm Hubstaff name: {change, eff, target, floor, basis}} from the salaried status file."""
+    sdf = pd.read_csv(path, dtype=str).fillna("")
+    need = {"member", "change", "effective_date", "target_hours"}
+    if need - set(sdf.columns):
+        print(f"ERROR: {path} is missing columns {sorted(need - set(sdf.columns))}", file=sys.stderr)
+        sys.exit(1)
+    bad = sorted(set(sdf["change"]) - {"moved", "hired_salaried", "hourly", "agency"})
+    if bad:
+        print(f"ERROR: {path}: unknown change value(s) {bad}", file=sys.stderr)
+        sys.exit(1)
+    mmap, unmatched = match_names(list(sdf["member"]), members)
+    out = {}
+    for _, row in sdf.iterrows():
+        if row["member"] not in mmap:
+            continue
+        eff = date.fromisoformat(row["effective_date"]) if row["effective_date"] else None
+        if row["change"] == "moved" and not eff:
+            print(f"ERROR: {path}: {row['member']} moved but has no effective_date", file=sys.stderr)
+            sys.exit(1)
+        target = float(row["target_hours"]) if row["target_hours"] else HIRED_TARGET
+        out[norm_name(mmap[row["member"]])] = {
+            "change": row["change"], "eff": eff, "target": target, "floor": floor_for(target),
+            "basis": row.get("target_basis", ""),
+        }
+    notes = [f"Salaried status file: {path} ({len(out)} matched)"]
+    if unmatched:
+        notes.append(f"  Not in this report: {', '.join(unmatched)}")
+    return out, notes
+
+
+def build_salaried_section(rows_scored: list, start: date, end: date, pay_of, status: dict, hr_of,
+                           current_totals: dict) -> dict:
+    """Section 3: salaried team members over this month and the two before."""
+    months = month_starts_back(start, 3)
+    totals = []
+    for i, m in enumerate(months):
+        totals.append(current_totals if i == len(months) - 1 else load_month_totals(m))
+    missing = [f"{m:%b %Y}" for m, t in zip(months, totals) if t is None]
+
+    refresh = load_hours_refresh()
+    ce_names = {norm_name(n) for n in FS_EXCLUSIONS}
+    groups = {"moved": [], "hired": []}
+    for r in rows_scored:
+        key = norm_name(r["member"])
+        st = status.get(key) or {}
+        if st.get("change") == "agency" or pay_of(r) != PAY_SALARIED:
+            continue
+        moved = st.get("change") == "moved"
+        basis = "moved" if moved else "hired"
+        target = st.get("target", HIRED_TARGET)
+        start_full = first_full_month(st["eff"]) if st.get("eff") else None
+        hours, floors, targets, cells = [], [], [], []
+        for i, (m, t) in enumerate(zip(months, totals)):
+            h = None if t is None else t.get(key)
+            refreshed = ""
+            if i < len(months) - 1 and (key, f"{m:%Y-%m}") in refresh:
+                h, was = refresh[(key, f"{m:%Y-%m}")]
+                refreshed = f"Hubstaff today; the {m:%b} CSV had {was}h (edited after the export)"
+            # Hired as salaried part-way through: earlier months were a different
+            # arrangement, shown but not counted
+            if not moved and start_full and m < start_full:
+                cells.append({"text": "—" if h is None else f"{h:.1f}h", "ce_partial": False,
+                              "under": False, "hourly_then": False, "before_hire": True,
+                              "refreshed": refreshed})
+                hours.append(None); floors.append(HIRED_FLOOR); targets.append(HIRED_TARGET)
+                continue
+            # Centrifuse Engineers joined Hubstaff mid-August 2026: earlier months are partial
+            ce_partial = key in ce_names and m < CE_HUBSTAFF_START
+            if ce_partial:
+                h = None
+            before_move = moved and m < start_full
+            m_target = HIRED_TARGET if before_move else target
+            m_floor = HIRED_FLOOR if before_move else floor_for(m_target)
+            hours.append(h)
+            floors.append(m_floor)
+            targets.append(m_target)
+            cells.append({"text": "—" if h is None else f"{h:.1f}h", "ce_partial": ce_partial,
+                          "under": h is not None and h < m_floor,
+                          "hourly_then": before_move and target != HIRED_TARGET,
+                          "before_hire": False, "refreshed": refreshed})
+        under, sal_status = salaried_status(hours, floors)
+        shorts = [t - h for h, f, t in zip(hours, floors, targets) if h is not None and h < f]
+        note = ""
+        if key in LEADERSHIP_NAMES:
+            sal_status, note = None, "Leadership, not ranked"
+        elif sal_status and all(h is None for h in hours[:-1]):
+            sal_status, note = None, "First month, not ranked"
+        groups[basis].append({
+            "member": r["member"], "team": r["team"], "hr": hr_of(r),
+            "since": f"{st['eff']:%b %-d, %Y}" if moved else "",
+            "target": f"{target:.0f}h", "target_basis": st.get("basis", ""),
+            "target_floor": f"{floor_for(target):.0f}h",
+            "cells": cells, "under": under,
+            "months_with_data": sum(1 for h in hours if h is not None),
+            "avg_short": f"{sum(shorts) / len(shorts):.1f}h" if shorts else "",
+            "status": sal_status, "note": note,
+            "_sort": ({"Serious": 0, "Alert": 1}.get(sal_status, 2), -under,
+                      -(sum(shorts) / len(shorts) if shorts else 0), r["member"].lower()),
+        })
+    for g in groups.values():
+        g.sort(key=lambda x: x["_sort"])
+    def split(g):
+        return ([x for x in g if x["status"]],
+                sorted([x for x in g if not x["status"]], key=lambda x: x["member"].lower()))
+    moved_flag, moved_ok = split(groups["moved"])
+    hired_flag, hired_ok = split(groups["hired"])
+    return {
+        "months": [f"{m:%b}" for m in months],
+        "missing_months": missing,
+        "moved_flagged": moved_flag, "moved_ok": moved_ok,
+        "hired_flagged": hired_flag, "hired_ok": hired_ok,
+        "moved_target": f"{MOVED_TARGET:.0f}h", "moved_floor": f"{MOVED_FLOOR:.0f}h",
+        "hired_target": f"{HIRED_TARGET:.0f}h",
+        "serious": sum(1 for x in moved_flag + hired_flag if x["status"] == "Serious"),
+        "alert": sum(1 for x in moved_flag + hired_flag if x["status"] == "Alert"),
+        "total": len(groups["moved"]) + len(groups["hired"]),
+    }
+
+
 def build_leave_summary(leave_df: pd.DataFrame, detail: str) -> dict:
     """Totals strip above Section 3 (raw numbers + bar widths for the template)."""
     def h(df, status):
@@ -706,7 +901,8 @@ def build_leave_summary(leave_df: pd.DataFrame, detail: str) -> dict:
 def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: float,
                       start: date, end: date, leave_df: pd.DataFrame | None = None,
                       leave_detail: str = "full", leave_pulled: str = "",
-                      pay_types: dict | None = None, hr_context: dict | None = None) -> dict:
+                      pay_types: dict | None = None, hr_context: dict | None = None,
+                      status: dict | None = None) -> dict:
     """Process all rows and build template context dict."""
 
     rows_scored = []
@@ -745,7 +941,18 @@ def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: fl
         return hr_context.get(norm_name(r["member"]), {"profile_url": "", "notes": []})
 
     def pay_of(r):
-        return pay_types.get(norm_name(r["member"]), PAY_UNKNOWN) if pay_enabled else None
+        if not pay_enabled:
+            return None
+        key = norm_name(r["member"])
+        st = (status or {}).get(key)
+        if st:
+            if st["change"] == "moved":
+                return PAY_SALARIED if st["eff"] and st["eff"] <= end else PAY_HOURLY
+            if st["change"] == "hired_salaried":
+                return PAY_SALARIED
+            if st["change"] == "hourly":
+                return PAY_HOURLY
+        return pay_types.get(key, PAY_UNKNOWN)
 
     # Section 1: Top 15
     top15 = []
@@ -846,10 +1053,23 @@ def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: fl
         leave_rows.sort(key=lambda x: (-x["total_raw"], x["member"].lower()))
         leave_summary = build_leave_summary(leave_df, leave_detail)
 
+    # Section 3: Salaried hours over 3 months (month-end only, needs pay types)
+    salaried = None
+    if pay_enabled and is_full_month(start, end):
+        current_totals = {norm_name(r["member"]): r["total_hours"]
+                          + (figures_for(r)["late_paid"] if leave_enabled else 0.0)
+                          for r in rows_scored if not pd.isna(r["total_hours"])}
+        salaried = build_salaried_section(rows_scored, start, end, pay_of, status or {}, hr_of,
+                                          current_totals)
+
     period_working_days = count_working_days(start, end)
+    period_kind = "Month-end" if is_full_month(start, end) else "Mid-month"
 
     return {
-        "report_title": "Bi-Weekly Performance Report",
+        "report_title": "Hubstaff Performance Report",
+        "period_kind": period_kind,
+        "salaried": salaried,
+        "leave_section_num": 4 if salaried else 3,
         "date_range": f"{start.strftime('%B %d, %Y')} — {end.strftime('%B %d, %Y')}",
         "start_date": start.isoformat(),
         "end_date": end.isoformat(),
@@ -947,6 +1167,15 @@ def main():
                         help="Comma-separated names with Salary Type = Hourly in the ClickUp HR profiles")
     parser.add_argument("--no-pay-type", action="store_true",
                         help="Explicitly skip the Hourly/Salaried tag (everyone counted as salaried)")
+    parser.add_argument("--salaried-status", default=None,
+                        help="Who moved to salaried, when and on what target (default "
+                             "data/input/salaried/salaried_status.csv when it exists; gitignored)")
+    parser.add_argument("--no-salaried-status", action="store_true",
+                        help="Do not read the salaried status file")
+    parser.add_argument("--csv-exported", default=None,
+                        help="When the master CSV was exported from Hubstaff (YYYY-MM-DD or ISO time, UTC). "
+                             "Paid leave approved after it is not in Total Worked Hours. "
+                             "Default: the CSV file's modified time")
     parser.add_argument("--hr-context", default=None,
                         help="Reviewed HR profile notes JSON (data/input/hr_context/, gitignored)")
     parser.add_argument("--dry-run", action="store_true",
@@ -1030,9 +1259,50 @@ def main():
 
     if leave_df is not None:
         leave_df = join_leave(leave_df, df, all_exclusions)
+        if args.csv_exported:
+            exported = pd.Timestamp(args.csv_exported)
+            exported = exported.tz_localize("UTC") if exported.tzinfo is None else exported.tz_convert("UTC")
+            src = "--csv-exported"
+        else:
+            exported = pd.Timestamp(datetime.utcfromtimestamp(csv_path.stat().st_mtime), tz="UTC")
+            src = "CSV file time; pass --csv-exported to override"
+        leave_df["late"] = (leave_df["status"] == "approved") & (leave_df["approved_at"] > exported)
+        print(f"Master CSV exported: {exported:%Y-%m-%d %H:%M} UTC ({src})")
+        for (m, cat), g in leave_df[leave_df["late"]].groupby(["member", "category"]):
+            print(f"  Approved after the export: {m}, {g['hours'].sum():.1f}h {cat} "
+                  f"(approved {g['approved_at'].max():%Y-%m-%d}); "
+                  + ("not in Total, so not taken off Worked" if cat == CATEGORY_PAID
+                     else "unpaid, no change"))
 
     pay_types, pay_notes = (resolve_pay_types(salaried_names, hourly_names, df, excluded_csv)
                             if pay_given else (None, []))
+
+    status = {}
+    st_path = (Path(args.salaried_status) if args.salaried_status
+               else REPO_ROOT / "data" / "input" / "salaried" / "salaried_status.csv")
+    if pay_given and not args.no_salaried_status:
+        if st_path.exists():
+            status, st_notes = load_salaried_status(st_path, list(df["member"]))
+            pay_notes.extend(st_notes)
+            changed = []
+            for m in df["member"]:
+                st = status.get(norm_name(m))
+                if not st or st["change"] == "agency":
+                    continue
+                field = pay_types.get(norm_name(m), PAY_UNKNOWN)
+                now = (PAY_HOURLY if st["change"] == "hourly"
+                       or (st["change"] == "moved" and st["eff"] > end) else PAY_SALARIED)
+                if field != now:
+                    changed.append(f"{m} ({field} → {now})")
+            if changed:
+                pay_notes.append("  Pay type set by the status file, not the ClickUp field: "
+                                 + ", ".join(changed))
+        elif args.salaried_status:
+            print(f"ERROR: Salaried status file not found: {st_path}", file=sys.stderr)
+            sys.exit(1)
+        else:
+            pay_notes.append(f"WARNING: no salaried status file at {st_path}; "
+                             "everyone salaried is shown as hired as salaried")
 
     hr_context = None
     if args.hr_context:
@@ -1046,7 +1316,7 @@ def main():
     context = build_report_data(df, prorated_red, prorated_orange, start, end,
                                 leave_df=leave_df, leave_detail=args.leave_detail,
                                 leave_pulled=leave_pulled, pay_types=pay_types,
-                                hr_context=hr_context)
+                                hr_context=hr_context, status=status)
     print(f"Employees flagged: {context['total_flagged']} / {context['total_employees']}")
     print(f"Hours violators:   {context['hours_violator_count']}")
     if context["leave_enabled"]:

@@ -638,6 +638,28 @@
     .hr-meta { display: block; font-size: 0.7rem; font-weight: 700; color: #6b7280; margin-bottom: 1px; }
     .hr-empty { font-size: 0.8rem; color: #6b7280; margin: 0; }
     @media print { .hr-chip, .hr-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+{% endif %}{% if salaried %}
+    /* Section 3: Salaried hours, last 3 months */
+    .sal-group { margin-bottom: 22px; }
+    .sal-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: 0 0 8px; }
+    .sal-title { font-size: 0.92rem; font-weight: 800; color: #111827; }
+    .sal-rule { font-size: 0.76rem; color: #6b7280; }
+    .sal-count { font-size: 0.7rem; font-weight: 700; color: #475569; background: #f1f5f9; padding: 2px 9px; border-radius: 999px; }
+    td.sal-month { text-align: center; white-space: nowrap; }
+    td.sal-month.under { color: #b91c1c; font-weight: 700; }
+    td.sal-month .then { display: block; font-size: 0.64rem; font-weight: 600; color: #94a3b8; }
+    .st-pill { display: inline-block; font-size: 0.72rem; font-weight: 800; padding: 2px 10px; border-radius: 999px; }
+    .st-pill.serious { background: #fee2e2; color: #b91c1c; }
+    .st-pill.alert { background: #fef3c7; color: #92400e; }
+    .st-note { font-size: 0.74rem; color: #6b7280; }
+    tr.sal-ok { background: #fff; }
+    .ok-toggle {
+      margin-top: 8px; background: none; border: 1px dashed #cbd5e1; color: #475569;
+      font-size: 0.74rem; font-weight: 700; padding: 5px 12px; border-radius: 999px; cursor: pointer;
+    }
+    .ok-toggle:hover { background: #f8fafc; }
+    @media print { tbody.ok-rows[hidden] { display: table-row-group !important; } .ok-toggle { display: none; }
+      .st-pill { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
 {% endif %}  </style>
 </head>
 <body>
@@ -675,6 +697,40 @@
   {% else %}<p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>{% endif %}
 </div>
 {%- endmacro %}{% endif %}
+{% macro sal_table(gid, title, rule, flagged, ok, months, show_since, hr_on, chev_html) -%}
+<div class="sal-group">
+  <div class="sal-head"><span class="sal-title">{{ title }}</span><span class="sal-count">{{ flagged|length + ok|length }}</span><span class="sal-rule">{{ rule }}</span></div>
+  {% if flagged or ok %}
+  <div class="table-wrapper">
+    <table>
+      <thead><tr>
+        <th>Member</th><th>Team</th>{% if show_since %}<th class="center">Salaried since</th><th class="center">Target</th>{% endif %}
+        {% for m in months %}<th class="center">{{ m }}</th>{% endfor %}
+        <th class="center">Months under</th><th class="center">Avg short</th><th class="center">Status</th>
+      </tr></thead>
+      {% set ncols = 7 + (2 if show_since else 0) %}
+      {% for part, rows in [('flag', flagged), ('ok', ok)] %}
+      <tbody{% if part == 'ok' %} class="ok-rows" id="{{ gid }}-ok" hidden{% endif %}>
+      {% for r in rows %}
+        <tr class="{{ 'severity-critical' if r.status == 'Serious' else ('severity-high' if r.status == 'Alert' else 'sal-ok') }}{% if hr_on %} expandable{% endif %}"{% if hr_on %} tabindex="0" role="button" aria-expanded="false" aria-controls="{{ gid }}-{{ part }}-{{ loop.index }}"{% endif %}>
+          <td class="member-name">{% if hr_on %}{{ chev_html }}{% endif %}{{ r.member }}{{ hr_chip(r.hr) }}</td>
+          <td class="team-name" title="{{ r.team }}">{{ r.team }}</td>
+          {% if show_since %}<td class="center">{{ r.since }}</td><td class="center" title="{{ r.target_basis }}">{{ r.target }}{% if r.target != r.target_floor %}<span class="then">flag under {{ r.target_floor }}</span>{% endif %}</td>{% endif %}
+          {% for c in r.cells %}<td class="sal-month{% if c.under %} under{% endif %}"{% if c.refreshed %} title="{{ c.refreshed }}"{% endif %}>{% if c.under %}🔴 {% endif %}{{ c.text }}{% if c.hourly_then and c.text != '—' %}<span class="then">before the move · 160h</span>{% endif %}{% if c.ce_partial %}<span class="then">not on Hubstaff yet</span>{% endif %}{% if c.before_hire and c.text != '—' %}<span class="then">before salaried · not counted</span>{% endif %}</td>{% endfor %}
+          <td class="center">{% if r.under %}{{ r.under }} of {{ r.months_with_data }}{% endif %}</td>
+          <td class="center">{{ r.avg_short }}</td>
+          <td class="center">{% if r.status == 'Serious' %}<span class="st-pill serious">Serious</span>{% elif r.status == 'Alert' %}<span class="st-pill alert">Alert</span>{% elif r.note %}<span class="st-note">{{ r.note }}</span>{% endif %}</td>
+        </tr>
+        {% if hr_on %}<tr class="detail-row" id="{{ gid }}-{{ part }}-{{ loop.index }}" hidden><td colspan="{{ ncols }}">{{ hr_panel(r.hr) }}</td></tr>{% endif %}
+      {% endfor %}
+      </tbody>
+      {% endfor %}
+    </table>
+  </div>
+  {% if ok %}<button type="button" class="ok-toggle" data-target="{{ gid }}-ok" data-n="{{ ok|length }}">Show {{ ok|length }} on target</button>{% endif %}
+  {% else %}<div class="empty-state">No one in this group.</div>{% endif %}
+</div>
+{%- endmacro %}
 {% macro hr_chip(c) -%}{% if c and c.notes %}<span class="hr-chip" title="Note on the HR profile">HR note</span>{% endif %}{%- endmacro %}
 {% set chev %}<span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>{% endset %}
 {% set toggle_svg %}<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>{% endset %}
@@ -691,7 +747,7 @@
         <div class="brand">WebLife Ventures &nbsp;·&nbsp; Internal Use Only</div>
         <h1>{{ report_title }}</h1>
       </div>
-      <div class="period-badge">{{ date_range }}</div>
+      <div class="period-badge">{{ period_kind }} · {{ date_range }}</div>
     </div>
     <div class="header-meta">
       <div class="header-meta-item">
@@ -735,7 +791,7 @@
     <div class="stat-card">
       <div class="s-label">Report Cycle</div>
       <div class="s-value slate" style="font-size:1.1rem; letter-spacing: -0.01em; margin-top: 4px;">{{ date_range }}</div>
-      <div class="s-sub">bi-weekly · Hubstaff</div>
+      <div class="s-sub">{{ period_kind|lower }} · Hubstaff</div>
     </div>
   </div>
 
@@ -949,13 +1005,43 @@
       {% endif %}
     </div>
 
+{% if salaried %}
+    <!-- ================================================================ -->
+    <!-- Section 3 — Salaried Hours, last 3 months                         -->
+    <!-- ================================================================ -->
+    <div class="section-block" id="s-sal">
+      <div class="section-title-row">
+        <div class="section-num">3</div>
+        <h2>Salaried Hours: Last 3 Months</h2>
+        <span class="count-pill">{{ salaried.serious }} serious · {{ salaried.alert }} alert</span>{% if hr_enabled %}
+        <span class="section-tools"><button type="button" class="toggle-all-btn" data-section="s-sal" aria-pressed="false">{{ toggle_svg }}<span class="btn-label">Expand all</span></button></span>{% endif %}
+      </div>
+      <p class="section-note">
+        Every salaried team member's Hubstaff total for {{ salaried.months|join(', ') }}: hours worked plus approved paid leave (unpaid leave does not count).
+        <strong>Serious</strong> = under target in 2 or more of the 3 months. <strong>Alert</strong> = under in {{ salaried.months[-1] }} only.
+        Who moved from hourly to salaried, when, and on what target is taken from HR profiles and transition letters until the People Ops tracker is in. Earlier months use today's Hubstaff figure where time was edited after that month's export.{% if salaried.missing_months %}
+        No Hubstaff data on file for {{ salaried.missing_months|join(', ') }}.{% endif %}
+      </p>
+      {{ sal_table('sal-moved', 'Moved from hourly to salaried', salaried.moved_target ~ ' only where it was agreed for that person (flagged under ' ~ salaried.moved_floor ~ '), otherwise ' ~ salaried.hired_target ~ ' · applies from the first full month after the move', salaried.moved_flagged, salaried.moved_ok, salaried.months, true, hr_enabled, chev) }}
+      {{ sal_table('sal-hired', 'Hired as salaried', 'Target ' ~ salaried.hired_target ~ ' · flagged under ' ~ salaried.hired_target, salaried.hired_flagged, salaried.hired_ok, salaried.months, false, hr_enabled, chev) }}
+    </div>
+<script>
+document.querySelectorAll('.ok-toggle').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var tb = document.getElementById(b.getAttribute('data-target'));
+    tb.hidden = !tb.hidden;
+    b.textContent = (tb.hidden ? 'Show ' : 'Hide ') + b.getAttribute('data-n') + ' on target';
+  });
+});
+</script>
+{% endif %}
 {% if leave_enabled %}
     <!-- ================================================================ -->
     <!-- Section 3 — Leave Summary                                         -->
     <!-- ================================================================ -->
     <div class="section-block" id="s3">
       <div class="section-title-row">
-        <div class="section-num">3</div>
+        <div class="section-num">{{ leave_section_num }}</div>
         <h2>Leave Summary</h2>
         <span class="count-pill">{{ leave_count }} employees</span>
         <span class="section-tools">

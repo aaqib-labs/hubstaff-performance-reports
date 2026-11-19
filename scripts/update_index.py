@@ -19,8 +19,8 @@ DOCS_DIR  = REPO_ROOT / "docs"
 
 REPORT_TYPE_CONFIG = {
     "biweekly_top_violators": {
-        "label": "Bi-Weekly Top Violators",
-        "short": "Bi-Weekly",
+        "label": "Hubstaff Performance Report",
+        "short": "Performance",
         "color": "#2563eb", "light": "#dbeafe", "text": "#1e40af",
         "icon":  "📊",
         "desc":  "SLA compliance · Top violators ranked by severity",

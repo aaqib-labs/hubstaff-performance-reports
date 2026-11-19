@@ -127,6 +127,45 @@ def get_exclusions(start: date) -> list[str]:
 
 
 # ---------------------------------------------------------------------------
+# Salaried hours targets (People Ops: Jorn Sep 3 and Oct 2 2026; Aaqib Oct 21)
+# ---------------------------------------------------------------------------
+# 180h applies only where it was agreed for that person (HR profile), from the
+# first full month after the move; 170h is "within range". Everyone else, and
+# every month before a move, is measured against the normal 160h (Aaqib, 2026-11-19).
+# Who moved, when and on what target: data/input/salaried/salaried_status.csv.
+MOVED_TARGET = 180.0
+MOVED_FLOOR  = 170.0
+HIRED_TARGET = 160.0
+HIRED_FLOOR  = 160.0
+
+
+def first_full_month(effective: date) -> date:
+    """First calendar month a pay change covers in full: the effective month when it
+    starts on the 1st, otherwise the month after. Earlier months count at 160h."""
+    if effective.day == 1:
+        return effective
+    return date(effective.year + (effective.month == 12), effective.month % 12 + 1, 1)
+
+
+def floor_for(target: float) -> float:
+    """Flag line for a monthly target: 180h is flagged under 170h; otherwise the target."""
+    return MOVED_FLOOR if target >= MOVED_TARGET else target
+
+
+def salaried_status(hours: list, floors: list) -> tuple:
+    """Months under target and status over a run of months (oldest first).
+    hours[i] is None when the person has no data that month.
+    Serious = under in 2+ months; Alert = under in the latest month only."""
+    under = sum(1 for h, f in zip(hours, floors) if h is not None and h < f)
+    latest = hours[-1]
+    if under >= 2:
+        return under, "Serious"
+    if latest is not None and latest < floors[-1]:
+        return under, "Alert"
+    return under, None
+
+
+# ---------------------------------------------------------------------------
 # Name matching (ClickUp HR profile names -> Hubstaff CSV member names)
 # ---------------------------------------------------------------------------
 
