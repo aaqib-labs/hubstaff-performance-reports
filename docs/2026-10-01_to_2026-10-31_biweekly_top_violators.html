@@ -616,9 +616,35 @@
         -webkit-print-color-adjust: exact; print-color-adjust: exact;
       }
     }
+
+    /* HR profile context (Sections 1 and 2) */
+    .hr-chip {
+      display: inline-block; margin-left: 8px; font-size: 0.66rem; font-weight: 700;
+      padding: 1px 8px; border-radius: 999px; background: #fdf2f8; color: #9d174d;
+      border: 1px solid #fbcfe8; vertical-align: 1px; white-space: nowrap;
+    }
+    .hr-card {
+      background: #fff; border: 1px solid #e2e8f0; border-left: 3px solid #db2777;
+      border-radius: 10px; padding: 10px 16px; margin-bottom: 10px;
+      box-shadow: 0 1px 2px rgba(0,0,0,.04);
+    }
+    .hr-head { display: flex; align-items: center; gap: 14px; margin-bottom: 6px; flex-wrap: wrap; }
+    .hr-title { font-size: 0.66rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: #9d174d; }
+    .hr-link { font-size: 0.74rem; font-weight: 700; color: #1d4ed8; text-decoration: none; white-space: nowrap; }
+    .hr-link:hover { text-decoration: underline; }
+    ul.hr-notes { list-style: none; margin: 0; padding: 0; }
+    ul.hr-notes li { font-size: 0.82rem; color: #1f2937; padding: 5px 0; border-top: 1px solid #f8fafc; line-height: 1.45; }
+    ul.hr-notes li:first-child { border-top: none; }
+    .hr-meta { display: block; font-size: 0.7rem; font-weight: 700; color: #6b7280; margin-bottom: 1px; }
+    .hr-empty { font-size: 0.8rem; color: #6b7280; margin: 0; }
+    @media print { .hr-chip, .hr-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
   </style>
 </head>
 <body>
+
+
+
+
 
 
 <div class="page-wrap">
@@ -651,7 +677,7 @@
       </div>
       <div class="header-meta-item">
         <div class="h-label">Generated</div>
-        <div class="h-value">2026-11-19 14:48</div>
+        <div class="h-value">2026-11-19 15:07</div>
       </div>
     </div>
   </div>
@@ -726,15 +752,17 @@
     <!-- ================================================================ -->
     <!-- Section 1 — Top Violators                                         -->
     <!-- ================================================================ -->
-    <div class="section-block">
+    <div class="section-block" id="s1">
       <div class="section-title-row">
         <div class="section-num">1</div>
         <h2>Top Violators</h2>
         <span class="count-pill">Top 15</span>
+        <span class="section-tools"><button type="button" class="toggle-all-btn" data-section="s1" aria-pressed="false"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-label">Expand all</span></button></span>
       </div>
       <p class="section-note">
         Ranked by weighted severity score. Activity violations weigh heaviest.
         Break ⚠️ contributes to score but is excluded from the displayed flag count.
+        Click a name for recent notes from their HR profile.
       </p>
 
       
@@ -757,11 +785,11 @@
           </thead>
           <tbody>
             
-            <tr class="severity-critical">
+            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="tv-1">
               <td class="rank rank-1">
                 1
               </td>
-              <td class="member-name">jorn wossner</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>jorn wossner</td>
               <td class="team-name" title="Leadership">Leadership</td>
               <td class="metric-cell">🔴 28%</td>
               <td class="metric-cell">🟠 223.6h</td>
@@ -772,12 +800,18 @@
               <td class="flags-cell">🔴 4 ⚠️ 1</td>
               <td class="center"><span class="pay-tag salaried">Salaried</span></td>
             </tr>
+            <tr class="detail-row" id="tv-1" hidden>
+              <td colspan="11"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ex381yb" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td>
+            </tr>
             
-            <tr class="severity-critical">
+            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="tv-2">
               <td class="rank rank-2">
                 2
               </td>
-              <td class="member-name">Brayden Robinson</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Brayden Robinson</td>
               <td class="team-name" title="Rev Ops">Rev Ops</td>
               <td class="metric-cell">🔴 30%</td>
               <td class="metric-cell">🔴 117.0h</td>
@@ -788,12 +822,18 @@
               <td class="flags-cell">🔴 3 ⚠️ 1</td>
               <td class="center"><span class="pay-tag salaried">Salaried</span></td>
             </tr>
+            <tr class="detail-row" id="tv-2" hidden>
+              <td colspan="11"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ex381ya" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td>
+            </tr>
             
-            <tr class="severity-critical">
+            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="tv-3">
               <td class="rank rank-3">
                 3
               </td>
-              <td class="member-name">Devanga Palliyaguru</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Devanga Palliyaguru<span class="hr-chip" title="Note on the HR profile">HR note</span></td>
               <td class="team-name" title="Centrifuse Engineers">Centrifuse Engineers</td>
               <td class="metric-cell">🔴 20%</td>
               <td class="metric-cell">🟠 203.7h</td>
@@ -804,12 +844,19 @@
               <td class="flags-cell">🔴 4</td>
               <td class="center"><span class="pay-tag salaried">Salaried</span></td>
             </tr>
+            <tr class="detail-row" id="tv-3" hidden>
+              <td colspan="11"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/z8x1tu0mhy" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <ul class="hr-notes"><li><span class="hr-meta">Rasma Rizwan · Oct 12, 2026</span>First-days buddy report (Sep 28 to 30): 24h 39m logged against about 24h; breaks ran over on two days. Growth area: even daily hours and breaks logged to policy.</li></ul>
+  
+</div></td>
+            </tr>
             
-            <tr class="severity-critical">
+            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="tv-4">
               <td class="rank rank-other">
                 4
               </td>
-              <td class="member-name">Nishantha Hettiarachchi</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Nishantha Hettiarachchi</td>
               <td class="team-name" title="AIT - Product, Centrifuse Engineers, Labs - all">AIT - Product, Centrifuse Engineers, Labs - all</td>
               <td class="metric-cell">🔴 23%</td>
               <td class="metric-cell">🟠 256.3h</td>
@@ -820,12 +867,18 @@
               <td class="flags-cell">🔴 4</td>
               <td class="center"><span class="pay-tag salaried">Salaried</span></td>
             </tr>
+            <tr class="detail-row" id="tv-4" hidden>
+              <td colspan="11"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ewnkxhm" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td>
+            </tr>
             
-            <tr class="severity-critical">
+            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="tv-5">
               <td class="rank rank-other">
                 5
               </td>
-              <td class="member-name">Fred Butson</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Fred Butson</td>
               <td class="team-name" title="Framework Friday, Leadership, Sales - Management">Framework Friday, Leadership, Sales - Management</td>
               <td class="metric-cell">🔴 30%</td>
               <td class="metric-cell">🟠 200.0h</td>
@@ -836,12 +889,18 @@
               <td class="flags-cell">🔴 3 ⚠️ 1</td>
               <td class="center"><span class="pay-tag salaried">Salaried</span></td>
             </tr>
+            <tr class="detail-row" id="tv-5" hidden>
+              <td colspan="11"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ex381y6" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td>
+            </tr>
             
-            <tr class="severity-critical">
+            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="tv-6">
               <td class="rank rank-other">
                 6
               </td>
-              <td class="member-name">Darren Karunaratne</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Darren Karunaratne</td>
               <td class="team-name" title="Labs - all, Venia Products  - All, VP - Customer Ops - Customer Relations">Labs - all, Venia Products  - All, VP - Customer Ops - Customer Relations</td>
               <td class="metric-cell">🔴 27%</td>
               <td class="metric-cell">195.2h</td>
@@ -852,12 +911,18 @@
               <td class="flags-cell">🔴 3</td>
               <td class="center"><span class="pay-tag salaried">Salaried</span></td>
             </tr>
+            <tr class="detail-row" id="tv-6" hidden>
+              <td colspan="11"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ew781kj" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td>
+            </tr>
             
-            <tr class="severity-critical">
+            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="tv-7">
               <td class="rank rank-other">
                 7
               </td>
-              <td class="member-name">Shehara Meadows</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Shehara Meadows<span class="hr-chip" title="Note on the HR profile">HR note</span></td>
               <td class="team-name" title="Content_catalog_platform, Digital Product, Labs - all, Site Content">Content_catalog_platform, Digital Product, Labs - all, Site Content</td>
               <td class="metric-cell">🔴 30%</td>
               <td class="metric-cell">162.3h</td>
@@ -868,12 +933,19 @@
               <td class="flags-cell">🔴 3</td>
               <td class="center"><span class="pay-tag salaried">Salaried</span></td>
             </tr>
+            <tr class="detail-row" id="tv-7" hidden>
+              <td colspan="11"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ew77zgh" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <ul class="hr-notes"><li><span class="hr-meta">Jorn Wossner · Oct 3, 2026</span>September: 161.9h including PTO and holiday, 33% activity. Activity improved after the Sep 11 review but is still under the 40% bar.</li><li><span class="hr-meta">Rasma Rizwan · Oct 21, 2026</span>Moved to fixed pay at the end of July based on 180h a month. August (165.0h) and September (161.9h) were in the 160s; manager asked to discuss the 180h expectation.</li><li><span class="hr-meta">Rasma Rizwan · Nov 10, 2026</span>August to October all in the low 160s, not the agreed 180h (October 162.3h). One more month agreed: if November is below 180h, she moves back to hourly.</li></ul>
+  
+</div></td>
+            </tr>
             
-            <tr class="severity-critical">
+            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="tv-8">
               <td class="rank rank-other">
                 8
               </td>
-              <td class="member-name">Prajwal Kumar</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Prajwal Kumar<span class="hr-chip" title="Note on the HR profile">HR note</span></td>
               <td class="team-name" title="Marketing, Marketing - Paid Media">Marketing, Marketing - Paid Media</td>
               <td class="metric-cell">🔴 33%</td>
               <td class="metric-cell">🔴 137.1h</td>
@@ -884,12 +956,19 @@
               <td class="flags-cell">🔴 2 ⚠️ 1</td>
               <td class="center"><span class="pay-tag salaried">Salaried</span></td>
             </tr>
+            <tr class="detail-row" id="tv-8" hidden>
+              <td colspan="11"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ew7817k" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <ul class="hr-notes"><li><span class="hr-meta">Saduka Sachintha · Nov 3, 2026</span>Worked fewer hours this month; timesheet approved. On fixed salary, but pay to be adjusted to the hours actually worked.</li></ul>
+  
+</div></td>
+            </tr>
             
-            <tr class="severity-critical">
+            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="tv-9">
               <td class="rank rank-other">
                 9
               </td>
-              <td class="member-name">Ounvin Ranaweera</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Ounvin Ranaweera</td>
               <td class="team-name" title="Labs - all, Venia Products  - All, VP - Customer Ops - Customer Relations">Labs - all, Venia Products  - All, VP - Customer Ops - Customer Relations</td>
               <td class="metric-cell">🔴 27%</td>
               <td class="metric-cell">175.8h</td>
@@ -900,12 +979,18 @@
               <td class="flags-cell">🔴 2 ⚠️ 1</td>
               <td class="center"><span class="pay-tag hourly">Hourly</span></td>
             </tr>
+            <tr class="detail-row" id="tv-9" hidden>
+              <td colspan="11"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ew781m3" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td>
+            </tr>
             
-            <tr class="severity-critical">
+            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="tv-10">
               <td class="rank rank-other">
                 10
               </td>
-              <td class="member-name">Ali Asghar</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Ali Asghar</td>
               <td class="team-name" title="AIT - Sales, allintalent, Rev Ops, Sales - Management">AIT - Sales, allintalent, Rev Ops, Sales - Management</td>
               <td class="metric-cell">🔴 27%</td>
               <td class="metric-cell">176.5h</td>
@@ -916,12 +1001,18 @@
               <td class="flags-cell">🔴 2 ⚠️ 1</td>
               <td class="center"><span class="pay-tag hourly">Hourly</span></td>
             </tr>
+            <tr class="detail-row" id="tv-10" hidden>
+              <td colspan="11"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ew7828f" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td>
+            </tr>
             
-            <tr class="severity-critical">
+            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="tv-11">
               <td class="rank rank-other">
                 11
               </td>
-              <td class="member-name">Ashan Perera</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Ashan Perera<span class="hr-chip" title="Note on the HR profile">HR note</span></td>
               <td class="team-name" title="Centrifuse Engineers">Centrifuse Engineers</td>
               <td class="metric-cell">🔴 25%</td>
               <td class="metric-cell">188.0h</td>
@@ -932,12 +1023,19 @@
               <td class="flags-cell">🔴 2 ⚠️ 1</td>
               <td class="center"><span class="pay-tag unknown" title="Salary Type is blank in the ClickUp HR profile. Counted as salaried.">Unknown</span></td>
             </tr>
+            <tr class="detail-row" id="tv-11" hidden>
+              <td colspan="11"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86eyr3q8k" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <ul class="hr-notes"><li><span class="hr-meta">Rasma Rizwan · Sep 2, 2026</span>First-days buddy report: Hubstaff record clean and policy-compliant, about 8 hours a day with breaks recorded correctly.</li></ul>
+  
+</div></td>
+            </tr>
             
-            <tr class="severity-critical">
+            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="tv-12">
               <td class="rank rank-other">
                 12
               </td>
-              <td class="member-name">Natalia Jayasundera</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Natalia Jayasundera</td>
               <td class="team-name" title="allintalent, HR, Labs - all">allintalent, HR, Labs - all</td>
               <td class="metric-cell">🔴 30%</td>
               <td class="metric-cell">179.0h</td>
@@ -948,12 +1046,18 @@
               <td class="flags-cell">🔴 2 ⚠️ 1</td>
               <td class="center"><span class="pay-tag salaried">Salaried</span></td>
             </tr>
+            <tr class="detail-row" id="tv-12" hidden>
+              <td colspan="11"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ex381y7" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td>
+            </tr>
             
-            <tr class="severity-critical">
+            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="tv-13">
               <td class="rank rank-other">
                 13
               </td>
-              <td class="member-name">Rasma Rizwan</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Rasma Rizwan</td>
               <td class="team-name" title="allintalent, HR, Labs - all">allintalent, HR, Labs - all</td>
               <td class="metric-cell">🔴 34%</td>
               <td class="metric-cell">175.2h</td>
@@ -964,12 +1068,18 @@
               <td class="flags-cell">🔴 2 ⚠️ 1</td>
               <td class="center"><span class="pay-tag salaried">Salaried</span></td>
             </tr>
+            <tr class="detail-row" id="tv-13" hidden>
+              <td colspan="11"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ex38gek" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td>
+            </tr>
             
-            <tr class="severity-critical">
+            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="tv-14">
               <td class="rank rank-other">
                 14
               </td>
-              <td class="member-name">Antik Mandal</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Antik Mandal<span class="hr-chip" title="Note on the HR profile">HR note</span></td>
               <td class="team-name" title="BI and Data Team, Digital Product">BI and Data Team, Digital Product</td>
               <td class="metric-cell">🔴 31%</td>
               <td class="metric-cell">199.4h</td>
@@ -980,12 +1090,19 @@
               <td class="flags-cell">🔴 2</td>
               <td class="center"><span class="pay-tag salaried">Salaried</span></td>
             </tr>
+            <tr class="detail-row" id="tv-14" hidden>
+              <td colspan="11"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86eyac9x6" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <ul class="hr-notes"><li><span class="hr-meta">Adam Burdeshaw · Sep 12, 2026</span>August: 237.9h over 29 days including weekends, 34.2% activity, most flags in Digital Product. Managers to set expectations on target hours, weekend work and activity.</li><li><span class="hr-meta">Bihani Madushika · Sep 14, 2026</span>Lower activity reflects reading and planning with AI tools before implementing. Over 200h is not a concern on fixed pay; asked to improve activity.</li></ul>
+  
+</div></td>
+            </tr>
             
-            <tr class="severity-critical">
+            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="tv-15">
               <td class="rank rank-other">
                 15
               </td>
-              <td class="member-name">Dhananjana Rathnayake</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Dhananjana Rathnayake</td>
               <td class="team-name" title="Centrifuse Engineers">Centrifuse Engineers</td>
               <td class="metric-cell">🔴 33%</td>
               <td class="metric-cell">175.8h</td>
@@ -995,6 +1112,12 @@
               <td class="metric-cell">🔴 58.1h (33.0%)</td>
               <td class="flags-cell">🔴 2</td>
               <td class="center"><span class="pay-tag salaried">Salaried</span></td>
+            </tr>
+            <tr class="detail-row" id="tv-15" hidden>
+              <td colspan="11"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ew77p5d" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td>
             </tr>
             
           </tbody>
@@ -1018,7 +1141,7 @@
         <strong>Worked</strong> = Total Hours minus approved paid time off (Hubstaff already adds paid leave to the total, not unpaid leave).
         <strong>Counted</strong> = Worked plus approved paid leave, plus approved unpaid leave for hourly team members (their pay is cut, so they do not make the hours up).
         <strong>Shortfall</strong> = Expected minus Counted. Pay type is from the ClickUp HR profile; Unknown is counted as salaried.
-        Click a name to see their time off. Unapproved requests are listed for reference only and never count.
+        Click a name to see their time off and recent HR profile notes. Unapproved requests are listed for reference only and never count.
       </p>
 
       <div class="threshold-note">
@@ -1049,8 +1172,8 @@
           <tbody>
             
             
-            <tr class="severity-critical">
-              <td class="member-name"><span class="chev-spacer"></span>Brayden Robinson</td>
+            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="hv-1">
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Brayden Robinson</td>
               <td class="team-name" title="Rev Ops">Rev Ops</td>
               <td class="center"><span class="pay-tag salaried">Salaried</span></td>
               <td class="center">🔴 117.0h</td>
@@ -1062,10 +1185,17 @@
               <td class="flags-cell">🔴 3 ⚠️ 1</td>
             </tr>
             
+            <tr class="detail-row" id="hv-1" hidden>
+              <td colspan="10"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ex381ya" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td>
+            </tr>
+            
             
             
             <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="hv-2">
-              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Prajwal Kumar</td>
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Prajwal Kumar<span class="hr-chip" title="Note on the HR profile">HR note</span></td>
               <td class="team-name" title="Marketing, Marketing - Paid Media">Marketing, Marketing - Paid Media</td>
               <td class="center"><span class="pay-tag salaried">Salaried</span></td>
               <td class="center">🔴 137.1h</td>
@@ -1078,7 +1208,11 @@
             </tr>
             
             <tr class="detail-row" id="hv-2" hidden>
-              <td colspan="10"><div class="leave-card">
+              <td colspan="10"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ew7817k" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <ul class="hr-notes"><li><span class="hr-meta">Saduka Sachintha · Nov 3, 2026</span>Worked fewer hours this month; timesheet approved. On fixed salary, but pay to be adjusted to the hours actually worked.</li></ul>
+  
+</div><div class="leave-card">
 
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
@@ -1100,8 +1234,8 @@
             
             
             
-            <tr class="severity-critical">
-              <td class="member-name"><span class="chev-spacer"></span>Irene Padilla</td>
+            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="hv-3">
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Irene Padilla</td>
               <td class="team-name" title="Accounting, WeAssist">Accounting, WeAssist</td>
               <td class="center"><span class="pay-tag salaried">Salaried</span></td>
               <td class="center">🔴 147.6h</td>
@@ -1111,6 +1245,13 @@
               <td class="shortfall">–12.4h</td>
               <td class="center"><span class="chip-stack"></span></td>
               <td class="flags-cell">🔴 1 ⚠️ 2</td>
+            </tr>
+            
+            <tr class="detail-row" id="hv-3" hidden>
+              <td colspan="10"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ew77z8w" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td>
             </tr>
             
             
@@ -1129,7 +1270,10 @@
             </tr>
             
             <tr class="detail-row" id="hv-4" hidden>
-              <td colspan="10"><div class="leave-card">
+              <td colspan="10"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ew781kg" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div><div class="leave-card">
 
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
@@ -1167,8 +1311,8 @@
             
             
             
-            <tr class="severity-critical">
-              <td class="member-name"><span class="chev-spacer"></span>Rebecca Corona</td>
+            <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="hv-5">
+              <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Rebecca Corona</td>
               <td class="team-name" title="VP - Customer Ops - Leads, VP - Customer Ops - Order Processing">VP - Customer Ops - Leads, VP - Customer Ops - Order Processing</td>
               <td class="center"><span class="pay-tag hourly">Hourly</span></td>
               <td class="center">🔴 154.3h</td>
@@ -1178,6 +1322,13 @@
               <td class="shortfall">–5.7h</td>
               <td class="center"><span class="chip-stack"></span></td>
               <td class="flags-cell">🔴 1</td>
+            </tr>
+            
+            <tr class="detail-row" id="hv-5" hidden>
+              <td colspan="10"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ew781kd" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td>
             </tr>
             
             
@@ -2483,7 +2634,7 @@
   <div class="page-footer">
     <span>WebLife Ventures Performance Reporting System</span>
     <span>
-      Generated 2026-11-19 14:48
+      Generated 2026-11-19 15:07
       <span class="footer-dot"> &nbsp;·&nbsp; </span>
       Internal use only — do not distribute
     </span>
