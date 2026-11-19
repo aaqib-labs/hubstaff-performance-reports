@@ -1049,12 +1049,23 @@ def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: fl
             figures_cache[key] = fig
         return figures_cache[key]
 
+    def expected_for(r) -> float:
+        """Prorated monthly target: 180h for people who moved from hourly to salaried
+        (from the first full month after the move), otherwise 160h. The list itself
+        stays on the 160h SLA red line (Aaqib, 2026-11-19)."""
+        st = (status or {}).get(norm_name(r["member"]))
+        if st and st["change"] == "moved" and st["eff"] \
+                and first_full_month(st["eff"]) <= date(start.year, start.month, 1):
+            return prorated_red * st["target"] / HIRED_TARGET
+        return prorated_red
+
     # Section 2: All Hours Violators (below prorated red threshold)
     hours_violators = []
     for r in rows_scored:
         h = r["total_hours"]
         if not pd.isna(h) and h < prorated_red:
-            shortfall = prorated_red - h
+            expected = expected_for(r)
+            shortfall = expected - h
             other_flags = fmt_flags_badge(r["red_count"], r["yellow_count"])
             entry = {
                 "member": r["member"],
@@ -1063,14 +1074,14 @@ def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: fl
                 "hr": hr_of(r),
                 "hours_worked": f"{h:.1f}h",
                 "hours_raw": h,
-                "expected_hours": f"{prorated_red:.1f}h",
+                "expected_hours": f"{expected:.1f}h",
                 "shortfall": f"{shortfall:.1f}h",
                 "other_flags": other_flags,
             }
             if leave_enabled:
                 fig = figures_for(r)
                 # Leave-adjusted shortfall: prorated 160h minus counted hours
-                counted_short = prorated_red - fig["counted"]
+                counted_short = expected - fig["counted"]
                 entry["shortfall"] = f"{counted_short:.1f}h" if counted_short > 0.05 else ""
                 entry["leave"] = fig
                 entry["time_off_tag"] = leave_tag(fig["approved"], fig["unapproved"])

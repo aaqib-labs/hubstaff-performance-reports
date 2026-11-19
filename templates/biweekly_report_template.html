@@ -915,6 +915,7 @@
         All employees below the prorated hours threshold. Sorted lowest hours first.{% if leave_enabled %}
         <strong>Worked</strong> = Total Hours minus approved paid time off (Hubstaff already adds paid leave to the total, not unpaid leave).
         <strong>Counted</strong> = Worked plus approved paid leave{% if pay_enabled %}, plus approved unpaid leave for hourly team members (their pay is cut, so they do not make the hours up){% endif %}.
+        <strong>Expected</strong> is 160h prorated, or 180h prorated for team members who moved from hourly to salaried (from the first full month after the move).
         <strong>Shortfall</strong> = Expected minus Counted.{% if pay_enabled %} Pay type is from the ClickUp HR profile; Unknown is counted as salaried.{% endif %}
         Click a name to see their time off{% if hr_enabled %} and recent HR profile notes{% endif %}. Unapproved requests are listed for reference only and never count.{% endif %}
       </p>
