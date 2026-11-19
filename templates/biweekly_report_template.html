@@ -471,7 +471,7 @@
       .stats-row { grid-template-columns: 1fr 1fr; }
       .header-meta { gap: 16px; }
     }
-{% if leave_enabled %}
+{% if leave_enabled or hr_enabled %}
     /* ------------------------------------------------------------------ */
     /* Month-end time off                                                   */
     /* ------------------------------------------------------------------ */
@@ -616,6 +616,28 @@
         -webkit-print-color-adjust: exact; print-color-adjust: exact;
       }
     }
+{% endif %}{% if hr_enabled %}
+    /* HR profile context (Sections 1 and 2) */
+    .hr-chip {
+      display: inline-block; margin-left: 8px; font-size: 0.66rem; font-weight: 700;
+      padding: 1px 8px; border-radius: 999px; background: #fdf2f8; color: #9d174d;
+      border: 1px solid #fbcfe8; vertical-align: 1px; white-space: nowrap;
+    }
+    .hr-card {
+      background: #fff; border: 1px solid #e2e8f0; border-left: 3px solid #db2777;
+      border-radius: 10px; padding: 10px 16px; margin-bottom: 10px;
+      box-shadow: 0 1px 2px rgba(0,0,0,.04);
+    }
+    .hr-head { display: flex; align-items: center; gap: 14px; margin-bottom: 6px; flex-wrap: wrap; }
+    .hr-title { font-size: 0.66rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: #9d174d; }
+    .hr-link { font-size: 0.74rem; font-weight: 700; color: #1d4ed8; text-decoration: none; white-space: nowrap; }
+    .hr-link:hover { text-decoration: underline; }
+    ul.hr-notes { list-style: none; margin: 0; padding: 0; }
+    ul.hr-notes li { font-size: 0.82rem; color: #1f2937; padding: 5px 0; border-top: 1px solid #f8fafc; line-height: 1.45; }
+    ul.hr-notes li:first-child { border-top: none; }
+    .hr-meta { display: block; font-size: 0.7rem; font-weight: 700; color: #6b7280; margin-bottom: 1px; }
+    .hr-empty { font-size: 0.8rem; color: #6b7280; margin: 0; }
+    @media print { .hr-chip, .hr-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
 {% endif %}  </style>
 </head>
 <body>
@@ -646,7 +668,17 @@
 {% endif %}
 </div>
 {%- endmacro %}
-{% endif %}<div class="page-wrap">
+{% endif %}{% if hr_enabled %}{% macro hr_panel(c) -%}
+<div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span>{% if c.profile_url %}<a class="hr-link" href="{{ c.profile_url }}" target="_blank" rel="noopener">Open HR profile ↗</a>{% endif %}</div>
+  {% if c.notes %}<ul class="hr-notes">{% for n in c.notes %}<li><span class="hr-meta">{{ n.author }} · {{ n.date_fmt }}</span>{{ n.text }}</li>{% endfor %}</ul>
+  {% else %}<p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>{% endif %}
+</div>
+{%- endmacro %}{% endif %}
+{% macro hr_chip(c) -%}{% if c and c.notes %}<span class="hr-chip" title="Note on the HR profile">HR note</span>{% endif %}{%- endmacro %}
+{% set chev %}<span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>{% endset %}
+{% set toggle_svg %}<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>{% endset %}
+<div class="page-wrap">
 
   <div class="back-nav"><a href="index.html">&#8592; Performance Reports</a></div>
 
@@ -751,15 +783,17 @@
     <!-- ================================================================ -->
     <!-- Section 1 — Top Violators                                         -->
     <!-- ================================================================ -->
-    <div class="section-block">
+    <div class="section-block"{% if hr_enabled %} id="s1"{% endif %}>
       <div class="section-title-row">
         <div class="section-num">1</div>
         <h2>Top Violators</h2>
-        <span class="count-pill">Top {{ top15 | length }}</span>
+        <span class="count-pill">Top {{ top15 | length }}</span>{% if hr_enabled and top15 %}
+        <span class="section-tools"><button type="button" class="toggle-all-btn" data-section="s1" aria-pressed="false">{{ toggle_svg }}<span class="btn-label">Expand all</span></button></span>{% endif %}
       </div>
       <p class="section-note">
         Ranked by weighted severity score. Activity violations weigh heaviest.
-        Break ⚠️ contributes to score but is excluded from the displayed flag count.
+        Break ⚠️ contributes to score but is excluded from the displayed flag count.{% if hr_enabled %}
+        Click a name for recent notes from their HR profile.{% endif %}
       </p>
 
       {% if top15 %}
@@ -782,11 +816,11 @@
           </thead>
           <tbody>
             {% for row in top15 %}
-            <tr class="{{ row.row_class }}">
+            <tr class="{{ row.row_class }}{% if hr_enabled %} expandable{% endif %}"{% if hr_enabled %} tabindex="0" role="button" aria-expanded="false" aria-controls="tv-{{ loop.index }}"{% endif %}>
               <td class="rank {% if row.rank == 1 %}rank-1{% elif row.rank == 2 %}rank-2{% elif row.rank == 3 %}rank-3{% else %}rank-other{% endif %}">
                 {{ row.rank }}
               </td>
-              <td class="member-name">{{ row.member }}</td>
+              <td class="member-name">{% if hr_enabled %}{{ chev }}{% endif %}{{ row.member }}{{ hr_chip(row.hr) }}</td>
               <td class="team-name" title="{{ row.team }}">{{ row.team }}</td>
               <td class="metric-cell">{{ row.activity_cell }}</td>
               <td class="metric-cell">{{ row.hours_cell }}</td>
@@ -796,7 +830,10 @@
               <td class="metric-cell">{{ row.low30_cell }}</td>
               <td class="flags-cell">{{ row.flags_badge }}</td>{% if pay_enabled %}
               <td class="center">{{ pay_tag(row.pay) }}</td>{% endif %}
-            </tr>
+            </tr>{% if hr_enabled %}
+            <tr class="detail-row" id="tv-{{ loop.index }}" hidden>
+              <td colspan="{{ 11 if pay_enabled else 10 }}">{{ hr_panel(row.hr) }}</td>
+            </tr>{% endif %}
             {% endfor %}
           </tbody>
         </table>
@@ -809,11 +846,11 @@
     <!-- ================================================================ -->
     <!-- Section 2 — Hours Violators                                       -->
     <!-- ================================================================ -->
-    <div class="section-block"{% if leave_enabled %} id="s2"{% endif %}>
+    <div class="section-block"{% if leave_enabled or hr_enabled %} id="s2"{% endif %}>
       <div class="section-title-row">
         <div class="section-num">2</div>
         <h2>Hours Violators</h2>
-        <span class="count-pill">{{ hours_violator_count }} employees</span>{% if leave_enabled and hours_violators %}
+        <span class="count-pill">{{ hours_violator_count }} employees</span>{% if (leave_enabled or hr_enabled) and hours_violators %}
         <span class="section-tools"><button type="button" class="toggle-all-btn" data-section="s2" aria-pressed="false"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-label">Expand all</span></button></span>{% endif %}
       </div>
       <p class="section-note">
@@ -821,7 +858,7 @@
         <strong>Worked</strong> = Total Hours minus approved paid time off (Hubstaff already adds paid leave to the total, not unpaid leave).
         <strong>Counted</strong> = Worked plus approved paid leave{% if pay_enabled %}, plus approved unpaid leave for hourly team members (their pay is cut, so they do not make the hours up){% endif %}.
         <strong>Shortfall</strong> = Expected minus Counted.{% if pay_enabled %} Pay type is from the ClickUp HR profile; Unknown is counted as salaried.{% endif %}
-        Click a name to see their time off. Unapproved requests are listed for reference only and never count.{% endif %}
+        Click a name to see their time off{% if hr_enabled %} and recent HR profile notes{% endif %}. Unapproved requests are listed for reference only and never count.{% endif %}
       </p>
 
       <div class="threshold-note">
@@ -851,9 +888,9 @@
           </thead>
           <tbody>
             {% for row in hours_violators %}
-            {% set has_leave = row.leave.entries|length > 0 %}
-            <tr class="severity-critical{% if has_leave %} expandable{% endif %}"{% if has_leave %} tabindex="0" role="button" aria-expanded="false" aria-controls="hv-{{ loop.index }}"{% endif %}>
-              <td class="member-name">{% if has_leave %}<span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>{% else %}<span class="chev-spacer"></span>{% endif %}{{ row.member }}</td>
+            {% set has_leave = row.leave.entries|length > 0 %}{% set can_expand = has_leave or hr_enabled %}
+            <tr class="severity-critical{% if can_expand %} expandable{% endif %}"{% if can_expand %} tabindex="0" role="button" aria-expanded="false" aria-controls="hv-{{ loop.index }}"{% endif %}>
+              <td class="member-name">{% if can_expand %}{{ chev }}{% else %}<span class="chev-spacer"></span>{% endif %}{{ row.member }}{{ hr_chip(row.hr) }}</td>
               <td class="team-name" title="{{ row.team }}">{{ row.team }}</td>{% if pay_enabled %}
               <td class="center">{{ pay_tag(row.pay) }}</td>{% endif %}
               <td class="center">🔴 {{ row.hours_worked }}{% if row.leave.over_total %} ⚠️{% endif %}</td>
@@ -864,9 +901,9 @@
               <td class="center"><span class="chip-stack">{% if row.tag_a %}<span class="chip off"><span class="dot"></span>{{ row.tag_a }} off</span>{% endif %}{% if row.tag_u %}<span class="chip off pending">{{ row.tag_u }} unapproved</span>{% endif %}</span></td>
               <td class="flags-cell">{{ row.other_flags }}</td>
             </tr>
-            {% if has_leave %}
+            {% if can_expand %}
             <tr class="detail-row" id="hv-{{ loop.index }}" hidden>
-              <td colspan="{{ 10 if pay_enabled else 9 }}">{{ leave_panel(row.leave, leave_detail, false) }}</td>
+              <td colspan="{{ 10 if pay_enabled else 9 }}">{% if hr_enabled %}{{ hr_panel(row.hr) }}{% endif %}{% if has_leave %}{{ leave_panel(row.leave, leave_detail, false) }}{% endif %}</td>
             </tr>
             {% endif %}
             {% endfor %}
@@ -889,15 +926,18 @@
           </thead>
           <tbody>
             {% for row in hours_violators %}
-            <tr class="severity-critical">
-              <td class="member-name">{{ row.member }}</td>
+            <tr class="severity-critical{% if hr_enabled %} expandable{% endif %}"{% if hr_enabled %} tabindex="0" role="button" aria-expanded="false" aria-controls="hv-{{ loop.index }}"{% endif %}>
+              <td class="member-name">{% if hr_enabled %}{{ chev }}{% endif %}{{ row.member }}{{ hr_chip(row.hr) }}</td>
               <td class="team-name" title="{{ row.team }}">{{ row.team }}</td>{% if pay_enabled %}
               <td class="center">{{ pay_tag(row.pay) }}</td>{% endif %}
               <td class="center">🔴 {{ row.hours_worked }}</td>
               <td class="center" style="color:#6b7280;">{{ row.expected_hours }}</td>
               <td class="shortfall">–{{ row.shortfall }}</td>
               <td class="flags-cell">{{ row.other_flags }}</td>
-            </tr>
+            </tr>{% if hr_enabled %}
+            <tr class="detail-row" id="hv-{{ loop.index }}" hidden>
+              <td colspan="{{ 7 if pay_enabled else 6 }}">{{ hr_panel(row.hr) }}</td>
+            </tr>{% endif %}
             {% endfor %}
           </tbody>
         </table>
@@ -1005,7 +1045,7 @@
   </div>
 
 </div><!-- /page-wrap -->
-{% if leave_enabled %}
+{% if leave_enabled or hr_enabled %}
 <script>
 (function () {
   function setRow(tr, open) {

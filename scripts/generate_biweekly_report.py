@@ -64,6 +64,15 @@ counted as salaried.
                         People Ops, 11 Nov 2026)
     Shortfall = prorated 160h threshold − Counted (none when Counted reaches it)
 A full-month run with --leave must pass --salaried/--hourly or --no-pay-type.
+
+HR profile context (--hr-context)
+---------------------------------
+A local JSON (data/input/hr_context/HRC-<start>_to_<end>.json, gitignored) with
+short notes from each flagged person's ClickUp HR profile about hours, activity
+or leave, reviewed by Aaqib before use. Rows in Sections 1 and 2 expand to show
+the notes and a link to the profile. Format:
+    {"members": {"<Name>": {"profile_url": "https://app.clickup.com/t/<id>",
+                            "notes": [{"author": "...", "date": "YYYY-MM-DD", "text": "..."}]}}}
 Use --dry-run to write to a scratch path without touching docs/.
 """
 
@@ -635,6 +644,26 @@ def resolve_pay_types(salaried: list[str], hourly: list[str], df: pd.DataFrame,
     return pay, notes
 
 
+def load_hr_context(path: Path, df: pd.DataFrame) -> dict:
+    """Load the reviewed HR profile notes -> {norm member: {"profile_url", "notes"}}."""
+    data = json.loads(path.read_text(encoding="utf-8")).get("members", {})
+    mapping, unmatched = match_names(list(data), list(df["member"]))
+    out = {}
+    for src, member in mapping.items():
+        entry = data[src]
+        notes = []
+        for n in sorted(entry.get("notes", []), key=lambda n: n["date"]):
+            d = date.fromisoformat(n["date"])
+            notes.append({"author": n["author"], "text": n["text"],
+                          "date_fmt": f"{d.strftime('%b')} {d.day}, {d.year}"})
+        out[norm_name(member)] = {"profile_url": entry.get("profile_url", ""), "notes": notes}
+    with_notes = sum(1 for v in out.values() if v["notes"])
+    print(f"HR context:        {len(out)} member(s) loaded, {with_notes} with notes")
+    if unmatched:
+        print(f"WARNING: HR context names not in this report: {', '.join(unmatched)}")
+    return out
+
+
 def build_leave_summary(leave_df: pd.DataFrame, detail: str) -> dict:
     """Totals strip above Section 3 (raw numbers + bar widths for the template)."""
     def h(df, status):
@@ -677,7 +706,7 @@ def build_leave_summary(leave_df: pd.DataFrame, detail: str) -> dict:
 def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: float,
                       start: date, end: date, leave_df: pd.DataFrame | None = None,
                       leave_detail: str = "full", leave_pulled: str = "",
-                      pay_types: dict | None = None) -> dict:
+                      pay_types: dict | None = None, hr_context: dict | None = None) -> dict:
     """Process all rows and build template context dict."""
 
     rows_scored = []
@@ -708,6 +737,12 @@ def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: fl
     rows_scored.sort(key=lambda x: x["score"], reverse=True)
 
     pay_enabled = pay_types is not None
+    hr_enabled = hr_context is not None
+
+    def hr_of(r):
+        if not hr_enabled:
+            return None
+        return hr_context.get(norm_name(r["member"]), {"profile_url": "", "notes": []})
 
     def pay_of(r):
         return pay_types.get(norm_name(r["member"]), PAY_UNKNOWN) if pay_enabled else None
@@ -721,6 +756,7 @@ def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: fl
             "member": r["member"],
             "team": r["team"],
             "pay": pay_of(r),
+            "hr": hr_of(r),
             "activity_cell": fmt_activity(r["activity_pct"], flags.get("A")),
             "hours_cell": fmt_hours(r["total_hours"], flags.get("H")),
             "break_cell": fmt_percent_hours(r["break_hours"], r["break_pct"], flags.get("B")),
@@ -763,6 +799,7 @@ def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: fl
                 "member": r["member"],
                 "team": r["team"],
                 "pay": pay_of(r),
+                "hr": hr_of(r),
                 "hours_worked": f"{h:.1f}h",
                 "hours_raw": h,
                 "expected_hours": f"{prorated_red:.1f}h",
@@ -834,6 +871,7 @@ def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: fl
         "leave_summary": leave_summary,
         "leave_warnings": leave_warnings,
         "pay_enabled": pay_enabled,
+        "hr_enabled": hr_enabled,
         "covered_count": sum(1 for v in hours_violators if leave_enabled and not v["shortfall"]),
         # Threshold reference strip values
         "thresh_activity_red": f"< {ACTIVITY_RED:.0f}%",
@@ -909,6 +947,8 @@ def main():
                         help="Comma-separated names with Salary Type = Hourly in the ClickUp HR profiles")
     parser.add_argument("--no-pay-type", action="store_true",
                         help="Explicitly skip the Hourly/Salaried tag (everyone counted as salaried)")
+    parser.add_argument("--hr-context", default=None,
+                        help="Reviewed HR profile notes JSON (data/input/hr_context/, gitignored)")
     parser.add_argument("--dry-run", action="store_true",
                         help="Write HTML to a scratch folder; do not touch docs/ or docs/index.html")
     parser.add_argument("--dry-run-dir", default=None,
@@ -994,10 +1034,19 @@ def main():
     pay_types, pay_notes = (resolve_pay_types(salaried_names, hourly_names, df, excluded_csv)
                             if pay_given else (None, []))
 
+    hr_context = None
+    if args.hr_context:
+        hr_path = Path(args.hr_context)
+        if not hr_path.exists():
+            print(f"ERROR: HR context file not found: {hr_path}", file=sys.stderr)
+            sys.exit(1)
+        hr_context = load_hr_context(hr_path, df)
+
     # --- Step 3: Build report data ---
     context = build_report_data(df, prorated_red, prorated_orange, start, end,
                                 leave_df=leave_df, leave_detail=args.leave_detail,
-                                leave_pulled=leave_pulled, pay_types=pay_types)
+                                leave_pulled=leave_pulled, pay_types=pay_types,
+                                hr_context=hr_context)
     print(f"Employees flagged: {context['total_flagged']} / {context['total_employees']}")
     print(f"Hours violators:   {context['hours_violator_count']}")
     if context["leave_enabled"]:

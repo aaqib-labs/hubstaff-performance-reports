@@ -94,8 +94,9 @@ A full-month run (`--start` = 1st, `--end` = last day) **must** pass `--leave <T
 3. `python scripts/build_timeoff_csv.py --raw data/input/timeoff/raw/TO-RAW-<start>_to_<end>_*.json --start <start> --end <end> --out data/input/timeoff/TO-<start>_to_<end>.csv` — review every WARN/ERROR with Aaqib before going on.
 4. Pull pay type from the ClickUp HR profiles: list `901812760745` (People Ops_all_teams), custom field `Salary Type` (`4ecfdb16-4f10-4a2f-89ea-7c53aa957ad5`). Filter the list by the field (Hourly option `9902cc89-7cfe-4bf9-888c-9b109d4c233e`, Salaried option `6be8afd5-74c7-425d-a6e7-2e4a835cf514`). Task names are `"<Name> - HR"`: strip ` - HR`, skip status offboarded/terminated. Pass the names on the command line only; never write HR data to a file. Blank Salary Type = Unknown (counted as salaried). Use the field as is, even where it looks stale.
 5. `python scripts/generate_biweekly_report.py --input data/input/monthly/HS-YYYY-MM-master.csv --start YYYY-MM-01 --end YYYY-MM-DD --leave data/input/timeoff/TO-YYYY-MM-01_to_YYYY-MM-DD.csv --salaried "Name,..." --hourly "Name,..." --dry-run` and check it. The end of the run lists Unknown pay types and ClickUp names with no report row: pass them to Aaqib.
-6. Re-run without `--dry-run`.
-7. Commit `Report: Bi-Weekly YYYY-MM-01 to YYYY-MM-DD` and push.
+6. HR profile context for Sections 1 and 2: for everyone in Top 15 and Hours Violators, read their HR profile comments (and thread replies) in ClickUp list `901812760745`, from one month before `<start>` to the day of the run. Keep only notes about hours, activity, timesheets, leave or availability; skip quarterly assessments, Leadership Connect, ClickBot and equipment notes. Draft one or two lines per note close to the author's wording, no pay figures and no medical detail, and show Aaqib one table to approve. Save the approved lines to `data/input/hr_context/HRC-<start>_to_<end>.json` (gitignored, never commit) and add `--hr-context <that file>` to the run.
+7. Re-run without `--dry-run`.
+8. Commit `Report: Bi-Weekly YYYY-MM-01 to YYYY-MM-DD` and push.
 
 **Time-off rules:**
 - Two categories from the **policy-level** `paid` flag (never the request-level one): Paid/Allocated and Unpaid/Flex. The exact Hubstaff policy name is always shown (unless `--leave-detail category`).
@@ -239,7 +240,7 @@ Score = sum of (base × multiplier) across all flags
 | Script | Purpose |
 |--------|---------|
 | `scripts/utils.py` | Shared helpers — working-days, proration, SLA thresholds, flag evaluation, exclusion lists. Import from here, never duplicate. |
-| `scripts/generate_biweekly_report.py` | Hubstaff bi-weekly + month-end report generation (`--leave`, `--no-leave`, `--leave-detail`, `--salaried`, `--hourly`, `--no-pay-type`, `--dry-run`) |
+| `scripts/generate_biweekly_report.py` | Hubstaff bi-weekly + month-end report generation (`--leave`, `--no-leave`, `--leave-detail`, `--salaried`, `--hourly`, `--no-pay-type`, `--hr-context`, `--dry-run`) |
 | `scripts/build_timeoff_csv.py` | Raw Hubstaff time-off JSON → per-day TO CSV for the month-end report |
 | `scripts/generate_ce_report.py` | Legacy — Centrifuse Engineers TMetric report (periods before Sep 2026 only; retired) |
 | `scripts/generate_pattern_analysis.py` | Quarterly repeated pattern analysis — fully implemented |
@@ -259,6 +260,8 @@ Ranked by severity score. Columns: Rank, Member, Team, Activity %, Hours, Break 
 **Section 2 — Hours Violators**
 All employees below the prorated hours threshold. Sorted ascending (worst first). Columns: Member, Team, Hours Worked, Expected Hours, Shortfall, Other Flags.
 With time off (`--leave`, month-end and bi-weekly): Member, Team, Pay (Hourly / Salaried / Unknown, when `--salaried`/`--hourly` are passed), Total Hours, Worked, Counted, Expected, Shortfall (leave-adjusted), Time Off, Other Flags. Each row expands to show the leave entries (policy · category · dates · hours · Approved/Unapproved); the expanded row has no extra sentence because Worked and Counted are already columns. No repeated figure boxes (Aaqib, 2026-10-02).
+
+**HR profile context (`--hr-context`, Sections 1 and 2):** every row expands to show recent notes from the person's ClickUp HR profile (author, date, one or two lines) with an "Open HR profile" link; rows with a note get an "HR note" chip. In Section 2 the notes sit above the time-off entries. Aaqib decided 2026-11-19 to show these on the page (public for now; moving to Vercel later). The hubstaff-review skill is a separate tool for deeper, on-demand checks.
 
 **Section 3 — Leave Summary (whenever `--leave` is passed — month-end and bi-weekly)**
 Everyone with time off (approved or unapproved), sorted by total time off. Columns: Member, Team, Pay (when passed), Paid/Allocated, Unpaid/Flex, Total. Expanded rows add one line only when relevant: "<total> total includes <paid> approved paid time off → <worked> actually worked" and, for hourly, "<unpaid> approved unpaid leave also counts → <counted> counted". Totals strip by category and by exact policy; header shows "Time off as of <pull timestamp>". Rows expand like Section 2; Expand all / Collapse all per section; print expands everything.
