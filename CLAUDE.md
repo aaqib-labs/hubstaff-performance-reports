@@ -73,7 +73,7 @@ When asked to "generate the bi-weekly report for [date range]":
 
 1. Find the master table CSV in `data/input/biweekly/`
 2. Pull time off and build the TO CSV for the same period — steps 2–3 of the Month-End Workflow, with the bi-weekly `<start>`/`<end>`. **Always include time off in bi-weekly reports too** (Aaqib, 2026-10-22); the script only enforces it for full months, so don't rely on the guard.
-3. Run `python scripts/generate_biweekly_report.py --input data/input/biweekly/[FILE].csv --start YYYY-MM-DD --end YYYY-MM-DD --leave data/input/timeoff/TO-[start]_to_[end].csv`
+3. Pull Salary Type from the ClickUp HR profiles (step 4 of the Month-End Workflow), then run `python scripts/generate_biweekly_report.py --input data/input/biweekly/[FILE].csv --start YYYY-MM-DD --end YYYY-MM-DD --leave data/input/timeoff/TO-[start]_to_[end].csv --salaried "..." --hourly "..."`
 4. Script writes HTML directly to `docs/[start]_to_[end]_biweekly_top_violators.html` and updates `docs/index.html`
 5. Commit with message: `Report: Bi-Weekly [start] to [end]`
 6. Push to GitHub
@@ -84,7 +84,7 @@ If any data anomaly is detected (unexpected columns, missing data, parse errors)
 
 ## Month-End Workflow (full calendar month, with time off)
 
-A full-month run (`--start` = 1st, `--end` = last day) **must** pass `--leave <TO CSV>` or an explicit `--no-leave` — the script exits otherwise.
+A full-month run (`--start` = 1st, `--end` = last day) **must** pass `--leave <TO CSV>` or an explicit `--no-leave`, and with `--leave` also `--salaried`/`--hourly` or an explicit `--no-pay-type`. The script exits otherwise.
 
 1. Confirm `data/input/monthly/HS-YYYY-MM-master.csv` exists.
 2. Pull time off from the Hubstaff MCP (`list_organizations` → org id, then `call_endpoint`):
@@ -92,14 +92,17 @@ A full-month run (`--start` = 1st, `--end` = last day) **must** pass `--leave <T
    - `get_organizations_organization_id_time_off_requests` with `starts_at: {start: <start − 62 days>T00:00:00Z, stop: <end + 1 day>T00:00:00Z}`, `include: ["users","time_off_policies"]`, `page_limit: 500` → `..._requests_p1.json` (page with `page_start_id` if a `pagination` object comes back or exactly 500 rows return)
    - Large responses spill to a tool-results file — `cp` it byte-for-byte. Never retype JSON.
 3. `python scripts/build_timeoff_csv.py --raw data/input/timeoff/raw/TO-RAW-<start>_to_<end>_*.json --start <start> --end <end> --out data/input/timeoff/TO-<start>_to_<end>.csv` — review every WARN/ERROR with Aaqib before going on.
-4. `python scripts/generate_biweekly_report.py --input data/input/monthly/HS-YYYY-MM-master.csv --start YYYY-MM-01 --end YYYY-MM-DD --leave data/input/timeoff/TO-YYYY-MM-01_to_YYYY-MM-DD.csv --dry-run` and check it.
-5. Re-run without `--dry-run`.
-6. Commit `Report: Bi-Weekly YYYY-MM-01 to YYYY-MM-DD` and push.
+4. Pull pay type from the ClickUp HR profiles: list `901812760745` (People Ops_all_teams), custom field `Salary Type` (`4ecfdb16-4f10-4a2f-89ea-7c53aa957ad5`). Filter the list by the field (Hourly option `9902cc89-7cfe-4bf9-888c-9b109d4c233e`, Salaried option `6be8afd5-74c7-425d-a6e7-2e4a835cf514`). Task names are `"<Name> - HR"`: strip ` - HR`, skip status offboarded/terminated. Pass the names on the command line only; never write HR data to a file. Blank Salary Type = Unknown (counted as salaried). Use the field as is, even where it looks stale.
+5. `python scripts/generate_biweekly_report.py --input data/input/monthly/HS-YYYY-MM-master.csv --start YYYY-MM-01 --end YYYY-MM-DD --leave data/input/timeoff/TO-YYYY-MM-01_to_YYYY-MM-DD.csv --salaried "Name,..." --hourly "Name,..." --dry-run` and check it. The end of the run lists Unknown pay types and ClickUp names with no report row: pass them to Aaqib.
+6. Re-run without `--dry-run`.
+7. Commit `Report: Bi-Weekly YYYY-MM-01 to YYYY-MM-DD` and push.
 
 **Time-off rules:**
 - Two categories from the **policy-level** `paid` flag (never the request-level one): Paid/Allocated and Unpaid/Flex. The exact Hubstaff policy name is always shown (unless `--leave-detail category`).
 - Unapproved (submitted) requests are shown and labelled `(unapproved)`; denied/cancelled are dropped.
-- `Total Worked Hours` already includes approved time off → **Hours Worked = Total − approved time off**. Unapproved is never subtracted. SLA flags are unchanged.
+- `Total Worked Hours` already includes approved **paid** time off and paid holidays, but **not** unpaid leave (checked against Hubstaff `activities_daily`, Oct 2026: Subashi Silva, Shehara Meadows, Prajwal Kumar, Ounvin Ranaweera) → **Worked = Total − approved paid time off**. Unapproved never counts. SLA flags are unchanged (still on Total).
+- **Counted hours and shortfall (against the prorated 160h for everyone):** Salaried and Unknown: Counted = Worked + approved paid leave (= Total). Hourly: Counted = Worked + approved paid leave + approved unpaid leave, because their pay is cut for unpaid leave and they do not make the hours up (People Ops, 2026-11-11). Shortfall = prorated threshold − Counted; shown as "✓ None" when Counted reaches it. Rasma's ask (ClickUp z8x1tu0q3t). The separate 180h salaried target is not in this report; it belongs to the hubstaff-review skill.
+- `PAY_NAME_ALIASES` in the script maps confirmed ClickUp → Hubstaff renames (Meredith Goostree → Meredith Sands, Hafiz Mudasir → Mudasir Amjad, Rebecca Zelaya → Rebecca Corona). Add to it only when a rename is confirmed.
 - Leave messages/reasons are never written to the TO CSV, the report or any committed file.
 - Time-off names that are not excluded and not in the master CSV stop the run — flag them to Aaqib, don't guess.
 - `--leave-detail full|category` (default `full`; decided 2026-10-02 to publish exact policy names for now).
@@ -236,7 +239,7 @@ Score = sum of (base × multiplier) across all flags
 | Script | Purpose |
 |--------|---------|
 | `scripts/utils.py` | Shared helpers — working-days, proration, SLA thresholds, flag evaluation, exclusion lists. Import from here, never duplicate. |
-| `scripts/generate_biweekly_report.py` | Hubstaff bi-weekly + month-end report generation (`--leave`, `--no-leave`, `--leave-detail`, `--dry-run`) |
+| `scripts/generate_biweekly_report.py` | Hubstaff bi-weekly + month-end report generation (`--leave`, `--no-leave`, `--leave-detail`, `--salaried`, `--hourly`, `--no-pay-type`, `--dry-run`) |
 | `scripts/build_timeoff_csv.py` | Raw Hubstaff time-off JSON → per-day TO CSV for the month-end report |
 | `scripts/generate_ce_report.py` | Legacy — Centrifuse Engineers TMetric report (periods before Sep 2026 only; retired) |
 | `scripts/generate_pattern_analysis.py` | Quarterly repeated pattern analysis — fully implemented |
@@ -255,10 +258,10 @@ Ranked by severity score. Columns: Rank, Member, Team, Activity %, Hours, Break 
 
 **Section 2 — Hours Violators**
 All employees below the prorated hours threshold. Sorted ascending (worst first). Columns: Member, Team, Hours Worked, Expected Hours, Shortfall, Other Flags.
-With time off (`--leave`, month-end and bi-weekly): the hours column becomes Total Hours, a Time Off tag column is added, and each row expands to show the leave entries (policy · category · dates · hours · Approved/Unapproved). Only when there is approved leave, one line is added: "<total> total includes <approved> approved time off → <worked> actually worked". No repeated figure boxes (Aaqib, 2026-10-02).
+With time off (`--leave`, month-end and bi-weekly): Member, Team, Pay (Hourly / Salaried / Unknown, when `--salaried`/`--hourly` are passed), Total Hours, Worked, Counted, Expected, Shortfall (leave-adjusted), Time Off, Other Flags. Each row expands to show the leave entries (policy · category · dates · hours · Approved/Unapproved); the expanded row has no extra sentence because Worked and Counted are already columns. No repeated figure boxes (Aaqib, 2026-10-02).
 
 **Section 3 — Leave Summary (whenever `--leave` is passed — month-end and bi-weekly)**
-Everyone with time off (approved or unapproved), sorted by total time off. Columns: Member, Team, Paid/Allocated, Unpaid/Flex, Total. Totals strip by category and by exact policy; header shows "Time off as of <pull timestamp>". Rows expand like Section 2; Expand all / Collapse all per section; print expands everything.
+Everyone with time off (approved or unapproved), sorted by total time off. Columns: Member, Team, Pay (when passed), Paid/Allocated, Unpaid/Flex, Total. Expanded rows add one line only when relevant: "<total> total includes <paid> approved paid time off → <worked> actually worked" and, for hourly, "<unpaid> approved unpaid leave also counts → <counted> counted". Totals strip by category and by exact policy; header shows "Time off as of <pull timestamp>". Rows expand like Section 2; Expand all / Collapse all per section; print expands everything.
 
 ---
 

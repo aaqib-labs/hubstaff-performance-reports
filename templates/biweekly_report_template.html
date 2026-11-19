@@ -369,6 +369,18 @@
 
     /* Shortfall */
     td.shortfall { color: #dc2626; font-weight: 700; text-align: center; }
+    td.shortfall.met { color: #15803d; font-weight: 600; font-size: 0.78rem; }
+    td.counted { text-align: center; white-space: nowrap; font-weight: 700; color: #111827; }
+    td.worked  { text-align: center; white-space: nowrap; color: #374151; }
+
+    /* Pay type tag (ClickUp HR profile Salary Type) */
+    .pay-tag {
+      display: inline-block; font-size: 0.7rem; font-weight: 700; padding: 2px 9px;
+      border-radius: 999px; white-space: nowrap; line-height: 1.3;
+    }
+    .pay-tag.hourly   { background: #fef3c7; color: #92400e; }
+    .pay-tag.salaried { background: #e0e7ff; color: #3730a3; }
+    .pay-tag.unknown  { background: #fff; color: #64748b; border: 1.5px dashed #94a3b8; }
 
     /* Row severity — left accent border + subtle background */
     tr.severity-critical {
@@ -607,10 +619,13 @@
 {% endif %}  </style>
 </head>
 <body>
-{% if leave_enabled %}{% macro leave_panel(l, detail) -%}
+{% macro pay_tag(p) -%}
+{% if p %}<span class="pay-tag {{ p|lower }}"{% if p == 'Unknown' %} title="Salary Type is blank in the ClickUp HR profile. Counted as salaried."{% endif %}>{{ p }}</span>{% endif %}
+{%- endmacro %}
+{% if leave_enabled %}{% macro leave_panel(l, detail, show_note=true) -%}
 <div class="leave-card">
-{% if l.over_total %}<div class="leave-note warn">⚠️ <span>Approved time off ({{ l.approved_fmt }}) is more than Total Hours ({{ l.total_fmt }}) — check this member's Hubstaff record.</span></div>
-{% elif l.approved %}<div class="leave-note">🕒 <span>{{ l.total_fmt }} total includes {{ l.approved_fmt }} approved time off → <strong>{{ l.worked_fmt }} actually worked</strong>.</span></div>
+{% if l.over_total %}<div class="leave-note warn">⚠️ <span>Approved paid time off ({{ l.paid_fmt }}) is more than Total Hours ({{ l.total_fmt }}). Check this member's Hubstaff record.</span></div>
+{% elif show_note and (l.paid_approved or l.unpaid_counted_fmt) %}<div class="leave-note">🕒 <span>{% if l.paid_approved %}{{ l.total_fmt }} total includes {{ l.paid_fmt }} approved paid time off → <strong>{{ l.worked_fmt }} actually worked</strong>.{% endif %}{% if l.unpaid_counted_fmt %}{% if l.paid_approved %} {% endif %}Hourly: {{ l.unpaid_counted_fmt }} approved unpaid leave also counts → <strong>{{ l.counted_fmt }} counted</strong>.{% endif %}</span></div>
 {% endif %}{% if l.entries %}
 <table class="leave-entries">
   <thead><tr><th>{% if detail == 'full' %}Policy{% else %}Type{% endif %}</th>{% if detail == 'full' %}<th>Category</th>{% endif %}<th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
@@ -807,7 +822,10 @@
       </div>
       <p class="section-note">
         All employees below the prorated hours threshold. Sorted lowest hours first.{% if leave_enabled %}
-        Click a name to see their time off. Unapproved requests are listed for reference only and are not counted in hours.{% endif %}
+        <strong>Worked</strong> = Total Hours minus approved paid time off (Hubstaff already adds paid leave to the total, not unpaid leave).
+        <strong>Counted</strong> = Worked plus approved paid leave{% if pay_enabled %}, plus approved unpaid leave for hourly team members (their pay is cut, so they do not make the hours up){% endif %}.
+        <strong>Shortfall</strong> = Expected minus Counted.{% if pay_enabled %} Pay type is from the ClickUp HR profile; Unknown is counted as salaried.{% endif %}
+        Click a name to see their time off. Unapproved requests are listed for reference only and never count.{% endif %}
       </p>
 
       <div class="threshold-note">
@@ -824,8 +842,11 @@
           <thead>
             <tr>
               <th>Member</th>
-              <th>Team</th>
+              <th>Team</th>{% if pay_enabled %}
+              <th class="center">Pay</th>{% endif %}
               <th class="center">Total Hours</th>
+              <th class="center">Worked</th>
+              <th class="center">Counted</th>
               <th class="center">Expected</th>
               <th class="center">Shortfall</th>
               <th class="center">Time Off</th>
@@ -837,16 +858,19 @@
             {% set has_leave = row.leave.entries|length > 0 %}
             <tr class="severity-critical{% if has_leave %} expandable{% endif %}"{% if has_leave %} tabindex="0" role="button" aria-expanded="false" aria-controls="hv-{{ loop.index }}"{% endif %}>
               <td class="member-name">{% if has_leave %}<span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>{% else %}<span class="chev-spacer"></span>{% endif %}{{ row.member }}</td>
-              <td class="team-name" title="{{ row.team }}">{{ row.team }}</td>
+              <td class="team-name" title="{{ row.team }}">{{ row.team }}</td>{% if pay_enabled %}
+              <td class="center">{{ pay_tag(row.pay) }}</td>{% endif %}
               <td class="center">🔴 {{ row.hours_worked }}{% if row.leave.over_total %} ⚠️{% endif %}</td>
+              <td class="worked">{{ row.leave.worked_fmt }}</td>
+              <td class="counted">{{ row.leave.counted_fmt }}</td>
               <td class="center" style="color:#6b7280;">{{ row.expected_hours }}</td>
-              <td class="shortfall">–{{ row.shortfall }}</td>
+              {% if row.shortfall %}<td class="shortfall">–{{ row.shortfall }}</td>{% else %}<td class="shortfall met" title="Approved unpaid leave covers the gap (hourly)">✓ None</td>{% endif %}
               <td class="center"><span class="chip-stack">{% if row.tag_a %}<span class="chip off"><span class="dot"></span>{{ row.tag_a }} off</span>{% endif %}{% if row.tag_u %}<span class="chip off pending">{{ row.tag_u }} unapproved</span>{% endif %}</span></td>
               <td class="flags-cell">{{ row.other_flags }}</td>
             </tr>
             {% if has_leave %}
             <tr class="detail-row" id="hv-{{ loop.index }}" hidden>
-              <td colspan="7">{{ leave_panel(row.leave, leave_detail) }}</td>
+              <td colspan="{{ 10 if pay_enabled else 9 }}">{{ leave_panel(row.leave, leave_detail, false) }}</td>
             </tr>
             {% endif %}
             {% endfor %}
@@ -859,7 +883,8 @@
           <thead>
             <tr>
               <th>Member</th>
-              <th>Team</th>
+              <th>Team</th>{% if pay_enabled %}
+              <th class="center">Pay</th>{% endif %}
               <th class="center">Hours Worked</th>
               <th class="center">Expected</th>
               <th class="center">Shortfall</th>
@@ -870,7 +895,8 @@
             {% for row in hours_violators %}
             <tr class="severity-critical">
               <td class="member-name">{{ row.member }}</td>
-              <td class="team-name" title="{{ row.team }}">{{ row.team }}</td>
+              <td class="team-name" title="{{ row.team }}">{{ row.team }}</td>{% if pay_enabled %}
+              <td class="center">{{ pay_tag(row.pay) }}</td>{% endif %}
               <td class="center">🔴 {{ row.hours_worked }}</td>
               <td class="center" style="color:#6b7280;">{{ row.expected_hours }}</td>
               <td class="shortfall">–{{ row.shortfall }}</td>
@@ -903,7 +929,7 @@
       </div>
       <p class="section-note">
         Everyone with time off in Hubstaff this period, sorted by total time off. Click a name for the breakdown.
-        Total Hours already include approved time off. Unapproved requests (dashed) are listed for reference only and are not counted in anyone's hours.
+        Hubstaff Total Hours already include approved paid time off, not unpaid leave.{% if pay_enabled %} Approved unpaid leave counts toward hours for hourly team members only.{% endif %} Unapproved requests (dashed) are listed for reference only and never count.
       </p>
 
       <div class="leave-overview">
@@ -940,7 +966,8 @@
           <thead>
             <tr>
               <th>Member</th>
-              <th>Team</th>
+              <th>Team</th>{% if pay_enabled %}
+              <th class="center">Pay</th>{% endif %}
               <th class="center">Paid/Allocated</th>
               <th class="center">Unpaid/Flex</th>
               <th class="center">Total</th>
@@ -950,13 +977,14 @@
             {% for row in leave_rows %}
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-{{ loop.index }}">
               <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>{{ row.member }}{% if row.leave.over_total %} ⚠️{% endif %}</td>
-              <td class="team-name" title="{{ row.team }}">{{ row.team }}</td>
+              <td class="team-name" title="{{ row.team }}">{{ row.team }}</td>{% if pay_enabled %}
+              <td class="center">{{ pay_tag(row.pay) }}</td>{% endif %}
               <td class="center"><span class="chip-stack">{% if row.paid_a %}<span class="chip paid"><span class="dot"></span>{{ row.paid_a }}</span>{% endif %}{% if row.paid_u %}<span class="chip paid pending">{{ row.paid_u }} unapproved</span>{% endif %}</span></td>
               <td class="center"><span class="chip-stack">{% if row.unpaid_a %}<span class="chip unpaid"><span class="dot"></span>{{ row.unpaid_a }}</span>{% endif %}{% if row.unpaid_u %}<span class="chip unpaid pending">{{ row.unpaid_u }} unapproved</span>{% endif %}</span></td>
               <td class="center total-cell">{% if row.tot_a %}<strong>{{ row.tot_a }}</strong>{% if row.tot_u %}<span class="tot-u">+ {{ row.tot_u }} unapproved</span>{% endif %}{% else %}<span class="tot-u only">{{ row.tot_u }} unapproved</span>{% endif %}</td>
             </tr>
             <tr class="detail-row" id="ls-{{ loop.index }}" hidden>
-              <td colspan="5">{{ leave_panel(row.leave, leave_detail) }}</td>
+              <td colspan="{{ 6 if pay_enabled else 5 }}">{{ leave_panel(row.leave, leave_detail) }}</td>
             </tr>
             {% endfor %}
           </tbody>

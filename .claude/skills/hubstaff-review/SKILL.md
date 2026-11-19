@@ -31,8 +31,10 @@ The MCP can't replace them: Hubstaff timesheets miss about a third of staff
 (anyone without a payroll timesheet, including leadership and some salaried staff).
 
 Note which `data/input/timeoff/TO-YYYY-MM-01_to_YYYY-MM-DD.csv` files exist for
-those months. They let the script take approved unpaid leave out of the salaried
-hours (Rasma's rule: count worked hours plus paid leave only).
+those months. They feed the unapproved-leave section only. Salaried hours are the
+Hubstaff Total Worked Hours as is: Hubstaff already adds approved paid leave and
+never includes unpaid leave, which salaried team members have to make up (Rasma's
+rule, People Ops 2 Oct and 11 Nov 2026). Nothing is subtracted.
 
 Also look for the latest `data/input/biweekly/HS-<current month>-01_to_YYYY-MM-DD.csv`
 (month to date). If there is one, pass it as `--partial`: the salaried table gets
@@ -89,7 +91,7 @@ time-off file, salaried names not found in the CSVs).
 
 | Check | Rule |
 | --- | --- |
-| Salaried hours | Target 180h a month, flag under 170h (Jorn's "within range"). Hours = Total Worked Hours − approved unpaid leave. Under in the latest month only = ⚠️ alert. Under in 2+ of 3 months = 🔴 serious. A one-off earlier month that recovered is not shown. |
+| Salaried hours | Target 180h a month, flag under 170h (Jorn's "within range"). Hours = Total Worked Hours as is (already includes approved paid leave, never unpaid leave). Under in the latest month only = ⚠️ alert. Under in 2+ of 3 months = 🔴 serious. A one-off earlier month that recovered is not shown. |
 | New joiners | No earlier months and under the floor = partial first month, listed but not flagged. |
 | Leadership | The `leadership` peer group in `generate_peer_comparison.py` is listed but not ranked. |
 | Repeat patterns | Standard SLA red (`utils.evaluate_flags`, full-month 160h/200h) in 2+ of the 3 months. Salaried staff are checked for hours in their own section, not here. |

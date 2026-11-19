@@ -42,13 +42,28 @@ Working days = Monday–Friday only.
 Note: US holidays and approved time-off are already included in Hubstaff
 Total Worked Hours — no further exclusion is needed here.
 
-Month-End Time Off (--leave)
-----------------------------
+Time Off (--leave)
+------------------
 For a full calendar month, pass --leave <TO CSV> (built by build_timeoff_csv.py)
 or an explicit --no-leave. With --leave, Section 2 rows expand to show the
-hours / time-off breakdown and a Section 3 Leave Summary is added.
-    Hours Worked = Total Worked Hours − approved time off
-Unapproved time off is shown but never subtracted. SLA flags are unchanged.
+time-off breakdown and a Section 3 Leave Summary is added.
+Hubstaff Total Worked Hours already includes approved PAID time off and paid
+holidays, but NOT unpaid leave (checked against Hubstaff activities_daily,
+Oct 2026). So:
+    Worked = Total Worked Hours − approved paid time off
+Unapproved time off is shown but never counted. SLA flags are unchanged.
+
+Pay type and leave-adjusted hours (--salaried / --hourly)
+---------------------------------------------------------
+Names come from the ClickUp HR profiles (Salary Type field) on the command
+line and are never written to disk. Anyone in neither list is Unknown and is
+counted as salaried.
+    Salaried / Unknown: Counted = Worked + approved paid leave (= Total)
+    Hourly:             Counted = Worked + approved paid leave + approved unpaid leave
+                        (their pay is cut for unpaid leave, so they do not make it up;
+                        People Ops, 11 Nov 2026)
+    Shortfall = prorated 160h threshold − Counted (none when Counted reaches it)
+A full-month run with --leave must pass --salaried/--hourly or --no-pay-type.
 Use --dry-run to write to a scratch path without touching docs/.
 """
 
@@ -72,6 +87,7 @@ from utils import (
     print_threshold_header,
     DOCS_DIR,
     get_exclusions,
+    match_names,
 )
 
 # ---------------------------------------------------------------------------
@@ -387,6 +403,17 @@ HOURS_PER_DAY = 8.0
 CATEGORY_PAID   = "Paid/Allocated"
 CATEGORY_UNPAID = "Unpaid/Flex"
 
+PAY_HOURLY   = "Hourly"
+PAY_SALARIED = "Salaried"
+PAY_UNKNOWN  = "Unknown"
+
+# ClickUp HR profile name -> Hubstaff name, for confirmed renames only (Oct-Nov 2026).
+PAY_NAME_ALIASES = {
+    "Meredith Goostree": "Meredith Sands",
+    "Hafiz Mudasir":     "Mudasir Amjad",
+    "Rebecca Zelaya":    "Rebecca Corona",
+}
+
 
 def norm_name(name) -> str:
     """Lowercase, trim and collapse internal whitespace."""
@@ -485,8 +512,11 @@ def build_leave_entries(rows: pd.DataFrame, detail: str) -> list[dict]:
     return entries
 
 
-def member_leave_figures(rows: pd.DataFrame, total_hours: float, detail: str) -> dict:
-    """Per-member figures (plan §5.3)."""
+def member_leave_figures(rows: pd.DataFrame, total_hours: float, detail: str,
+                         pay: str | None = None) -> dict:
+    """Per-member figures. Total already includes approved paid time off but not
+    unpaid leave, so Worked = Total − approved paid. Counted adds approved
+    unpaid leave back for hourly team members only."""
     approved   = float(rows.loc[rows["status"] == "approved", "hours"].sum())
     unapproved = float(rows.loc[rows["status"] == "unapproved", "hours"].sum())
     by_cat = {}
@@ -494,16 +524,26 @@ def member_leave_figures(rows: pd.DataFrame, total_hours: float, detail: str) ->
         c = rows[rows["category"] == cat]
         by_cat[cat] = (float(c.loc[c["status"] == "approved", "hours"].sum()),
                        float(c.loc[c["status"] == "unapproved", "hours"].sum()))
-    worked = total_hours - approved if not pd.isna(total_hours) else float("nan")
+    paid_appr, unpaid_appr = by_cat[CATEGORY_PAID][0], by_cat[CATEGORY_UNPAID][0]
+    has_total = not pd.isna(total_hours)
+    worked = total_hours - paid_appr if has_total else float("nan")
+    unpaid_counted = unpaid_appr if pay == PAY_HOURLY else 0.0
+    counted = total_hours + unpaid_counted if has_total else float("nan")
     return {
         "approved":       approved,
         "unapproved":     unapproved,
         "by_cat":         by_cat,
-        "total_fmt":      fmt_h(total_hours) if not pd.isna(total_hours) else "—",
-        "worked_fmt":     fmt_h(worked) if not pd.isna(worked) else "—",
+        "paid_approved":  paid_appr,
+        "worked":         worked,
+        "counted":        counted,
+        "total_fmt":      fmt_h(total_hours) if has_total else "—",
+        "worked_fmt":     fmt_h(worked) if has_total else "—",
+        "counted_fmt":    fmt_h(counted) if has_total else "—",
+        "paid_fmt":       fmt_hd(paid_appr),
+        "unpaid_counted_fmt": fmt_hd(unpaid_counted) if unpaid_counted else "",
         "approved_fmt":   fmt_hd(approved),
         "unapproved_fmt": fmt_hd(unapproved) if unapproved else "",
-        "over_total":     (not pd.isna(total_hours)) and approved > total_hours + 1e-9,
+        "over_total":     has_total and paid_appr > total_hours + 1e-9,
         "entries":        build_leave_entries(rows, detail) if len(rows) else [],
     }
 
@@ -556,6 +596,45 @@ def join_leave(leave_df: pd.DataFrame, df: pd.DataFrame, excluded: list[str]) ->
     return kept
 
 
+def resolve_pay_types(salaried: list[str], hourly: list[str], df: pd.DataFrame,
+                      excluded_csv: list[str]) -> tuple[dict, list[str]]:
+    """Map ClickUp Salary Type names to report members -> ({norm member: pay}, notes).
+    Members in neither list are Unknown. Notes (counts, Unknowns, unmatched
+    names) are printed at the end of the run."""
+    salaried = [PAY_NAME_ALIASES.get(n, n) for n in salaried]
+    hourly   = [PAY_NAME_ALIASES.get(n, n) for n in hourly]
+    members = list(df["member"])
+    sal_map, sal_un = match_names(salaried, members)
+    hr_map,  hr_un  = match_names(hourly, members)
+    pay = {norm_name(m): PAY_UNKNOWN for m in members}
+    both = set(sal_map.values()) & set(hr_map.values())
+    for m in sal_map.values():
+        pay[norm_name(m)] = PAY_SALARIED
+    for m in hr_map.values():
+        pay[norm_name(m)] = PAY_HOURLY
+    for m in both:
+        pay[norm_name(m)] = PAY_UNKNOWN
+
+    notes = []
+    counts = {k: sum(1 for v in pay.values() if v == k) for k in (PAY_HOURLY, PAY_SALARIED, PAY_UNKNOWN)}
+    notes.append(f"Pay type:          {counts[PAY_HOURLY]} Hourly, {counts[PAY_SALARIED]} Salaried, "
+                 f"{counts[PAY_UNKNOWN]} Unknown (counted as salaried)")
+    if both:
+        notes.append(f"WARNING: In both the salaried and hourly lists (shown as Unknown): {', '.join(sorted(both))}")
+
+    # ClickUp names with no report row: split out the ones that are simply excluded this run
+    unmatched = sal_un + hr_un
+    excl_map, still = match_names(unmatched, excluded_csv) if unmatched else ({}, [])
+    unknown = sorted(m for m in members if pay[norm_name(m)] == PAY_UNKNOWN)
+    if unknown:
+        notes.append(f"Pay type Unknown (blank Salary Type or no ClickUp profile): {', '.join(unknown)}")
+    if excl_map:
+        notes.append(f"Pay type: {len(excl_map)} ClickUp name(s) belong to excluded members, ignored")
+    if still:
+        notes.append(f"Pay type: ClickUp names with no row in this report: {', '.join(sorted(still))}")
+    return pay, notes
+
+
 def build_leave_summary(leave_df: pd.DataFrame, detail: str) -> dict:
     """Totals strip above Section 3 (raw numbers + bar widths for the template)."""
     def h(df, status):
@@ -597,7 +676,8 @@ def build_leave_summary(leave_df: pd.DataFrame, detail: str) -> dict:
 
 def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: float,
                       start: date, end: date, leave_df: pd.DataFrame | None = None,
-                      leave_detail: str = "full", leave_pulled: str = "") -> dict:
+                      leave_detail: str = "full", leave_pulled: str = "",
+                      pay_types: dict | None = None) -> dict:
     """Process all rows and build template context dict."""
 
     rows_scored = []
@@ -647,6 +727,11 @@ def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: fl
         })
 
     leave_enabled = leave_df is not None
+    pay_enabled = pay_types is not None
+
+    def pay_of(r):
+        return pay_types.get(norm_name(r["member"]), PAY_UNKNOWN) if pay_enabled else None
+
     leave_by_member = {}
     if leave_enabled:
         for norm, grp in leave_df.groupby("norm"):
@@ -659,9 +744,9 @@ def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: fl
         key = norm_name(r["member"])
         if key not in figures_cache:
             rows = leave_by_member.get(key, empty_leave)
-            fig = member_leave_figures(rows, r["total_hours"], leave_detail)
+            fig = member_leave_figures(rows, r["total_hours"], leave_detail, pay_of(r))
             if fig["over_total"]:
-                leave_warnings.append(f"{r['member']}: approved time off {fig['approved']:.1f}h "
+                leave_warnings.append(f"{r['member']}: approved paid time off {fig['paid_approved']:.1f}h "
                                       f"> Total Worked Hours {r['total_hours']:.1f}h")
             figures_cache[key] = fig
         return figures_cache[key]
@@ -676,6 +761,7 @@ def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: fl
             entry = {
                 "member": r["member"],
                 "team": r["team"],
+                "pay": pay_of(r),
                 "hours_worked": f"{h:.1f}h",
                 "hours_raw": h,
                 "expected_hours": f"{prorated_red:.1f}h",
@@ -684,6 +770,9 @@ def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: fl
             }
             if leave_enabled:
                 fig = figures_for(r)
+                # Leave-adjusted shortfall: prorated 160h minus counted hours
+                counted_short = prorated_red - fig["counted"]
+                entry["shortfall"] = f"{counted_short:.1f}h" if counted_short > 0.05 else ""
                 entry["leave"] = fig
                 entry["time_off_tag"] = leave_tag(fig["approved"], fig["unapproved"])
                 entry["tag_a"] = fmt_h(fig["approved"]) if fig["approved"] else ""
@@ -705,6 +794,7 @@ def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: fl
             leave_rows.append({
                 "member":     r["member"],
                 "team":       r["team"],
+                "pay":        pay_of(r),
                 "paid_cell":  leave_cell(pa, pu),
                 "unpaid_cell": leave_cell(ua, uu),
                 "total_cell": leave_cell(fig["approved"], fig["unapproved"]),
@@ -742,6 +832,8 @@ def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: fl
         "leave_count": len(leave_rows),
         "leave_summary": leave_summary,
         "leave_warnings": leave_warnings,
+        "pay_enabled": pay_enabled,
+        "covered_count": sum(1 for v in hours_violators if leave_enabled and not v["shortfall"]),
         # Threshold reference strip values
         "thresh_activity_red": f"< {ACTIVITY_RED:.0f}%",
         "thresh_activity_yellow": f"< {ACTIVITY_YELLOW:.0f}%",
@@ -810,6 +902,12 @@ def main():
                              help="Explicitly skip time off on a full-month report")
     parser.add_argument("--leave-detail", choices=["full", "category"], default="full",
                         help="full = show exact Hubstaff policy names; category = Paid/Unpaid only")
+    parser.add_argument("--salaried", default="",
+                        help="Comma-separated names with Salary Type = Salaried in the ClickUp HR profiles")
+    parser.add_argument("--hourly", default="",
+                        help="Comma-separated names with Salary Type = Hourly in the ClickUp HR profiles")
+    parser.add_argument("--no-pay-type", action="store_true",
+                        help="Explicitly skip the Hourly/Salaried tag (everyone counted as salaried)")
     parser.add_argument("--dry-run", action="store_true",
                         help="Write HTML to a scratch folder; do not touch docs/ or docs/index.html")
     parser.add_argument("--dry-run-dir", default=None,
@@ -831,6 +929,18 @@ def main():
               f"(build it with scripts/build_timeoff_csv.py),\n"
               f"       or --no-leave to generate it without the time-off breakdown.",
               file=sys.stderr)
+        sys.exit(2)
+
+    split = lambda v: [x.strip() for x in v.split(",") if x.strip()]  # noqa: E731
+    salaried_names, hourly_names = split(args.salaried), split(args.hourly)
+    pay_given = bool(salaried_names or hourly_names)
+    if pay_given and args.no_pay_type:
+        print("ERROR: --no-pay-type cannot be combined with --salaried/--hourly", file=sys.stderr)
+        sys.exit(2)
+    if is_full_month(start, end) and args.leave and not pay_given and not args.no_pay_type:
+        print("ERROR: Month-end report with time off needs the pay type for the leave-adjusted hours.\n"
+              "       Pass --salaried \"...\" --hourly \"...\" (Salary Type from the ClickUp HR profiles),\n"
+              "       or --no-pay-type to count everyone as salaried.", file=sys.stderr)
         sys.exit(2)
 
     leave_df = None
@@ -867,9 +977,11 @@ def main():
     cycle_exclusions = [n.strip() for n in args.exclude.split(",") if n.strip()]
 
     all_exclusions = get_exclusions(start) + cycle_exclusions
+    excluded_csv = []
     if all_exclusions:
         before = len(df)
         _excl_set = set(n.lower().strip() for n in all_exclusions)
+        excluded_csv = list(df.loc[df["member"].apply(lambda n: str(n).lower().strip() in _excl_set), "member"])
         df = df[~df["member"].apply(lambda n: str(n).lower().strip() in _excl_set)].reset_index(drop=True)
         excluded_count = before - len(df)
         print(f"Excluded {excluded_count} employee(s): {', '.join(all_exclusions)}")
@@ -878,17 +990,27 @@ def main():
     if leave_df is not None:
         leave_df = join_leave(leave_df, df, all_exclusions)
 
+    pay_types, pay_notes = (resolve_pay_types(salaried_names, hourly_names, df, excluded_csv)
+                            if pay_given else (None, []))
+
     # --- Step 3: Build report data ---
     context = build_report_data(df, prorated_red, prorated_orange, start, end,
                                 leave_df=leave_df, leave_detail=args.leave_detail,
-                                leave_pulled=leave_pulled)
+                                leave_pulled=leave_pulled, pay_types=pay_types)
     print(f"Employees flagged: {context['total_flagged']} / {context['total_employees']}")
     print(f"Hours violators:   {context['hours_violator_count']}")
     if context["leave_enabled"]:
         print(f"Leave summary:     {context['leave_count']} member(s) with time off "
               f"(as of {leave_pulled}, detail={args.leave_detail})")
+        if context["covered_count"]:
+            print(f"Hours violators with no shortfall after leave (hourly, approved unpaid leave): "
+                  f"{context['covered_count']}")
         for w in context["leave_warnings"]:
-            print(f"WARNING: {w} — contradicts 'Total includes approved time off'")
+            print(f"WARNING: {w} (contradicts 'Total includes approved paid time off')")
+
+    def print_pay_notes():
+        for n in pay_notes:
+            print(n)
 
     # --- Step 4: Render HTML ---
     html = render_report(context)
@@ -899,6 +1021,7 @@ def main():
         path = write_report(html, start, end, out_dir)
         print(f"DRY RUN — report written to: {path}")
         print("docs/ and docs/index.html NOT modified.")
+        print_pay_notes()
         return
 
     docs_path = write_report(html, start, end)
@@ -907,6 +1030,7 @@ def main():
     # --- Step 6: Update index ---
     update_index(start, end)
     print(f"Index updated:     {DOCS_DIR / 'index.html'}")
+    print_pay_notes()
     print("Done.")
 
 

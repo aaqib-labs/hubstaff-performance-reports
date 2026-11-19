@@ -5,6 +5,9 @@ Common helpers shared across all report generation scripts.
 Import from here — do not duplicate in individual scripts.
 """
 
+import difflib
+import re
+import unicodedata
 from datetime import date, timedelta
 from pathlib import Path
 
@@ -121,6 +124,42 @@ def get_exclusions(start: date) -> list[str]:
     if start < CE_HUBSTAFF_START:
         return PERMANENT_EXCLUSIONS + FS_EXCLUSIONS
     return list(PERMANENT_EXCLUSIONS)
+
+
+# ---------------------------------------------------------------------------
+# Name matching (ClickUp HR profile names -> Hubstaff CSV member names)
+# ---------------------------------------------------------------------------
+
+def norm(name: str) -> str:
+    """Lowercase, strip accents and a leading 'Dr.', collapse whitespace."""
+    s = unicodedata.normalize("NFKD", str(name)).encode("ascii", "ignore").decode()
+    s = re.sub(r"^dr\.?\s+", "", s.strip().lower())
+    return re.sub(r"\s+", " ", s)
+
+
+def match_names(wanted: list[str], available: list[str]) -> tuple[dict, list]:
+    """Map each wanted (ClickUp) name to a CSV member name: exact, same last
+    name with one first name a short form of the other (Fred / Frederick),
+    token subset, then close spelling. Returns (mapping, unmatched)."""
+    by_norm = {norm(a): a for a in available}
+    mapping, unmatched = {}, []
+    for w in wanted:
+        n = norm(w)
+        wt = n.split()
+        if n in by_norm:
+            mapping[w] = by_norm[n]
+            continue
+        cands = [a for k, a in by_norm.items() if k.split()[-1] == wt[-1] and len(k.split()) >= 2
+                 and (k.split()[0].startswith(wt[0]) or wt[0].startswith(k.split()[0]))]
+        if not cands:
+            cands = [a for k, a in by_norm.items() if len(k.split()) >= 2 and set(k.split()) <= set(wt)]
+        if not cands:
+            cands = [by_norm[k] for k in difflib.get_close_matches(n, by_norm, n=1, cutoff=0.85)]
+        if len(cands) == 1:
+            mapping[w] = cands[0]
+        else:
+            unmatched.append(w)
+    return mapping, unmatched
 
 
 # ---------------------------------------------------------------------------

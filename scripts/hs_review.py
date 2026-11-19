@@ -27,11 +27,9 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import difflib
 import json
 import re
 import sys
-import unicodedata
 from datetime import date
 from pathlib import Path
 
@@ -39,7 +37,8 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).parent))
 from utils import (HOURS_BASE, HOURS_OVERWORK_BASE, count_working_days, evaluate_flags,  # noqa: E402
-                   get_exclusions, get_month_working_days, load_master_table)
+                   get_exclusions, get_month_working_days, load_master_table,
+                   match_names, norm)
 from generate_peer_comparison import PEER_GROUPS  # noqa: E402
 
 # ---------------------------------------------------------------------------
@@ -57,38 +56,7 @@ PATTERN_METRICS = {"A": "activity", "H": "low hours", "M": "manual time",
                    "20": "low activity ≤20%", "30": "low activity ≤30%"}
 
 
-def norm(name: str) -> str:
-    s = unicodedata.normalize("NFKD", str(name)).encode("ascii", "ignore").decode()
-    s = re.sub(r"^dr\.?\s+", "", s.strip().lower())
-    return re.sub(r"\s+", " ", s)
-
-
 LEADERSHIP = {norm(n) for g in PEER_GROUPS if g["id"] == "leadership" for n in g["members"]}
-
-
-def match_names(wanted: list[str], available: list[str]) -> tuple[dict, list]:
-    """Map each wanted (ClickUp) name to a CSV member name: exact, same last
-    name with one first name a short form of the other (Fred / Frederick),
-    token subset, then close spelling. Returns (mapping, unmatched)."""
-    by_norm = {norm(a): a for a in available}
-    mapping, unmatched = {}, []
-    for w in wanted:
-        n = norm(w)
-        wt = n.split()
-        if n in by_norm:
-            mapping[w] = by_norm[n]
-            continue
-        cands = [a for k, a in by_norm.items() if k.split()[-1] == wt[-1] and len(k.split()) >= 2
-                 and (k.split()[0].startswith(wt[0]) or wt[0].startswith(k.split()[0]))]
-        if not cands:
-            cands = [a for k, a in by_norm.items() if len(k.split()) >= 2 and set(k.split()) <= set(wt)]
-        if not cands:
-            cands = [by_norm[k] for k in difflib.get_close_matches(n, by_norm, n=1, cutoff=0.85)]
-        if len(cands) == 1:
-            mapping[w] = cands[0]
-        else:
-            unmatched.append(w)
-    return mapping, unmatched
 
 
 def month_of(csv_path: Path) -> date:
@@ -120,19 +88,6 @@ def load_partial(csv_path: Path, skip: set) -> dict:
             "pace": SALARIED_TARGET * days / month_days, "rows": {r["member"]: r for _, r in df.iterrows()}}
 
 
-def load_unpaid_leave(paths: list[Path]) -> dict:
-    """{(YYYY-MM, member): approved Unpaid/Flex hours}. Total Worked Hours
-    already includes approved time off, so salaried hours = total − unpaid."""
-    out = {}
-    for p in paths:
-        df = pd.read_csv(p, dtype=str)
-        df = df[(df["status"] == "approved") & (df["category"] == "Unpaid/Flex")]
-        for _, r in df.iterrows():
-            key = (r["date"][:7], r["member"])
-            out[key] = out.get(key, 0.0) + float(r["hours"])
-    return out
-
-
 def table(headers: list[str], rows: list[list]) -> list[str]:
     """Markdown table lines. Pipes inside cells are escaped."""
     cell = lambda v: "" if v is None else str(v).replace("|", "\\|")  # noqa: E731
@@ -144,7 +99,7 @@ def table(headers: list[str], rows: list[list]) -> list[str]:
 # Sections — each returns (detail lines, [(priority, icon, name, area, why), ...])
 # ---------------------------------------------------------------------------
 
-def section_salaried(months, mapping: dict, unmatched: list, unpaid: dict, leave_months: set,
+def section_salaried(months, mapping: dict, unmatched: list,
                      partial: dict | None = None, partial_map: dict | None = None):
     serious, alert, aside, top = [], [], [], []
     fmt = lambda h: "—" if h is None else (f"**{h:.0f}h**" if h < SALARIED_FLOOR else f"{h:.0f}h")  # noqa: E731
@@ -154,7 +109,7 @@ def section_salaried(months, mapping: dict, unmatched: list, unpaid: dict, leave
         row = partial["rows"].get((partial_map or {}).get(sal_name))
         if row is None or pd.isna(row["total_hours"]):
             return "—"
-        return f"{row['total_hours'] - unpaid.get((partial['start'].strftime('%Y-%m'), row['member']), 0.0):.0f}h"
+        return f"{row['total_hours']:.0f}h"
 
     extra = (lambda n: [to_date(n)]) if partial else (lambda n: [])  # noqa: E731
     for sal_name, csv_name in mapping.items():
@@ -164,7 +119,10 @@ def section_salaried(months, mapping: dict, unmatched: list, unpaid: dict, leave
             if row is None or pd.isna(row["total_hours"]):
                 hours.append(None)
                 continue
-            h = row["total_hours"] - unpaid.get((mo["start"].strftime("%Y-%m"), csv_name), 0.0)
+            # Salaried hours = Hubstaff Total Worked Hours as is: it already includes approved
+            # paid leave and never includes unpaid/flex leave, which salaried team members make
+            # up (Rasma, People Ops 2 Oct and 11 Nov 2026). Do not subtract unpaid leave again.
+            h = row["total_hours"]
             hours.append(h)
             under += h < SALARIED_FLOOR
         latest = hours[-1]
@@ -206,9 +164,6 @@ def section_salaried(months, mapping: dict, unmatched: list, unpaid: dict, leave
                    f"{SALARIED_TARGET:.0f}h × {partial['days']} of {partial['month_days']} working days._")
     if aside:
         out += ["", "**Not ranked**", ""] + table(["Name", *labels, "Why"], sorted(aside, key=lambda r: (r[-1], r[0])))
-    no_leave = [mo["label"] for mo in months if mo["start"].strftime("%Y-%m") not in leave_months]
-    if no_leave:
-        out.append(f"\n_No time-off file for {', '.join(no_leave)}: those totals still include approved unpaid leave._")
     if unmatched:
         out.append(f"\n_Salaried in ClickUp but not in the Hubstaff CSVs: {', '.join(sorted(unmatched))}._")
     return out, top
@@ -357,8 +312,6 @@ def main():
     skip = {norm(n) for n in match_names(split(args.skip), all_names)[0].values()}
     months = load_months([Path(p) for p in args.months], skip)
     leave_paths = [Path(p) for p in args.leave]
-    unpaid = load_unpaid_leave(leave_paths)
-    leave_months = {re.search(r"TO-(\d{4}-\d{2})", p.name).group(1) for p in leave_paths}
     current = sorted({m for mo in months for m in mo["rows"]})
     sal_map, sal_unmatched = match_names(split(args.salaried), current)
     partial = load_partial(Path(args.partial), skip) if args.partial else None
@@ -374,7 +327,7 @@ def main():
 
     if want in (None, "salaried"):
         if sal_map:
-            add(section_salaried(months, sal_map, sal_unmatched, unpaid, leave_months, partial, partial_map))
+            add(section_salaried(months, sal_map, sal_unmatched, partial, partial_map))
         else:
             detail.extend(["## Salaried hours", "", "_No salaried list passed — pull it from the ClickUp HR profiles._", ""])
     if want in (None, "patterns"):
