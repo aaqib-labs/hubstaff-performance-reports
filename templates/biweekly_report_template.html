@@ -769,7 +769,8 @@
             <tr>
               <th class="center">#</th>
               <th>Member</th>
-              <th>Team</th>
+              <th>Team</th>{% if pay_enabled %}
+              <th class="center">Pay</th>{% endif %}
               <th class="center">Activity %</th>
               <th class="center">Hours</th>
               <th class="center">Break</th>
@@ -787,7 +788,8 @@
                 {{ row.rank }}
               </td>
               <td class="member-name">{{ row.member }}</td>
-              <td class="team-name" title="{{ row.team }}">{{ row.team }}</td>
+              <td class="team-name" title="{{ row.team }}">{{ row.team }}</td>{% if pay_enabled %}
+              <td class="center">{{ pay_tag(row.pay) }}</td>{% endif %}
               <td class="metric-cell">{{ row.activity_cell }}</td>
               <td class="metric-cell">{{ row.hours_cell }}</td>
               <td class="metric-cell">{{ row.break_cell }}</td>

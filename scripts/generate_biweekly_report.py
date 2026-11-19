@@ -707,6 +707,11 @@ def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: fl
     # Sort by score descending
     rows_scored.sort(key=lambda x: x["score"], reverse=True)
 
+    pay_enabled = pay_types is not None
+
+    def pay_of(r):
+        return pay_types.get(norm_name(r["member"]), PAY_UNKNOWN) if pay_enabled else None
+
     # Section 1: Top 15
     top15 = []
     for rank, r in enumerate(rows_scored[:15], start=1):
@@ -715,6 +720,7 @@ def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: fl
             "rank": rank,
             "member": r["member"],
             "team": r["team"],
+            "pay": pay_of(r),
             "activity_cell": fmt_activity(r["activity_pct"], flags.get("A")),
             "hours_cell": fmt_hours(r["total_hours"], flags.get("H")),
             "break_cell": fmt_percent_hours(r["break_hours"], r["break_pct"], flags.get("B")),
@@ -727,11 +733,6 @@ def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: fl
         })
 
     leave_enabled = leave_df is not None
-    pay_enabled = pay_types is not None
-
-    def pay_of(r):
-        return pay_types.get(norm_name(r["member"]), PAY_UNKNOWN) if pay_enabled else None
-
     leave_by_member = {}
     if leave_enabled:
         for norm, grp in leave_df.groupby("norm"):
