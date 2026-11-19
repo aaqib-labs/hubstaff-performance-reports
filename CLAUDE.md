@@ -254,7 +254,7 @@ Score = sum of (base × multiplier) across all flags
 Each bi-weekly HTML report contains:
 
 **Section 1 — Top 15 Violators**
-Ranked by severity score. Columns: Rank, Member, Team, Pay (when `--salaried`/`--hourly` are passed), Activity %, Hours, Break %, Manual Hours, Low Act ≤20%, Low Act ≤30%, Flags, Score.
+Ranked by severity score. Columns: Rank, Member, Team, Activity %, Hours, Break %, Manual Hours, Low Act ≤20%, Low Act ≤30%, Flags, Pay (when `--salaried`/`--hourly` are passed). The score is used for ranking only and is not shown (Aaqib, 2026-11-19).
 
 **Section 2 — Hours Violators**
 All employees below the prorated hours threshold. Sorted ascending (worst first). Columns: Member, Team, Hours Worked, Expected Hours, Shortfall, Other Flags.

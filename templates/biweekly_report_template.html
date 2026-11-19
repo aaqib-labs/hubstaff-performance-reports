@@ -769,16 +769,15 @@
             <tr>
               <th class="center">#</th>
               <th>Member</th>
-              <th>Team</th>{% if pay_enabled %}
-              <th class="center">Pay</th>{% endif %}
+              <th>Team</th>
               <th class="center">Activity %</th>
               <th class="center">Hours</th>
               <th class="center">Break</th>
               <th class="center">Manual</th>
               <th class="center">Low Act ≤20%</th>
               <th class="center">Low Act ≤30%</th>
-              <th class="center">Flags</th>
-              <th class="center">Score</th>
+              <th class="center">Flags</th>{% if pay_enabled %}
+              <th class="center">Pay</th>{% endif %}
             </tr>
           </thead>
           <tbody>
@@ -788,20 +787,15 @@
                 {{ row.rank }}
               </td>
               <td class="member-name">{{ row.member }}</td>
-              <td class="team-name" title="{{ row.team }}">{{ row.team }}</td>{% if pay_enabled %}
-              <td class="center">{{ pay_tag(row.pay) }}</td>{% endif %}
+              <td class="team-name" title="{{ row.team }}">{{ row.team }}</td>
               <td class="metric-cell">{{ row.activity_cell }}</td>
               <td class="metric-cell">{{ row.hours_cell }}</td>
               <td class="metric-cell">{{ row.break_cell }}</td>
               <td class="metric-cell">{{ row.manual_cell }}</td>
               <td class="metric-cell">{{ row.low20_cell }}</td>
               <td class="metric-cell">{{ row.low30_cell }}</td>
-              <td class="flags-cell">{{ row.flags_badge }}</td>
-              <td class="center">
-                <span class="score-pill {% if row.score | float >= 60 %}score-critical{% elif row.score | float >= 30 %}score-high{% elif row.score | float >= 15 %}score-medium{% else %}score-low{% endif %}">
-                  {{ row.score }}
-                </span>
-              </td>
+              <td class="flags-cell">{{ row.flags_badge }}</td>{% if pay_enabled %}
+              <td class="center">{{ pay_tag(row.pay) }}</td>{% endif %}
             </tr>
             {% endfor %}
           </tbody>
