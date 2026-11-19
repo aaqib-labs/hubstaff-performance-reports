@@ -79,17 +79,16 @@ shell for `--salaried` / `--hourly` only.
 ## 5. Salaried status file
 
 `data/input/salaried/salaried_status.csv` decides Section 3 and overrides the ClickUp
-field. Before the run, check for changes since last month:
-- new transition or compensation letters in Drive. Search **titles** containing
-  "Transition Letter" or "Compensation Update", not only the Transition Letters
-  folder (the July letters sit elsewhere). Read each new letter's effective date.
-- HR profile comments since last month mentioning salaried, fixed pay, transition,
-  or going back to hourly.
-- people whose effective date has now passed (e.g. Ounvin Nov 1, Aaqib Nov 1,
-  Dharshika Dec 1) need nothing: the date in the file does it.
-Add or change rows with the evidence (letter name or comment id). New rows go in
-the review pack. If Rasma's People Ops tracker exists, compare it against the file
-and list any differences in the pack.
+field. Source of truth: **Rasma's tracker** on ClickUp to-do 86eyuadqb (comment
+1100510000260517, effective dates from the Hubstaff rate history). Each month:
+- read the to-do for an updated list; add new movers (`moved`, date, 180) and fix
+  changed dates. The tracker wins over letters and HR comments.
+- compare the file with the freshly pulled Salary Type field (step 4). The run prints
+  every person whose pay type the file overrides; the only expected ones are people
+  whose move date is after the report month (e.g. Aaqib and Ounvin, Nov 1, show as
+  Hourly for October). Anything else goes in the review pack.
+- people whose effective date has now passed need nothing: the date does it.
+Evidence column: the tracker comment id. New rows go in the review pack.
 
 ## 6. Dry run
 
