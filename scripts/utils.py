@@ -129,9 +129,9 @@ def get_exclusions(start: date) -> list[str]:
 # ---------------------------------------------------------------------------
 # Salaried hours targets (People Ops: Jorn Sep 3 and Oct 2 2026; Aaqib Oct 21)
 # ---------------------------------------------------------------------------
-# 180h applies only where it was agreed for that person (HR profile), from the
-# first full month after the move; 170h is "within range". Everyone else, and
-# every month before a move, is measured against the normal 160h (Aaqib, 2026-11-19).
+# Everyone who moved from hourly to salaried: 180h from the first full month after
+# the move; red under 170h, yellow 170–179h. Hired as salaried, and every month
+# before a move: the normal 160h (Aaqib, 2026-11-19).
 # Who moved, when and on what target: data/input/salaried/salaried_status.csv.
 MOVED_TARGET = 180.0
 MOVED_FLOOR  = 170.0
@@ -148,7 +148,8 @@ def first_full_month(effective: date) -> date:
 
 
 def floor_for(target: float) -> float:
-    """Flag line for a monthly target: 180h is flagged under 170h; otherwise the target."""
+    """Red line for a monthly target: 180h is red under 170h (170–179h is yellow);
+    otherwise the target itself."""
     return MOVED_FLOOR if target >= MOVED_TARGET else target
 
 

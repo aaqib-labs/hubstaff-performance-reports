@@ -729,6 +729,47 @@ def load_hours_refresh() -> dict:
             for _, r in rdf.iterrows()}
 
 
+def load_month_leave(month: date) -> dict:
+    """{norm member: (approved paid, approved unpaid, unapproved, late paid)} hours for a
+    month, from data/input/timeoff/TO-<month>, or {} when that file is missing. Late paid =
+    approved paid leave approved after that month's master CSV was exported (not in its Total)."""
+    last = (date(month.year + (month.month == 12), month.month % 12 + 1, 1) - timedelta(days=1))
+    path = REPO_ROOT / "data" / "input" / "timeoff" / f"TO-{month:%Y-%m-%d}_to_{last:%Y-%m-%d}.csv"
+    if not path.exists():
+        return {}
+    ldf = pd.read_csv(path, dtype=str)
+    ldf["hours"] = ldf["hours"].astype(float)
+    csv_path = MONTHLY_DIR / f"HS-{month:%Y-%m}-master.csv"
+    exported = (pd.Timestamp(datetime.utcfromtimestamp(csv_path.stat().st_mtime), tz="UTC")
+                if csv_path.exists() else None)
+    approved_at = (pd.to_datetime(ldf["approved_at"], utc=True, errors="coerce")
+                   if "approved_at" in ldf.columns else pd.Series(pd.NaT, index=ldf.index))
+    ldf["late"] = (approved_at > exported) if exported is not None else False
+    out = {}
+    for name, g in ldf.groupby(ldf["member"].apply(norm_name)):
+        appr = g[g["status"] == "approved"]
+        paid = appr[appr["category"] == CATEGORY_PAID]
+        out[name] = (float(paid["hours"].sum()),
+                     float(appr.loc[appr["category"] == CATEGORY_UNPAID, "hours"].sum()),
+                     float(g.loc[g["status"] != "approved", "hours"].sum()),
+                     float(paid.loc[paid["late"].astype(bool), "hours"].sum()))
+    return out
+
+
+def month_leave_note(paid: float, unpaid: float, unapproved: float, late: float = 0.0) -> str:
+    """Short line under a Section 3 month, e.g. 'incl. 8h paid leave · 64h leave not approved'."""
+    def h(x):
+        return f"{x:.1f}".rstrip("0").rstrip(".") + "h"
+    parts = []
+    if paid:
+        parts.append(f"incl. {h(paid)} paid leave")
+    if unpaid:
+        parts.append(f"{h(unpaid)} unpaid leave")
+    if unapproved:
+        parts.append(f"{h(unapproved)} leave not approved")
+    return " · ".join(parts)
+
+
 def load_month_totals(month: date) -> dict | None:
     """{norm member: Total Worked Hours} from HS-YYYY-MM-master.csv, or None if missing."""
     path = MONTHLY_DIR / f"HS-{month:%Y-%m}-master.csv"
@@ -780,6 +821,7 @@ def build_salaried_section(rows_scored: list, start: date, end: date, pay_of, st
     missing = [f"{m:%b %Y}" for m, t in zip(months, totals) if t is None]
 
     refresh = load_hours_refresh()
+    leaves = [load_month_leave(m) for m in months]
     ce_names = {norm_name(n) for n in FS_EXCLUSIONS}
     groups = {"moved": [], "hired": []}
     for r in rows_scored:
@@ -798,12 +840,20 @@ def build_salaried_section(rows_scored: list, start: date, end: date, pay_of, st
             if i < len(months) - 1 and (key, f"{m:%Y-%m}") in refresh:
                 h, was = refresh[(key, f"{m:%Y-%m}")]
                 refreshed = f"Hubstaff today; the {m:%b} CSV had {was}h (edited after the export)"
+            lv = leaves[i].get(key, (0.0, 0.0, 0.0, 0.0))
+            leave_note = month_leave_note(*lv)
+            # Earlier months: add paid leave approved after that month's CSV export
+            # (the current month already does this through the leave figures)
+            if h is not None and i < len(months) - 1 and lv[3]:
+                h += lv[3]
+                refreshed = (refreshed + "; " if refreshed else "") + \
+                    f"includes {lv[3]:.1f}h paid leave approved after the {m:%b} export"
             # Hired as salaried part-way through: earlier months were a different
             # arrangement, shown but not counted
             if not moved and start_full and m < start_full:
                 cells.append({"text": "—" if h is None else f"{h:.1f}h", "ce_partial": False,
-                              "under": False, "hourly_then": False, "before_hire": True,
-                              "refreshed": refreshed})
+                              "under": False, "warn": False, "hourly_then": False,
+                              "before_hire": True, "refreshed": refreshed, "leave": ""})
                 hours.append(None); floors.append(HIRED_FLOOR); targets.append(HIRED_TARGET)
                 continue
             # Centrifuse Engineers joined Hubstaff mid-August 2026: earlier months are partial
@@ -818,8 +868,10 @@ def build_salaried_section(rows_scored: list, start: date, end: date, pay_of, st
             targets.append(m_target)
             cells.append({"text": "—" if h is None else f"{h:.1f}h", "ce_partial": ce_partial,
                           "under": h is not None and h < m_floor,
+                          "warn": h is not None and m_floor <= h < m_target,
                           "hourly_then": before_move and target != HIRED_TARGET,
-                          "before_hire": False, "refreshed": refreshed})
+                          "before_hire": False, "refreshed": refreshed,
+                          "leave": leave_note if h is not None and h < m_target else ""})
         under, sal_status = salaried_status(hours, floors)
         shorts = [t - h for h, f, t in zip(hours, floors, targets) if h is not None and h < f]
         note = ""

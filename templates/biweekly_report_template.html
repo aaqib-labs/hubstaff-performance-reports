@@ -647,6 +647,8 @@
     .sal-count { font-size: 0.7rem; font-weight: 700; color: #475569; background: #f1f5f9; padding: 2px 9px; border-radius: 999px; }
     td.sal-month { text-align: center; white-space: nowrap; }
     td.sal-month.under { color: #b91c1c; font-weight: 700; }
+    td.sal-month.warn { color: #92400e; font-weight: 700; }
+    td.sal-month .leave { display: block; font-size: 0.64rem; font-weight: 600; color: #475569; }
     td.sal-month .then { display: block; font-size: 0.64rem; font-weight: 600; color: #94a3b8; }
     .st-pill { display: inline-block; font-size: 0.72rem; font-weight: 800; padding: 2px 10px; border-radius: 999px; }
     .st-pill.serious { background: #fee2e2; color: #b91c1c; }
@@ -704,19 +706,19 @@
   <div class="table-wrapper">
     <table>
       <thead><tr>
-        <th>Member</th><th>Team</th>{% if show_since %}<th class="center">Salaried since</th><th class="center">Target</th>{% endif %}
+        <th>Member</th><th>Team</th>{% if show_since %}<th class="center">Salaried since</th>{% endif %}
         {% for m in months %}<th class="center">{{ m }}</th>{% endfor %}
         <th class="center">Months under</th><th class="center">Avg short</th><th class="center">Status</th>
       </tr></thead>
-      {% set ncols = 7 + (2 if show_since else 0) %}
+      {% set ncols = 7 + (1 if show_since else 0) %}
       {% for part, rows in [('flag', flagged), ('ok', ok)] %}
       <tbody{% if part == 'ok' %} class="ok-rows" id="{{ gid }}-ok" hidden{% endif %}>
       {% for r in rows %}
         <tr class="{{ 'severity-critical' if r.status == 'Serious' else ('severity-high' if r.status == 'Alert' else 'sal-ok') }}{% if hr_on %} expandable{% endif %}"{% if hr_on %} tabindex="0" role="button" aria-expanded="false" aria-controls="{{ gid }}-{{ part }}-{{ loop.index }}"{% endif %}>
           <td class="member-name">{% if hr_on %}{{ chev_html }}{% endif %}{{ r.member }}{{ hr_chip(r.hr) }}</td>
           <td class="team-name" title="{{ r.team }}">{{ r.team }}</td>
-          {% if show_since %}<td class="center">{{ r.since }}</td><td class="center" title="{{ r.target_basis }}">{{ r.target }}{% if r.target != r.target_floor %}<span class="then">flag under {{ r.target_floor }}</span>{% endif %}</td>{% endif %}
-          {% for c in r.cells %}<td class="sal-month{% if c.under %} under{% endif %}"{% if c.refreshed %} title="{{ c.refreshed }}"{% endif %}>{% if c.under %}🔴 {% endif %}{{ c.text }}{% if c.hourly_then and c.text != '—' %}<span class="then">before the move · 160h</span>{% endif %}{% if c.ce_partial %}<span class="then">not on Hubstaff yet</span>{% endif %}{% if c.before_hire and c.text != '—' %}<span class="then">before salaried · not counted</span>{% endif %}</td>{% endfor %}
+          {% if show_since %}<td class="center">{{ r.since }}</td>{% endif %}
+          {% for c in r.cells %}<td class="sal-month{% if c.under %} under{% elif c.warn %} warn{% endif %}"{% if c.refreshed %} title="{{ c.refreshed }}"{% endif %}>{% if c.under %}🔴 {% elif c.warn %}⚠️ {% endif %}{{ c.text }}{% if c.hourly_then and c.text != '—' %}<span class="then">before the move · 160h</span>{% endif %}{% if c.ce_partial %}<span class="then">not on Hubstaff yet</span>{% endif %}{% if c.leave %}<span class="leave">{{ c.leave }}</span>{% endif %}{% if c.before_hire and c.text != '—' %}<span class="then">before salaried · not counted</span>{% endif %}</td>{% endfor %}
           <td class="center">{% if r.under %}{{ r.under }} of {{ r.months_with_data }}{% endif %}</td>
           <td class="center">{{ r.avg_short }}</td>
           <td class="center">{% if r.status == 'Serious' %}<span class="st-pill serious">Serious</span>{% elif r.status == 'Alert' %}<span class="st-pill alert">Alert</span>{% elif r.note %}<span class="st-note">{{ r.note }}</span>{% endif %}</td>
@@ -1018,12 +1020,12 @@
       </div>
       <p class="section-note">
         Every salaried team member's Hubstaff total for {{ salaried.months|join(', ') }}: hours worked plus approved paid leave (unpaid leave does not count).
-        <strong>Serious</strong> = under target in 2 or more of the 3 months. <strong>Alert</strong> = under in {{ salaried.months[-1] }} only.
+        <strong>Serious</strong> = 🔴 in 2 or more of the 3 months. <strong>Alert</strong> = 🔴 in {{ salaried.months[-1] }} only. ⚠️ is a warning and does not set the status. Time off is shown under any month below target.
         Who moved from hourly to salaried, when, and on what target is taken from HR profiles and transition letters until the People Ops tracker is in. Earlier months use today's Hubstaff figure where time was edited after that month's export.{% if salaried.missing_months %}
         No Hubstaff data on file for {{ salaried.missing_months|join(', ') }}.{% endif %}
       </p>
-      {{ sal_table('sal-moved', 'Moved from hourly to salaried', salaried.moved_target ~ ' only where it was agreed for that person (flagged under ' ~ salaried.moved_floor ~ '), otherwise ' ~ salaried.hired_target ~ ' · applies from the first full month after the move', salaried.moved_flagged, salaried.moved_ok, salaried.months, true, hr_enabled, chev) }}
-      {{ sal_table('sal-hired', 'Hired as salaried', 'Target ' ~ salaried.hired_target ~ ' · flagged under ' ~ salaried.hired_target, salaried.hired_flagged, salaried.hired_ok, salaried.months, false, hr_enabled, chev) }}
+      {{ sal_table('sal-moved', 'Moved from hourly to salaried', "Target " ~ salaried.moved_target ~ " from the first full month after the move: 🔴 below " ~ salaried.moved_floor ~ ", ⚠️ " ~ salaried.moved_floor ~ "–179h. Months before the move count against " ~ salaried.hired_target ~ ".", salaried.moved_flagged, salaried.moved_ok, salaried.months, true, hr_enabled, chev) }}
+      {{ sal_table('sal-hired', 'Hired as salaried', "Target " ~ salaried.hired_target ~ ": 🔴 below " ~ salaried.hired_target ~ ".", salaried.hired_flagged, salaried.hired_ok, salaried.months, false, hr_enabled, chev) }}
     </div>
 <script>
 document.querySelectorAll('.ok-toggle').forEach(function (b) {
