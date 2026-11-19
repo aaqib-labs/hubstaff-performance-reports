@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bi-Weekly Performance Report — October 01, 2026 — October 31, 2026</title>
+  <title>Hubstaff Performance Report — October 01, 2026 — October 31, 2026</title>
   <style>
     /* ------------------------------------------------------------------ */
     /* Base                                                                 */
@@ -638,9 +638,32 @@
     .hr-meta { display: block; font-size: 0.7rem; font-weight: 700; color: #6b7280; margin-bottom: 1px; }
     .hr-empty { font-size: 0.8rem; color: #6b7280; margin: 0; }
     @media print { .hr-chip, .hr-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+
+    /* Section 3: Salaried hours, last 3 months */
+    .sal-group { margin-bottom: 22px; }
+    .sal-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: 0 0 8px; }
+    .sal-title { font-size: 0.92rem; font-weight: 800; color: #111827; }
+    .sal-rule { font-size: 0.76rem; color: #6b7280; }
+    .sal-count { font-size: 0.7rem; font-weight: 700; color: #475569; background: #f1f5f9; padding: 2px 9px; border-radius: 999px; }
+    td.sal-month { text-align: center; white-space: nowrap; }
+    td.sal-month.under { color: #b91c1c; font-weight: 700; }
+    td.sal-month .then { display: block; font-size: 0.64rem; font-weight: 600; color: #94a3b8; }
+    .st-pill { display: inline-block; font-size: 0.72rem; font-weight: 800; padding: 2px 10px; border-radius: 999px; }
+    .st-pill.serious { background: #fee2e2; color: #b91c1c; }
+    .st-pill.alert { background: #fef3c7; color: #92400e; }
+    .st-note { font-size: 0.74rem; color: #6b7280; }
+    tr.sal-ok { background: #fff; }
+    .ok-toggle {
+      margin-top: 8px; background: none; border: 1px dashed #cbd5e1; color: #475569;
+      font-size: 0.74rem; font-weight: 700; padding: 5px 12px; border-radius: 999px; cursor: pointer;
+    }
+    .ok-toggle:hover { background: #f8fafc; }
+    @media print { tbody.ok-rows[hidden] { display: table-row-group !important; } .ok-toggle { display: none; }
+      .st-pill { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
   </style>
 </head>
 <body>
+
 
 
 
@@ -658,9 +681,9 @@
     <div class="header-top">
       <div>
         <div class="brand">WebLife Ventures &nbsp;·&nbsp; Internal Use Only</div>
-        <h1>Bi-Weekly Performance Report</h1>
+        <h1>Hubstaff Performance Report</h1>
       </div>
-      <div class="period-badge">October 01, 2026 — October 31, 2026</div>
+      <div class="period-badge">Month-end · October 01, 2026 — October 31, 2026</div>
     </div>
     <div class="header-meta">
       <div class="header-meta-item">
@@ -677,7 +700,7 @@
       </div>
       <div class="header-meta-item">
         <div class="h-label">Generated</div>
-        <div class="h-value">2026-11-19 15:18</div>
+        <div class="h-value">2026-11-19 17:12</div>
       </div>
     </div>
   </div>
@@ -704,7 +727,7 @@
     <div class="stat-card">
       <div class="s-label">Report Cycle</div>
       <div class="s-value slate" style="font-size:1.1rem; letter-spacing: -0.01em; margin-top: 4px;">October 01, 2026 — October 31, 2026</div>
-      <div class="s-sub">bi-weekly · Hubstaff</div>
+      <div class="s-sub">month-end · Hubstaff</div>
     </div>
   </div>
 
@@ -1340,11 +1363,695 @@
 
 
     <!-- ================================================================ -->
+    <!-- Section 3 — Salaried Hours, last 3 months                         -->
+    <!-- ================================================================ -->
+    <div class="section-block" id="s-sal">
+      <div class="section-title-row">
+        <div class="section-num">3</div>
+        <h2>Salaried Hours: Last 3 Months</h2>
+        <span class="count-pill">3 serious · 2 alert</span>
+        <span class="section-tools"><button type="button" class="toggle-all-btn" data-section="s-sal" aria-pressed="false"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-label">Expand all</span></button></span>
+      </div>
+      <p class="section-note">
+        Every salaried team member's Hubstaff total for Aug, Sep, Oct: hours worked plus approved paid leave (unpaid leave does not count).
+        <strong>Serious</strong> = under target in 2 or more of the 3 months. <strong>Alert</strong> = under in Oct only.
+        Who moved from hourly to salaried, when, and on what target is taken from HR profiles and transition letters until the People Ops tracker is in. Earlier months use today's Hubstaff figure where time was edited after that month's export.
+      </p>
+      <div class="sal-group">
+  <div class="sal-head"><span class="sal-title">Moved from hourly to salaried</span><span class="sal-count">19</span><span class="sal-rule">180h only where it was agreed for that person (flagged under 170h), otherwise 160h · applies from the first full month after the move</span></div>
+  
+  <div class="table-wrapper">
+    <table>
+      <thead><tr>
+        <th>Member</th><th>Team</th><th class="center">Salaried since</th><th class="center">Target</th>
+        <th class="center">Aug</th><th class="center">Sep</th><th class="center">Oct</th>
+        <th class="center">Months under</th><th class="center">Avg short</th><th class="center">Status</th>
+      </tr></thead>
+      
+      
+      <tbody>
+      
+        <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-moved-flag-1">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Shehara Meadows<span class="hr-chip" title="Note on the HR profile">HR note</span></td>
+          <td class="team-name" title="Content_catalog_platform, Digital Product, Labs - all, Site Content">Content_catalog_platform, Digital Product, Labs - all, Site Content</td>
+          <td class="center">Aug 1, 2026</td><td class="center" title="agreed 180h">180h<span class="then">flag under 170h</span></td>
+          <td class="sal-month under">🔴 165.0h</td><td class="sal-month under">🔴 161.9h</td><td class="sal-month under">🔴 162.3h</td>
+          <td class="center">3 of 3</td>
+          <td class="center">16.9h</td>
+          <td class="center"><span class="st-pill serious">Serious</span></td>
+        </tr>
+        <tr class="detail-row" id="sal-moved-flag-1" hidden><td colspan="9"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ew77zgh" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <ul class="hr-notes"><li><span class="hr-meta">Rasma Rizwan · Sep 21, 2026</span>Worked reduced hours on Sep 21 for a medical reason; expected to make up the 160h within the month.</li><li><span class="hr-meta">Jorn Wossner · Oct 3, 2026</span>September: 161.9h including PTO and holiday, 33% activity. Activity improved after the Sep 11 review but is still under the 40% bar.</li><li><span class="hr-meta">Rasma Rizwan · Oct 21, 2026</span>Moved to fixed pay at the end of July based on 180h a month. August (165.0h) and September (161.9h) were in the 160s; manager asked to discuss the 180h expectation.</li><li><span class="hr-meta">Rasma Rizwan · Nov 10, 2026</span>August to October all in the low 160s, not the agreed 180h (October 162.3h, plus 7h unpaid medical leave on Oct 28). One more month agreed: if November is below 180h, she moves back to hourly.</li></ul>
+  
+</div></td></tr>
+      
+        <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-moved-flag-2">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Jebby Rochelle</td>
+          <td class="team-name" title="Framework Friday, Labs - all, Marketing, Media, Rev Ops">Framework Friday, Labs - all, Marketing, Media, Rev Ops</td>
+          <td class="center">Jul 28, 2026</td><td class="center" title="agreed 180h">180h<span class="then">flag under 170h</span></td>
+          <td class="sal-month under">🔴 160.7h</td><td class="sal-month under">🔴 168.4h</td><td class="sal-month under">🔴 165.3h</td>
+          <td class="center">3 of 3</td>
+          <td class="center">15.2h</td>
+          <td class="center"><span class="st-pill serious">Serious</span></td>
+        </tr>
+        <tr class="detail-row" id="sal-moved-flag-2" hidden><td colspan="9"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ewdv06n" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="severity-critical expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-moved-flag-3">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Kianna Xue<span class="hr-chip" title="Note on the HR profile">HR note</span></td>
+          <td class="team-name" title="Digital Product, VP - Systems - CRM Automation Product Owner">Digital Product, VP - Systems - CRM Automation Product Owner</td>
+          <td class="center">Jul 9, 2026</td><td class="center" title="agreed 180h">180h<span class="then">flag under 170h</span></td>
+          <td class="sal-month under">🔴 144.9h</td><td class="sal-month under">🔴 164.1h</td><td class="sal-month">199.3h</td>
+          <td class="center">2 of 3</td>
+          <td class="center">25.5h</td>
+          <td class="center"><span class="st-pill serious">Serious</span></td>
+        </tr>
+        <tr class="detail-row" id="sal-moved-flag-3" hidden><td colspan="9"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ew781kt" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <ul class="hr-notes"><li><span class="hr-meta">Adam Burdeshaw · Sep 11, 2026</span>August review: 144.9h tracked plus 20h of approved leave. Two weekdays (Aug 3, Aug 24) had no tracked time and no leave request; confirming with her. September will run short with 40h of approved unpaid leave.</li><li><span class="hr-meta">Jorn Wossner · Oct 3, 2026</span>September hours volume is not the concern: 156.1h tracked against a 128h requirement after 40h of approved unpaid leave. The concern is several very long days and weekend work to make up the leave, and Sep 1 with no tracked time and no leave request.</li><li><span class="hr-meta">Rasma Rizwan · Oct 21, 2026</span>Moved to fixed pay in July based on 180h a month (August 156.9h, September 164.1h). Asked Adam to have a candid conversation with her about the 180h expectation; tracking it month to month.</li></ul>
+  
+</div></td></tr>
+      
+      </tbody>
+      
+      <tbody class="ok-rows" id="sal-moved-ok" hidden>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-moved-ok-1">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Bihani Madushika</td>
+          <td class="team-name" title="BI and Data Team, Digital Product, Labs - all">BI and Data Team, Digital Product, Labs - all</td>
+          <td class="center">Jun 1, 2026</td><td class="center" title="160h in HR profile">160h</td>
+          <td class="sal-month">172.1h</td><td class="sal-month">187.6h</td><td class="sal-month">160.1h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-moved-ok-1" hidden><td colspan="9"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-moved-ok-2">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Darren Karunaratne</td>
+          <td class="team-name" title="Labs - all, Venia Products  - All, VP - Customer Ops - Customer Relations">Labs - all, Venia Products  - All, VP - Customer Ops - Customer Relations</td>
+          <td class="center">Jun 1, 2026</td><td class="center" title="letter (no hours stated)">160h</td>
+          <td class="sal-month">181.5h</td><td class="sal-month" title="Hubstaff today; the Sep CSV had 182.5h (edited after the export)">182.8h</td><td class="sal-month">195.2h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-moved-ok-2" hidden><td colspan="9"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ew781kj" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-moved-ok-3">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Dr. Yashoda Velananda</td>
+          <td class="team-name" title="CRM, Digital Product, Friday Solutions, Labs - all, Platform and Engineering Team">CRM, Digital Product, Friday Solutions, Labs - all, Platform and Engineering Team</td>
+          <td class="center">Jun 1, 2026</td><td class="center" title="160h in HR profile">160h</td>
+          <td class="sal-month">173.9h</td><td class="sal-month">184.5h</td><td class="sal-month">164.9h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-moved-ok-3" hidden><td colspan="9"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-moved-ok-4">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Krishanthiny Krishnaraj</td>
+          <td class="team-name" title="AIT - Recruitment, allintalent, Labs - all">AIT - Recruitment, allintalent, Labs - all</td>
+          <td class="center">Jun 1, 2026</td><td class="center" title="letter (no hours stated)">160h</td>
+          <td class="sal-month">175.2h</td><td class="sal-month">189.1h</td><td class="sal-month">184.2h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-moved-ok-4" hidden><td colspan="9"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-moved-ok-5">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Kunchana Prabashwara</td>
+          <td class="team-name" title="Design, Digital Product, Labs - all, Site Content">Design, Digital Product, Labs - all, Site Content</td>
+          <td class="center">Jul 28, 2026</td><td class="center" title="no 180h agreement">160h</td>
+          <td class="sal-month">207.6h</td><td class="sal-month">205.9h</td><td class="sal-month">190.2h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-moved-ok-5" hidden><td colspan="9"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-moved-ok-6">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Kushani Kalpage</td>
+          <td class="team-name" title="allintalent, Labs - all">allintalent, Labs - all</td>
+          <td class="center">Jun 1, 2026</td><td class="center" title="letter (no hours stated)">160h</td>
+          <td class="sal-month">192.2h</td><td class="sal-month" title="Hubstaff today; the Sep CSV had 185.7h (edited after the export)">188.1h</td><td class="sal-month">189.6h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-moved-ok-6" hidden><td colspan="9"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-moved-ok-7">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Laleesha Wijeratne</td>
+          <td class="team-name" title="Catalog Team, Content_catalog_platform, Digital Product, Labs - all">Catalog Team, Content_catalog_platform, Digital Product, Labs - all</td>
+          <td class="center">Jun 1, 2026</td><td class="center" title="160h in HR profile">160h</td>
+          <td class="sal-month">174.3h</td><td class="sal-month">200.9h</td><td class="sal-month">174.6h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-moved-ok-7" hidden><td colspan="9"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-moved-ok-8">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Menara Kahatapitiya</td>
+          <td class="team-name" title="allintalent">allintalent</td>
+          <td class="center">Sep 1, 2026</td><td class="center" title="agreed 180h">180h<span class="then">flag under 170h</span></td>
+          <td class="sal-month">184.7h<span class="then">before the move · 160h</span></td><td class="sal-month">184.0h</td><td class="sal-month">185.6h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-moved-ok-8" hidden><td colspan="9"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-moved-ok-9">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Modhuka Paranagama</td>
+          <td class="team-name" title="BI and Data Team, Digital Product, Labs - all">BI and Data Team, Digital Product, Labs - all</td>
+          <td class="center">Jun 1, 2026</td><td class="center" title="letter (no hours stated)">160h</td>
+          <td class="sal-month">180.4h</td><td class="sal-month">166.4h</td><td class="sal-month">166.7h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-moved-ok-9" hidden><td colspan="9"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-moved-ok-10">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Natalia Jayasundera</td>
+          <td class="team-name" title="allintalent, HR, Labs - all">allintalent, HR, Labs - all</td>
+          <td class="center">Jun 1, 2026</td><td class="center" title="letter (no hours stated)">160h</td>
+          <td class="sal-month">170.8h</td><td class="sal-month" title="Hubstaff today; the Sep CSV had 159.9h (edited after the export)">161.4h</td><td class="sal-month">179.0h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-moved-ok-10" hidden><td colspan="9"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ex381y7" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-moved-ok-11">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Rasma Rizwan</td>
+          <td class="team-name" title="allintalent, HR, Labs - all">allintalent, HR, Labs - all</td>
+          <td class="center">Jun 1, 2026</td><td class="center" title="letter (no hours stated)">160h</td>
+          <td class="sal-month under">🔴 52.8h</td><td class="sal-month">175.6h</td><td class="sal-month">175.2h</td>
+          <td class="center">1 of 3</td>
+          <td class="center">107.2h</td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-moved-ok-11" hidden><td colspan="9"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ex38gek" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-moved-ok-12">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Saduka Sachintha</td>
+          <td class="team-name" title="Amazon, Labs - all, Marketing, Marketing- Labs, Marketing - Paid Media, Media, Sales - RGC">Amazon, Labs - all, Marketing, Marketing- Labs, Marketing - Paid Media, Media, Sales - RGC</td>
+          <td class="center">Jun 1, 2026</td><td class="center" title="letter (no hours stated)">160h</td>
+          <td class="sal-month">175.2h</td><td class="sal-month" title="Hubstaff today; the Sep CSV had 179.5h (edited after the export)">180.1h</td><td class="sal-month">173.6h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-moved-ok-12" hidden><td colspan="9"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-moved-ok-13">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Sasindee Wijeratne</td>
+          <td class="team-name" title="Labs - all, Marketing, Sales - RGC">Labs - all, Marketing, Sales - RGC</td>
+          <td class="center">Jun 1, 2026</td><td class="center" title="letter (no hours stated)">160h</td>
+          <td class="sal-month">176.2h</td><td class="sal-month">173.8h</td><td class="sal-month">173.9h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-moved-ok-13" hidden><td colspan="9"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-moved-ok-14">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Sean Dehoedt</td>
+          <td class="team-name" title="—">—</td>
+          <td class="center">May 1, 2026</td><td class="center" title="no hours stated">160h</td>
+          <td class="sal-month">176.3h</td><td class="sal-month">174.8h</td><td class="sal-month">167.9h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-moved-ok-14" hidden><td colspan="9"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-moved-ok-15">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Shenallie Jayathillake</td>
+          <td class="team-name" title="Labs - all, Venia Products  - All, VP - Customer Ops - Order Processing">Labs - all, Venia Products  - All, VP - Customer Ops - Order Processing</td>
+          <td class="center">Aug 1, 2026</td><td class="center" title="no hours stated">160h</td>
+          <td class="sal-month">180.7h</td><td class="sal-month">195.4h</td><td class="sal-month">161.5h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-moved-ok-15" hidden><td colspan="9"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-moved-ok-16">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Tashia Bernardus</td>
+          <td class="team-name" title="Digital Product, SEO Team, Site Content">Digital Product, SEO Team, Site Content</td>
+          <td class="center">May 1, 2026</td><td class="center" title="no hours stated">160h</td>
+          <td class="sal-month">161.2h</td><td class="sal-month">170.6h</td><td class="sal-month">168.7h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-moved-ok-16" hidden><td colspan="9"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+      </tbody>
+      
+    </table>
+  </div>
+  <button type="button" class="ok-toggle" data-target="sal-moved-ok" data-n="16">Show 16 on target</button>
+  
+</div>
+      <div class="sal-group">
+  <div class="sal-head"><span class="sal-title">Hired as salaried</span><span class="sal-count">24</span><span class="sal-rule">Target 160h · flagged under 160h</span></div>
+  
+  <div class="table-wrapper">
+    <table>
+      <thead><tr>
+        <th>Member</th><th>Team</th>
+        <th class="center">Aug</th><th class="center">Sep</th><th class="center">Oct</th>
+        <th class="center">Months under</th><th class="center">Avg short</th><th class="center">Status</th>
+      </tr></thead>
+      
+      
+      <tbody>
+      
+        <tr class="severity-high expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-hired-flag-1">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Brayden Robinson</td>
+          <td class="team-name" title="Rev Ops">Rev Ops</td>
+          
+          <td class="sal-month">185.1h</td><td class="sal-month" title="Hubstaff today; the Sep CSV had 197.8h (edited after the export)">198.2h</td><td class="sal-month under">🔴 117.0h</td>
+          <td class="center">1 of 3</td>
+          <td class="center">43.0h</td>
+          <td class="center"><span class="st-pill alert">Alert</span></td>
+        </tr>
+        <tr class="detail-row" id="sal-hired-flag-1" hidden><td colspan="7"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ex381ya" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="severity-high expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-hired-flag-2">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Prajwal Kumar<span class="hr-chip" title="Note on the HR profile">HR note</span></td>
+          <td class="team-name" title="Marketing, Marketing - Paid Media">Marketing, Marketing - Paid Media</td>
+          
+          <td class="sal-month">165.8h</td><td class="sal-month">179.3h</td><td class="sal-month under">🔴 137.1h</td>
+          <td class="center">1 of 3</td>
+          <td class="center">22.9h</td>
+          <td class="center"><span class="st-pill alert">Alert</span></td>
+        </tr>
+        <tr class="detail-row" id="sal-hired-flag-2" hidden><td colspan="7"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ew7817k" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <ul class="hr-notes"><li><span class="hr-meta">Saduka Sachintha · Nov 3, 2026</span>Worked fewer hours this month; timesheet approved. On fixed salary, but pay to be adjusted to the hours actually worked.</li></ul>
+  
+</div></td></tr>
+      
+      </tbody>
+      
+      <tbody class="ok-rows" id="sal-hired-ok" hidden>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-hired-ok-1">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Adam Burdeshaw</td>
+          <td class="team-name" title="CRM, Digital Product, Leadership, Platform and Engineering Team, VP - Systems - CRM Automation Product Owner">CRM, Digital Product, Leadership, Platform and Engineering Team, VP - Systems - CRM Automation Product Owner</td>
+          
+          <td class="sal-month">181.5h</td><td class="sal-month">196.4h</td><td class="sal-month">197.9h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"><span class="st-note">Leadership, not ranked</span></td>
+        </tr>
+        <tr class="detail-row" id="sal-hired-ok-1" hidden><td colspan="7"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-hired-ok-2">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Akram Khan</td>
+          <td class="team-name" title="Catalog Team, Digital Product">Catalog Team, Digital Product</td>
+          
+          <td class="sal-month">167.1h</td><td class="sal-month">185.4h</td><td class="sal-month">164.8h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-hired-ok-2" hidden><td colspan="7"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-hired-ok-3">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Antik Mandal<span class="hr-chip" title="Note on the HR profile">HR note</span></td>
+          <td class="team-name" title="BI and Data Team, Digital Product">BI and Data Team, Digital Product</td>
+          
+          <td class="sal-month">237.9h</td><td class="sal-month">243.8h</td><td class="sal-month">199.4h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-hired-ok-3" hidden><td colspan="7"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86eyac9x6" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <ul class="hr-notes"><li><span class="hr-meta">Adam Burdeshaw · Sep 12, 2026</span>August: 237.9h over 29 days including weekends, 34.2% activity, most flags in Digital Product. Managers to set expectations on target hours, weekend work and activity.</li><li><span class="hr-meta">Bihani Madushika · Sep 14, 2026</span>Lower activity reflects reading and planning with AI tools before implementing. Over 200h is not a concern on fixed pay; asked to improve activity.</li></ul>
+  
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-hired-ok-4">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Anuj Bansal</td>
+          <td class="team-name" title="Accounting, FP&amp;A">Accounting, FP&amp;A</td>
+          
+          <td class="sal-month">65.7h<span class="then">before salaried · not counted</span></td><td class="sal-month">85.0h<span class="then">before salaried · not counted</span></td><td class="sal-month">162.8h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-hired-ok-4" hidden><td colspan="7"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-hired-ok-5">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Atul Joshi</td>
+          <td class="team-name" title="AIT - Product, Task Agency">AIT - Product, Task Agency</td>
+          
+          <td class="sal-month">175.8h</td><td class="sal-month">189.5h</td><td class="sal-month">165.2h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-hired-ok-5" hidden><td colspan="7"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-hired-ok-6">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Devanga Palliyaguru<span class="hr-chip" title="Note on the HR profile">HR note</span></td>
+          <td class="team-name" title="Centrifuse Engineers">Centrifuse Engineers</td>
+          
+          <td class="sal-month">—</td><td class="sal-month under">🔴 26.6h</td><td class="sal-month">203.7h</td>
+          <td class="center">1 of 2</td>
+          <td class="center">133.4h</td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-hired-ok-6" hidden><td colspan="7"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/z8x1tu0mhy" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <ul class="hr-notes"><li><span class="hr-meta">Rasma Rizwan · Oct 12, 2026</span>First-days buddy report (Sep 28 to 30): 24h 39m logged against about 24h; breaks ran over on two days. Growth area: even daily hours and breaks logged to policy.</li></ul>
+  
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-hired-ok-7">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Dhananjana Rathnayake</td>
+          <td class="team-name" title="Centrifuse Engineers">Centrifuse Engineers</td>
+          
+          <td class="sal-month">—<span class="then">not on Hubstaff yet</span></td><td class="sal-month">173.7h</td><td class="sal-month">175.8h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-hired-ok-7" hidden><td colspan="7"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ew77p5d" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-hired-ok-8">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Dulan Jayawickrama</td>
+          <td class="team-name" title="Centrifuse Engineers">Centrifuse Engineers</td>
+          
+          <td class="sal-month">—<span class="then">not on Hubstaff yet</span></td><td class="sal-month">175.3h</td><td class="sal-month">199.2h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-hired-ok-8" hidden><td colspan="7"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-hired-ok-9">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Eden Schweyer</td>
+          <td class="team-name" title="Leadership, Venia Products  - All, VP - Customer Ops - Leads, VP - Customer Ops - SDR, VP - Systems - CRM Automation Product Owner, VP - VA/Contractor">Leadership, Venia Products  - All, VP - Customer Ops - Leads, VP - Customer Ops - SDR, VP - Systems - CRM Automation Product Owner, VP - VA/Contractor</td>
+          
+          <td class="sal-month">160.0h</td><td class="sal-month">167.7h</td><td class="sal-month">178.2h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"><span class="st-note">Leadership, not ranked</span></td>
+        </tr>
+        <tr class="detail-row" id="sal-hired-ok-9" hidden><td colspan="7"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-hired-ok-10">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Fred Butson</td>
+          <td class="team-name" title="Framework Friday, Leadership, Sales - Management">Framework Friday, Leadership, Sales - Management</td>
+          
+          <td class="sal-month">199.9h</td><td class="sal-month">206.4h</td><td class="sal-month">200.0h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"><span class="st-note">Leadership, not ranked</span></td>
+        </tr>
+        <tr class="detail-row" id="sal-hired-ok-10" hidden><td colspan="7"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ex381y6" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-hired-ok-11">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Gayan Keppetipola</td>
+          <td class="team-name" title="Centrifuse Engineers">Centrifuse Engineers</td>
+          
+          <td class="sal-month">—<span class="then">not on Hubstaff yet</span></td><td class="sal-month">186.7h</td><td class="sal-month">197.3h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-hired-ok-11" hidden><td colspan="7"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-hired-ok-12">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Hasan Zarook</td>
+          <td class="team-name" title="Centrifuse Engineers">Centrifuse Engineers</td>
+          
+          <td class="sal-month">—<span class="then">not on Hubstaff yet</span></td><td class="sal-month">189.8h</td><td class="sal-month">190.2h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-hired-ok-12" hidden><td colspan="7"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-hired-ok-13">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Ibrahim Adeeb</td>
+          <td class="team-name" title="Accounting, FP&amp;A">Accounting, FP&amp;A</td>
+          
+          <td class="sal-month under">🔴 156.8h</td><td class="sal-month">166.1h</td><td class="sal-month">169.4h</td>
+          <td class="center">1 of 3</td>
+          <td class="center">3.2h</td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-hired-ok-13" hidden><td colspan="7"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-hired-ok-14">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Isura Rajapakse</td>
+          <td class="team-name" title="allintalent, Centrifuse Engineers">allintalent, Centrifuse Engineers</td>
+          
+          <td class="sal-month">185.8h</td><td class="sal-month">193.9h</td><td class="sal-month">176.8h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-hired-ok-14" hidden><td colspan="7"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-hired-ok-15">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Jomal Mathew</td>
+          <td class="team-name" title="Catalog Team, Digital Product">Catalog Team, Digital Product</td>
+          
+          <td class="sal-month">171.9h</td><td class="sal-month" title="Hubstaff today; the Sep CSV had 177.8h (edited after the export)">178.3h</td><td class="sal-month">174.8h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-hired-ok-15" hidden><td colspan="7"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-hired-ok-16">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>jorn wossner</td>
+          <td class="team-name" title="Leadership">Leadership</td>
+          
+          <td class="sal-month">211.3h</td><td class="sal-month under">🔴 88.0h</td><td class="sal-month">223.6h</td>
+          <td class="center">1 of 3</td>
+          <td class="center">72.0h</td>
+          <td class="center"><span class="st-note">Leadership, not ranked</span></td>
+        </tr>
+        <tr class="detail-row" id="sal-hired-ok-16" hidden><td colspan="7"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ex381yb" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-hired-ok-17">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Lucas Robinson</td>
+          <td class="team-name" title="Leadership, Team Lucas">Leadership, Team Lucas</td>
+          
+          <td class="sal-month">284.7h</td><td class="sal-month">313.6h</td><td class="sal-month">236.5h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"><span class="st-note">Leadership, not ranked</span></td>
+        </tr>
+        <tr class="detail-row" id="sal-hired-ok-17" hidden><td colspan="7"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-hired-ok-18">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Nishantha Hettiarachchi</td>
+          <td class="team-name" title="AIT - Product, Centrifuse Engineers, Labs - all">AIT - Product, Centrifuse Engineers, Labs - all</td>
+          
+          <td class="sal-month">188.1h</td><td class="sal-month">235.9h</td><td class="sal-month">256.3h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-hired-ok-18" hidden><td colspan="7"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span><a class="hr-link" href="https://app.clickup.com/t/86ewnkxhm" target="_blank" rel="noopener">Open HR profile ↗</a></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-hired-ok-19">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Saumya Sewwandi</td>
+          <td class="team-name" title="Centrifuse Engineers">Centrifuse Engineers</td>
+          
+          <td class="sal-month">192.7h</td><td class="sal-month">192.3h</td><td class="sal-month">182.4h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-hired-ok-19" hidden><td colspan="7"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-hired-ok-20">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Shannon Woods</td>
+          <td class="team-name" title="Venia Products  - All, VP - Customer Ops - CAM, VP - Customer Ops - Leads">Venia Products  - All, VP - Customer Ops - CAM, VP - Customer Ops - Leads</td>
+          
+          <td class="sal-month under">🔴 153.8h</td><td class="sal-month">169.1h</td><td class="sal-month">187.4h</td>
+          <td class="center">1 of 3</td>
+          <td class="center">6.2h</td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-hired-ok-20" hidden><td colspan="7"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-hired-ok-21">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Tharusha Kulasinghe</td>
+          <td class="team-name" title="Centrifuse Engineers">Centrifuse Engineers</td>
+          
+          <td class="sal-month">167.6h</td><td class="sal-month">177.0h</td><td class="sal-month">171.7h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-hired-ok-21" hidden><td colspan="7"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+        <tr class="sal-ok expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="sal-hired-ok-22">
+          <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Yahal Yahampath</td>
+          <td class="team-name" title="Centrifuse Engineers">Centrifuse Engineers</td>
+          
+          <td class="sal-month">219.7h</td><td class="sal-month">227.2h</td><td class="sal-month">212.4h</td>
+          <td class="center"></td>
+          <td class="center"></td>
+          <td class="center"></td>
+        </tr>
+        <tr class="detail-row" id="sal-hired-ok-22" hidden><td colspan="7"><div class="hr-card">
+  <div class="hr-head"><span class="hr-title">HR profile notes</span></div>
+  <p class="hr-empty">No recent HR profile note on hours, activity or leave.</p>
+</div></td></tr>
+      
+      </tbody>
+      
+    </table>
+  </div>
+  <button type="button" class="ok-toggle" data-target="sal-hired-ok" data-n="22">Show 22 on target</button>
+  
+</div>
+    </div>
+<script>
+document.querySelectorAll('.ok-toggle').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var tb = document.getElementById(b.getAttribute('data-target'));
+    tb.hidden = !tb.hidden;
+    b.textContent = (tb.hidden ? 'Show ' : 'Hide ') + b.getAttribute('data-n') + ' on target';
+  });
+});
+</script>
+
+
+    <!-- ================================================================ -->
     <!-- Section 3 — Leave Summary                                         -->
     <!-- ================================================================ -->
     <div class="section-block" id="s3">
       <div class="section-title-row">
-        <div class="section-num">3</div>
+        <div class="section-num">4</div>
         <h2>Leave Summary</h2>
         <span class="count-pill">33 employees</span>
         <span class="section-tools">
@@ -1628,7 +2335,7 @@
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-5">
               <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Shenallie Jayathillake</td>
               <td class="team-name" title="Labs - all, Venia Products  - All, VP - Customer Ops - Order Processing">Labs - all, Venia Products  - All, VP - Customer Ops - Order Processing</td>
-              <td class="center"><span class="pay-tag hourly">Hourly</span></td>
+              <td class="center"><span class="pay-tag salaried">Salaried</span></td>
               <td class="center"><span class="chip-stack"><span class="chip paid pending">16.0h unapproved</span></span></td>
               <td class="center"><span class="chip-stack"><span class="chip unpaid pending">8.0h unapproved</span></span></td>
               <td class="center total-cell"><span class="tot-u only">24.0h unapproved</span></td>
@@ -1893,14 +2600,13 @@
             <tr class="expandable" tabindex="0" role="button" aria-expanded="false" aria-controls="ls-11">
               <td class="member-name"><span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M3.5 2l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Jebby Rochelle</td>
               <td class="team-name" title="Framework Friday, Labs - all, Marketing, Media, Rev Ops">Framework Friday, Labs - all, Marketing, Media, Rev Ops</td>
-              <td class="center"><span class="pay-tag hourly">Hourly</span></td>
+              <td class="center"><span class="pay-tag salaried">Salaried</span></td>
               <td class="center"><span class="chip-stack"></span></td>
               <td class="center"><span class="chip-stack"><span class="chip unpaid"><span class="dot"></span>10.0h</span></span></td>
               <td class="center total-cell"><strong>10.0h</strong></td>
             </tr>
             <tr class="detail-row" id="ls-11" hidden>
               <td colspan="6"><div class="leave-card">
-<div class="leave-note">🕒 <span>Hourly: 10.0h (1.2d) approved unpaid leave also counts → <strong>175.3h counted</strong>.</span></div>
 
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
@@ -2513,7 +3219,7 @@
             </tr>
             <tr class="detail-row" id="ls-30" hidden>
               <td colspan="6"><div class="leave-card">
-<div class="leave-note">🕒 <span>163.9h total includes 4.0h (0.5d) approved paid time off → <strong>159.9h actually worked</strong>.</span></div>
+<div class="leave-note">🕒 <span>163.9h total includes 4.0h (0.5d) approved paid time off → <strong>163.9h actually worked</strong>.</span></div>
 
 <table class="leave-entries">
   <thead><tr><th>Policy</th><th>Category</th><th>Date(s)</th><th>Hours</th><th>Status</th></tr></thead>
@@ -2634,7 +3340,7 @@
   <div class="page-footer">
     <span>WebLife Ventures Performance Reporting System</span>
     <span>
-      Generated 2026-11-19 15:18
+      Generated 2026-11-19 17:12
       <span class="footer-dot"> &nbsp;·&nbsp; </span>
       Internal use only — do not distribute
     </span>
