@@ -634,7 +634,7 @@ def join_leave(leave_df: pd.DataFrame, df: pd.DataFrame, excluded: list[str]) ->
               file=sys.stderr)
         for n in unmatched:
             print(f"  - {n}", file=sys.stderr)
-        print("Flag these to Aaqib — name mismatch or missing employee. Report NOT written.",
+        print("Flag these to Aaqib — name mismatch or missing team member. Report NOT written.",
               file=sys.stderr)
         sys.exit(1)
 
@@ -1153,6 +1153,8 @@ def build_report_data(df: pd.DataFrame, prorated_red: float, prorated_orange: fl
         "end_date": end.isoformat(),
         "period_working_days": period_working_days,
         "prorated_red": f"{prorated_red:.1f}h",
+        "expected_mover": f"{prorated_red * MOVED_TARGET / HIRED_TARGET:.1f}h",
+        "is_partial": not is_full_month(start, end),
         "prorated_orange": f"{prorated_orange:.1f}h",
         "total_employees": len(df),
         "total_flagged": sum(1 for r in rows_scored if r["score"] > 0),
@@ -1312,7 +1314,7 @@ def main():
     # --- Step 2: Load and clean data ---
     print(f"Loading: {csv_path}")
     df = load_master_table(csv_path)
-    print(f"Loaded {len(df)} employees.")
+    print(f"Loaded {len(df)} team members.")
 
     # Sanity check: warn if expected columns are missing
     expected_cols = ["Member", "Activity %", "Total Worked Hours"]
@@ -1332,8 +1334,18 @@ def main():
         excluded_csv = list(df.loc[df["member"].apply(lambda n: str(n).lower().strip() in _excl_set), "member"])
         df = df[~df["member"].apply(lambda n: str(n).lower().strip() in _excl_set)].reset_index(drop=True)
         excluded_count = before - len(df)
-        print(f"Excluded {excluded_count} employee(s): {', '.join(all_exclusions)}")
-        print(f"Remaining: {len(df)} employees.")
+        print(f"Excluded {excluded_count} team member(s): {', '.join(all_exclusions)}")
+        print(f"Remaining: {len(df)} team members.")
+
+    # Report month: time edited after the CSV export -> use the corrected Hubstaff figure
+    # (hours_refresh.csv, written by verify_hours.py --write-refresh; Aaqib 2026-11-19)
+    if is_full_month(start, end):
+        refresh = load_hours_refresh()
+        for i, r in df.iterrows():
+            k = (norm_name(r["member"]), f"{start:%Y-%m}")
+            if k in refresh:
+                print(f"Hours corrected from Hubstaff: {r['member']} {r['total_hours']:.1f}h -> {refresh[k][0]:.1f}h")
+                df.at[i, "total_hours"] = refresh[k][0]
 
     if leave_df is not None:
         leave_df = join_leave(leave_df, df, all_exclusions)
@@ -1395,7 +1407,7 @@ def main():
                                 leave_df=leave_df, leave_detail=args.leave_detail,
                                 leave_pulled=leave_pulled, pay_types=pay_types,
                                 hr_context=hr_context, status=status)
-    print(f"Employees flagged: {context['total_flagged']} / {context['total_employees']}")
+    print(f"Team members flagged: {context['total_flagged']} / {context['total_employees']}")
     print(f"Hours violators:   {context['hours_violator_count']}")
     if context["leave_enabled"]:
         print(f"Leave summary:     {context['leave_count']} member(s) with time off "

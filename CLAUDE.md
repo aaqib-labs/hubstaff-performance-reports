@@ -110,7 +110,8 @@ A full-month run (`--start` = 1st, `--end` = last day) **must** pass `--leave <T
    - Earlier months come from the monthly CSVs; `hours_refresh.csv` (member, month, hours, csv_hours, source) swaps in today's Hubstaff figure where time was edited after that month's export (checked with the Hubstaff MCP).
    - Serious = under in 2+ of the 3 months; Alert = under in the latest month only. Leadership is not ranked.
    - Add HR profile notes (step 6) for everyone flagged in Section 3 too.
-8. Paid leave approved after the master CSV was exported is not in that CSV's Total, so it is not taken off Worked (it still counts). The TO CSV carries `approved_at`; the export time defaults to the CSV file's modified time, or pass `--csv-exported YYYY-MM-DD`. The run prints every late approval (Sean Dehoedt, Oct 2026).
+8. **Corrected Hubstaff figures win over the CSV** (Aaqib, 2026-11-19): where time was edited after a month's export, `verify_hours.py --write-refresh` writes today's Hubstaff figure to `hours_refresh.csv`, and the report uses it for that month, the report month included (Section 1, 2 and 3 hours and flags).
+8b. Paid leave approved after the master CSV was exported is not in that CSV's Total, so it is not taken off Worked (it still counts). The TO CSV carries `approved_at`; the export time defaults to the CSV file's modified time, or pass `--csv-exported YYYY-MM-DD`. The run prints every late approval (Sean Dehoedt, Oct 2026).
 9. Re-run without `--dry-run`.
 10. Commit `Report: Bi-Weekly YYYY-MM-01 to YYYY-MM-DD` and push.
 
@@ -202,6 +203,8 @@ If a name in the CSV does not match anyone in the index, flag it to Aaqib before
 | Break / Manual / Low Activity cells | `Xh (X.X%)` format |
 | Flags badge | `🔴 2 ⚠️ 1` (B ⚠️ excluded from count) |
 | Member name cells | No status emoji prefix |
+| People | Always "team members" (or "members"), never "employees": they are consultants, not employees, per their contracts (Aaqib, 2026-11-19) |
+| Page width | `.page-wrap` max-width 1320px, table cells 10px side padding: every table fits with no sideways scroll (checked 2026-11-19) |
 | Empty / compliant cells | Leave blank — no "CLEAR" text |
 | Violation indicators | Embedded in metric cells: `🔴 34%`, `⚠️ 8.3h (11.4%)` |
 

@@ -19,7 +19,7 @@
       line-height: 1.5;
     }
 
-    .page-wrap { max-width: 1440px; margin: 0 auto; padding: 0 0 60px; }
+    .page-wrap { max-width: 1320px; margin: 0 auto; padding: 0 0 60px; }
     .back-nav { background: #0f172a; padding: 11px 28px; position: sticky; top: 0; z-index: 100; }
     .back-nav a { color: #94a3b8; text-decoration: none; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; transition: color .15s; }
     .back-nav a:hover { color: #fff; }
@@ -289,7 +289,7 @@
 
     thead th {
       color: #64748b;
-      padding: 11px 14px;
+      padding: 11px 10px;
       text-align: left;
       font-size: 0.7rem;
       font-weight: 700;
@@ -309,7 +309,7 @@
     tbody tr:hover { background: #f8fafc !important; }
 
     tbody td {
-      padding: 11px 14px;
+      padding: 11px 10px;
       vertical-align: middle;
       white-space: nowrap;
     }
@@ -648,7 +648,7 @@
     td.sal-month { text-align: center; white-space: nowrap; }
     td.sal-month.under { color: #b91c1c; font-weight: 700; }
     td.sal-month.warn { color: #92400e; font-weight: 700; }
-    td.sal-month .leave { display: block; font-size: 0.64rem; font-weight: 600; color: #475569; }
+    td.sal-month .leave { display: block; font-size: 0.64rem; font-weight: 600; color: #475569; white-space: normal; max-width: 150px; margin: 2px auto 0; line-height: 1.25; }
     td.sal-month .then { display: block; font-size: 0.64rem; font-weight: 600; color: #94a3b8; }
     .st-pill { display: inline-block; font-size: 0.72rem; font-weight: 800; padding: 2px 10px; border-radius: 999px; }
     .st-pill.serious { background: #fee2e2; color: #b91c1c; }
@@ -776,7 +776,7 @@
   <!-- ================================================================== -->
   <div class="stats-row">
     <div class="stat-card">
-      <div class="s-label">Employees Covered</div>
+      <div class="s-label">Team Members Covered</div>
       <div class="s-value blue">{{ total_employees }}</div>
       <div class="s-sub">tracked this period</div>
     </div>
@@ -908,11 +908,11 @@
       <div class="section-title-row">
         <div class="section-num">2</div>
         <h2>Hours Violators</h2>
-        <span class="count-pill">{{ hours_violator_count }} employees</span>{% if (leave_enabled or hr_enabled) and hours_violators %}
+        <span class="count-pill">{{ hours_violator_count }} team members</span>{% if (leave_enabled or hr_enabled) and hours_violators %}
         <span class="section-tools"><button type="button" class="toggle-all-btn" data-section="s2" aria-pressed="false"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-label">Expand all</span></button></span>{% endif %}
       </div>
       <p class="section-note">
-        All employees below the prorated hours threshold. Sorted lowest hours first.{% if leave_enabled %}
+        All team members below the {{ prorated_red }} hours threshold. Sorted lowest hours first.{% if leave_enabled %}
         <strong>Worked</strong> = Total Hours minus approved paid time off (Hubstaff already adds paid leave to the total, not unpaid leave).
         <strong>Counted</strong> = Worked plus approved paid leave{% if pay_enabled %}, plus approved unpaid leave for hourly team members (their pay is cut, so they do not make the hours up){% endif %}.
         <strong>Expected</strong> is 160h prorated, or 180h prorated for team members who moved from hourly to salaried (from the first full month after the move).
@@ -923,8 +923,8 @@
       <div class="threshold-note">
         <span class="tn-icon">🔴</span>
         <span>
-          <strong>Prorated threshold:</strong> {{ prorated_red }} expected for {{ period_working_days }} working days
-          &nbsp;·&nbsp; Any employee below this is flagged.
+          <strong>Hours threshold:</strong> below {{ prorated_red }} is flagged ({{ period_working_days }} working days{% if is_partial %}, prorated{% endif %}).
+          &nbsp;·&nbsp; <strong>Expected:</strong> {{ prorated_red }}, or {{ expected_mover }} for team members who moved from hourly to salaried.
         </span>
       </div>
 
@@ -1003,7 +1003,7 @@
       </div>
 {% endif %}      {% else %}
       <div class="empty-state">
-        All employees met the {{ prorated_red }} threshold this period.
+        All team members met the {{ prorated_red }} threshold this period.
       </div>
       {% endif %}
     </div>
@@ -1046,7 +1046,7 @@ document.querySelectorAll('.ok-toggle').forEach(function (b) {
       <div class="section-title-row">
         <div class="section-num">{{ leave_section_num }}</div>
         <h2>Leave Summary</h2>
-        <span class="count-pill">{{ leave_count }} employees</span>
+        <span class="count-pill">{{ leave_count }} team members</span>
         <span class="section-tools">
           <span class="pulled-at">🕒 Time off as of {{ leave_pulled }}</span>{% if leave_rows %}
           <button type="button" class="toggle-all-btn" data-section="s3" aria-pressed="false"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="btn-label">Expand all</span></button>{% endif %}

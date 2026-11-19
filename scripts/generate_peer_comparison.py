@@ -721,7 +721,7 @@ def main():
     df   = df[~df["member"].apply(lambda n: n.lower().strip() in excl)].reset_index(drop=True)
     if cycle_excl:
         print(f"Cycle exclusions: {', '.join(cycle_excl)}")
-    print(f"Employees loaded: {len(df)}")
+    print(f"Team members loaded: {len(df)}")
 
     groups = []
     for i, grp_def in enumerate(PEER_GROUPS, 1):

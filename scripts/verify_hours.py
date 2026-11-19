@@ -30,10 +30,11 @@ Usage:
 Output: one line per difference of 0.1h or more, then a summary. A difference
 equal to a month's paid holiday hours is reported as "holiday" (the member's
 CSV includes it, or doesn't), not as an error. With --write-refresh, differences
-in the two earlier months are written to data/input/salaried/hours_refresh.csv
-(today's Hubstaff figure replaces that month's CSV figure in Section 3). A
-difference in the report month itself means time was edited after the export:
-re-export the CSV or note it; the script never changes the report month.
+are written to data/input/salaried/hours_refresh.csv (today's Hubstaff figure
+replaces that month's CSV figure in the report). A
+difference means time was edited after that month's export; --write-refresh
+records today's figure for every month, the report month included (the report
+uses the corrected Hubstaff figure, Aaqib 2026-11-19).
 """
 
 import argparse
@@ -139,7 +140,7 @@ def main():
             # What the report shows: CSV total, or the refresh figure (earlier months),
             # plus paid leave approved after that month's export
             shown = total
-            if not current and (name, key_m) in refresh:
+            if (name, key_m) in refresh:
                 shown = refresh[(name, key_m)][0]
             shown += leave.get(name, (0, 0, 0, 0))[3]
             hub = sum(tracked.get((u, key_m), 0) for u in uids) / 3600 + paid_now.get(name, 0.0)
@@ -159,7 +160,7 @@ def main():
 
     print(f"Checked {checked} member-months over {', '.join(f'{m:%b %Y}' for m in months)}.")
     for key_m, current, name, shown, hub in sorted(diffs):
-        where = "REPORT MONTH (edited after export)" if current else "earlier month"
+        where = "report month" if current else "earlier month"
         print(f"  {key_m} {name:30} report {shown:7.1f}h  Hubstaff {hub:7.1f}h  "
               f"({hub - shown:+.1f}h)  {where}")
     if holiday_only:
@@ -178,7 +179,7 @@ def main():
     print(f"Differences: {len(diffs)}")
 
     if args.write_refresh:
-        earlier = [x for x in diffs if not x[1]]
+        earlier = list(diffs)  # earlier months and the report month alike
         if not earlier:
             print("Nothing to write to hours_refresh.csv.")
             return

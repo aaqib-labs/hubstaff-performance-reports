@@ -528,7 +528,7 @@ def main():
     parser.add_argument("--start",  required=True, help="Quarter start YYYY-MM-DD")
     parser.add_argument("--end",    required=True, help="Quarter end YYYY-MM-DD")
     parser.add_argument("--sample", action="store_true",
-                        help="Run with sample employees for structure review")
+                        help="Run with sample team members for structure review")
     args = parser.parse_args()
 
     start     = date.fromisoformat(args.start)
@@ -543,18 +543,18 @@ def main():
     print("=" * 60)
     print(f"Q1 Pattern Analysis: {start} to {end}")
     if args.sample:
-        print("MODE: Sample employees only")
+        print("MODE: Sample team members only")
     print("=" * 60)
 
     employee_month_data, thresholds = load_all_months(csv_paths, args.labels, args.sample, start)
-    print(f"Employees loaded:  {len(employee_month_data)}")
+    print(f"Team members loaded:  {len(employee_month_data)}")
     for label, (pr, po) in zip(args.labels, thresholds):
         print(f"  {label}: red < {pr}h | orange ≥ {po}h")
 
     context   = build_context(employee_month_data, args.labels, thresholds, start, end, args.sample)
 
     for sec in context["sections"]:
-        print(f"  Section {sec['num']:>2}: {sec['title']:<42} {len(sec['rows'])} employees")
+        print(f"  Section {sec['num']:>2}: {sec['title']:<42} {len(sec['rows'])} team members")
 
     html      = render_report(context)
     docs_path = write_report(html, start, end, args.sample)

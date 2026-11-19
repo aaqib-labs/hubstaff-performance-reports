@@ -112,11 +112,10 @@ python3 scripts/verify_hours.py --start <start> --end <end> --pulls data/input/h
    `get_organizations_organization_id_activities_daily` for each month with
    `user_ids: [...]`, `page_limit: 300`, every page, into the pull folder, then
    run it again. Never save part-paged org-wide pages.
-2. Any difference in `<m1>`/`<m2>` for someone in Section 3: re-run with
-   `--write-refresh` (writes `hours_refresh.csv`), then re-run the dry run.
-3. A difference in the report month = time edited after the export. Note it in
-   the pack: Aaqib re-exports the CSV, or it's left as is.
-Target: every Section 3 figure matches.
+2. Any difference (any month, the report month included) = time edited after the
+   export. Re-run with `--write-refresh`: the report then uses today's Hubstaff
+   figure (Aaqib, 2026-11-19). Re-run until it prints `Differences: 0`.
+Target: `Differences: 0`, then re-run the dry run. Never write "employees" anywhere: team members.
 
 ## 8. HR profile notes
 

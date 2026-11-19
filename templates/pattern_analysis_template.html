@@ -383,7 +383,7 @@
         <div class="h-value">{{ labels | join(" · ") }}</div>
       </div>
       <div class="header-meta-item">
-        <div class="h-label">Employees Analysed</div>
+        <div class="h-label">Team Members Analysed</div>
         <div class="h-value">{{ total_analysed }}</div>
       </div>
       <div class="header-meta-item">
@@ -399,7 +399,7 @@
 
   {% if is_sample %}
   <div class="sample-banner">
-    ⚠️ SAMPLE REPORT — subset of employees only. For structure review. Run without --sample for the full report.
+    ⚠️ SAMPLE REPORT — subset of team members only. For structure review. Run without --sample for the full report.
   </div>
   {% endif %}
 
@@ -408,24 +408,24 @@
   <!-- ================================================================== -->
   <div class="stats-row">
     <div class="stat-tile blue">
-      <div class="t-label">Employees Analysed</div>
+      <div class="t-label">Team Members Analysed</div>
       <div class="t-value">{{ total_analysed }}</div>
       <div class="t-sub">across {{ labels | length }} months</div>
     </div>
     <div class="stat-tile red">
       <div class="t-label">Critical Red Violations</div>
       <div class="t-value">{{ exec_summary.critical | sum(attribute='count') }}</div>
-      <div class="t-sub">employee appearances in red categories</div>
+      <div class="t-sub">team member appearances in red categories</div>
     </div>
     <div class="stat-tile amber">
       <div class="t-label">Yellow Warnings</div>
       <div class="t-value">{{ exec_summary.high_priority | sum(attribute='count') }}</div>
-      <div class="t-sub">employee appearances in yellow categories</div>
+      <div class="t-sub">team member appearances in yellow categories</div>
     </div>
     <div class="stat-tile slate">
       <div class="t-label">Multi-Category Violators</div>
       <div class="t-value">{{ exec_summary.multi_violators | length }}</div>
-      <div class="t-sub">employees flagged in 2+ categories</div>
+      <div class="t-sub">team members flagged in 2+ categories</div>
     </div>
   </div>
 
@@ -443,7 +443,7 @@
         <span class="section-subtitle">{{ sec.subtitle }}</span>
         {% if sec.rows %}
         <span class="count-pill {{ 'red-pill' if sec.is_red else 'yellow-pill' }}">
-          {{ sec.rows | length }} employee{{ 's' if sec.rows | length != 1 }}
+          {{ sec.rows | length }} team member{{ 's' if sec.rows | length != 1 }}
         </span>
         {% endif %}
       </div>
@@ -454,7 +454,7 @@
           <thead>
             <tr>
               <th class="center">#</th>
-              <th>Employee</th>
+              <th>Team Member</th>
               <th>Team / Department</th>
               {% for label in labels %}
               <th class="center">{{ label }}</th>
@@ -501,7 +501,7 @@
 
       <div class="section-summary">
         <strong>Summary:</strong>
-        {{ sec.rows | length }} employee{{ 's' if sec.rows | length != 1 }} with repeated {{ sec.title | lower }}.
+        {{ sec.rows | length }} team member{{ 's' if sec.rows | length != 1 }} with repeated {{ sec.title | lower }}.
         Top violators:
         {% for r in sec.rows[:3] %}{{ r.employee }}{% if not loop.last %}, {% endif %}{% endfor %}{% if sec.rows | length > 3 %} and {{ sec.rows | length - 3 }} more{% endif %}.
       </div>
